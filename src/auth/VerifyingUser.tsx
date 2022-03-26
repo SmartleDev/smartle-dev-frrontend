@@ -22,7 +22,20 @@ const VerifyingUser = () => {
         code : otp.toString()
     });
 
-    
+    const [loginCreds, setLoginCreds] : any = useState(
+        {
+          email: localStorage.getItem('username'),
+          password: localStorage.getItem('username-p')
+        }
+      );
+
+      const [parentTable, setParentTable] : any = useState(
+        {
+          parentId: '',
+          parentName: '',
+          parentEmail: ''
+        }
+      );
 
     const navigate = useNavigate();
 
@@ -48,11 +61,32 @@ const VerifyingUser = () => {
                 setErrorMsg(res.data.code)
             }else{
             setCodeResult(res.data);
-            localStorage.removeItem('username')
-            navigate('/')
+
+            API.post('login', loginCreds)
+            .then((res)=>{
+                    console.log(res.data.token)
+                    localStorage.setItem('user-details', JSON.stringify(res.data.token))
+                    setErrorMsg('')
+                    // setParentTable({ ...parentTable, 
+                    //     parentTable.parentId = res.data.username,
+                    //     parentTable.parentName = res.data.name,
+                    //     parentTable.parentEmail = res.data.email
+                    // })
+                    console.log(parentTable)
+                    navigate('/learner')
+                    localStorage.removeItem('username')
+                    localStorage.removeItem('username-p')
+             API.post('parentpopluate', parentTable)
+             .then(res => {
+                 console.log(res.data)
+             })
+            .catch(err => {
+                 console.log(err)
+             })
+             }).catch((err) => {
+                console.log(err)
+             })
         }
-        }).catch((err) => {
-          console.log(err)
         })
     }
 

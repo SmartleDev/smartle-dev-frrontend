@@ -59,6 +59,7 @@ const Signup = () => {
       if(typeof res.data === 'object'){
         setLoginToken(res.data)
         localStorage.setItem('username', res?.data?.username)
+        localStorage.setItem('username-p', signupCreds.password)
         navigate('/otp')
       }else{
         setErrorMsg(res?.data)
