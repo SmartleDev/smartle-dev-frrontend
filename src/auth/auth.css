@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200&family=Saira:wght@500&display=swap');
+
+.select-learner{
+	margin : 3% 3% 1% 8%;
+	font-family: 'Nunito Sans', sans-serif !important;
+}
+.learner-overview{
+	display: flex;
+	flex-wrap: wrap;
+	max-width: 50%;
+	justify-content: space-between;
+}
+.learner-choose{
+	margin: 5% 5% 3% 0;
+	display: flex;
+}
+.learner-icon{
+	background-color :  '#F9EDF5';
+	box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+	cursor: pointer;
+	/* border: 1px dashed #917EBD;
+	border-width: thin; */
+}
+.learner-icon:hover{
+	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+.learner-name{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	width:100%;
+	margin-left : 8%;
+	margin-bottom: 40px;
+}
+.form-input{
+	border: 1px solid #917EBD;
+}
+.auth-button {
+	padding : 10px !important;
+	font-size: 18px !important;
+}
+.form-class{
+	width: 500px !important;
+	box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+.childacc-inline{
+	display: flex ;
+}
+hr {
+	border: none;
+	border-top: 5px dashed #917EBD;
+	background-color: #fff;
+	width: 50%;
+	border-width: thin;
+  }
+
+.otp-field {
+    width: 50px;
+    margin-right: 10px;
+    padding-left: 15px;
+    height: 60px;
+	font-size: 25px;
+	font-weight: 700;
+	border: 3px solid #917EBD;
+	border-radius: 3px;
+}
+
+.otp-button{
+
+}
+/* body{
+	background-color: #E5E5E5;
+} */
+
+.amp{
+
+}

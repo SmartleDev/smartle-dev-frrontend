@@ -1,0 +1,15 @@
+export const Book = require('./book.png');
+export const Boy = require('./boy.png');
+export const Bookmark = require('./bookmark.svg');
+export const Calendar = require('./calendar.png');
+export const Dog = require('./dog.png');
+export const File = require('./file.svg');
+export const Rocket = require('./rocket.png');
+export const Star = require('./star.png');
+export const Star2 = require('./star2.svg');
+export const Settings = require('./settings.svg');
+export const Zoom = require('./zoom.png');
+export const Flash = require('./flash.png');
+export const Folder = require('./folder.png');
+export const Chat = require('./chat.png');
+export const Camera = require('./camera.png');

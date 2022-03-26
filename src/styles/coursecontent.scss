@@ -1,0 +1,33 @@
+.title-div{
+    top: 20px;
+    left: 50px;
+    background-image: linear-gradient(to right, #A18CD1 , #FBC2EB);
+    height: 80px;
+    width: 90%;
+    border-radius: 5px;
+}
+
+.module-overview{
+    background-color: #A18CD1;
+    height: 60px;
+    border-radius: 5px;
+    text-align: center;
+    color: white;
+}
+
+.activity-title{
+    background-color: #A18CD1;
+    height: 40px;
+    border-radius: 5px;
+    color: white;
+}
+
+.content-resize{
+    width: 1px;
+    min-width: 100%;
+}
+
+iframe {
+    width: 1px;
+    min-width: 100%;
+}
