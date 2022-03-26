@@ -7,6 +7,7 @@ import { Axios } from 'axios';
 import API from '../redux/api/api';
 import { useNavigate } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
+import jwt_decode from "jwt-decode";
 
 const VerifyingUser = () => {
     const [otp, setOtp] = useState(new Array(6).fill(""));
@@ -14,6 +15,7 @@ const VerifyingUser = () => {
 
     const [user, setUser] = useState<any>(JSON.parse(localStorage.getItem('user-details') || '{}'))
 
+    console.log(user);
     const[optResult, setOtpResult] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
     
@@ -29,6 +31,9 @@ const VerifyingUser = () => {
         }
       );
 
+      console.log(loginCreds);
+
+
       const [parentTable, setParentTable] : any = useState(
         {
           parentId: '',
@@ -37,6 +42,7 @@ const VerifyingUser = () => {
         }
       );
 
+    console.log(parentTable);
     const navigate = useNavigate();
 
     const handleChange = (element:any, index: any) => {
@@ -64,18 +70,23 @@ const VerifyingUser = () => {
 
             API.post('login', loginCreds)
             .then((res)=>{
-                    console.log(res.data.token)
+                    console.log(res.data.username);
+                    console.log(res.data.email);
+                    const value: any = jwt_decode(res.data.token);
+                    const decodeAccessToken: any = jwt_decode(res.data.accessToken);
+                    console.log(value.email);
+                    console.log(decodeAccessToken.username);
+                    console.log(value.name);
                     localStorage.setItem('user-details', JSON.stringify(res.data.token))
                     setErrorMsg('')
-                    // setParentTable({ ...parentTable, 
-                    //     parentTable.parentId = res.data.username,
-                    //     parentTable.parentName = res.data.name,
-                    //     parentTable.parentEmail = res.data.email
-                    // })
+
+                    
+                    setParentTable({
+                       parentId: decodeAccessToken.username,
+                       parentName: value.name,
+                       parentEmail: value.email
+                    })
                     console.log(parentTable)
-                    navigate('/learner')
-                    localStorage.removeItem('username')
-                    localStorage.removeItem('username-p')
              API.post('parentpopluate', parentTable)
              .then(res => {
                  console.log(res.data)
@@ -83,9 +94,14 @@ const VerifyingUser = () => {
             .catch(err => {
                  console.log(err)
              })
+             navigate('/learner')
+             localStorage.removeItem('username')
+             localStorage.removeItem('username-p')
              }).catch((err) => {
                 console.log(err)
+
              })
+
         }
         })
     }
@@ -129,8 +145,6 @@ const VerifyingUser = () => {
                             />
                         );
                     })}
-
-                    <Typography>OTP Entered - {otp.join("")}</Typography>
                     <Typography>
                         
                             <Button
