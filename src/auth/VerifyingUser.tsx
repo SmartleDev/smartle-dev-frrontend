@@ -1,5 +1,5 @@
 import { Box, Button, Avatar, Typography } from '@mui/material';
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import AuthHeader from '../components/organisms/AuthHeader';
 import PopOutCircle from '../components/atom/PopOutCircle';
 import { EnterpriseBannerGirl as BImg } from '../util/resources';
@@ -42,7 +42,6 @@ const VerifyingUser = () => {
         }
       );
 
-    console.log(parentTable);
     const navigate = useNavigate();
 
     const handleChange = (element:any, index: any) => {
@@ -69,7 +68,7 @@ const VerifyingUser = () => {
             setCodeResult(res.data);
 
             API.post('login', loginCreds)
-            .then((res)=>{
+            .then( async (res)=>{
                     console.log(res.data.username);
                     console.log(res.data.email);
                     const value: any = jwt_decode(res.data.token);
@@ -79,32 +78,34 @@ const VerifyingUser = () => {
                     console.log(value.name);
                     localStorage.setItem('user-details', JSON.stringify(res.data.token))
                     setErrorMsg('')
-
-                    
-                    setParentTable({
+                   setParentTable({
                        parentId: decodeAccessToken.username,
                        parentName: value.name,
                        parentEmail: value.email
                     })
-                    console.log(parentTable)
-             API.post('parentpopluate', parentTable)
-             .then(res => {
-                 console.log(res.data)
-             })
-            .catch(err => {
-                 console.log(err)
-             })
              navigate('/learner')
              localStorage.removeItem('username')
              localStorage.removeItem('username-p')
              }).catch((err) => {
                 console.log(err)
-
              })
-
         }
         })
     }
+
+    useEffect(() => {
+
+        if(parentTable.parentId !== ''){
+            console.log(parentTable)
+         API.post('parentpopluate', parentTable)
+         .then(res => {
+                    console.log(res.data)
+                })
+               .catch(err => {
+                    console.log(err)
+                })
+            }
+    }, [parentTable])
 
     const handleResendCode = async () => {
         await API.post('resendcode', codeCreds)
