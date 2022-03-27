@@ -76,7 +76,11 @@ const VerifyingUser = () => {
                     console.log(value.email);
                     console.log(decodeAccessToken.username);
                     console.log(value.name);
-                    localStorage.setItem('user-details', JSON.stringify(res.data.token))
+                    localStorage.setItem('user-details', JSON.stringify({
+                        token : res.data.token,
+                        accessToken : res.data.accessToken,
+                        username : res.data.username,
+                      }))
                     setErrorMsg('')
                    setParentTable({
                        parentId: decodeAccessToken.username,

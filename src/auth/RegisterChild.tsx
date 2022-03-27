@@ -1,17 +1,14 @@
 import React, { useState } from "react";
-import { Typography, Box, Button, Grid } from "@mui/material";
+import { Typography, Box, Button} from "@mui/material";
 import { HashLink as Link } from "react-router-hash-link";
 import Header from "../components/organisms/Header";
 import Footer from "../components/organisms/Footer";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import TextField from "@mui/material/TextField";
-import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import { purple } from "@mui/material/colors";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import API from '../redux/api/api';
+import { useNavigate } from 'react-router-dom';
 import "./auth.css";
 
 function RegisterChild() {
@@ -23,26 +20,40 @@ function RegisterChild() {
     },
   });
 
-  // const [value, setValue] = React.useState(new Date("2014-08-18T21:11:54"));
+  const AGE = [5,6,7,8,9,10,11,12,13,14,15,17,18];
+  const token = JSON.parse(localStorage.getItem('user-details') || '{}');
+  const [userId, setUserId] = useState<any>(token?.username)
+  const navigate = useNavigate();
 
-  const handleAge = (newValue: any) => {
-    setAge(newValue);
-  };
+  const [childCreds, setChildCreds] = useState(
+    {
+      studentName: '',
+      studentGender: '',
+      studentAge: '',
+      parentId: userId
+    }
+  );
 
-  const handleGender = (newValue: any) => {
-    setGender(newValue);
-  };
+  console.log(childCreds)
 
-  const AGE = [5,6,7,8,9,10,11,12,13,14,15,15,17,18];
+  const handelChange = (e: any) => {
 
-  const [childName, setChildName] = useState("");
-  const [age, setAge] = useState("");
-  const [gender, setGender] = useState("male");
-  const [password, setPassword] = useState("");
-  const [rememberme, setRemberme] = useState(false);
+    const {name, value} = e.target
+    setChildCreds({...childCreds, [name]:value})
+  }
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+   
+
+    await API.post('createchild', childCreds)
+    .then(res => {
+      console.log(res.data)
+      navigate('/learner')
+    }).catch(err => {
+      console.log(err)
+    })
   }
 
   return (
@@ -53,9 +64,9 @@ function RegisterChild() {
           <h1 className="font-black text-4xl">
             Please Setup Your Child's Account{" "}
           </h1>
-          <p className="text-stone-600">
+          {/* <p className="text-stone-600">
             Already Have an Account, Login in now!
-          </p>
+          </p> */}
         </div>
         <p className="text-center md:text-left text-xl md:text-4xl mt-4 md:mt-8 text-stone-600">
           Child Account Details
@@ -80,8 +91,9 @@ function RegisterChild() {
                 type={"text"}
                 placeholder="Enter your Child Name"
                 className="form-input"
-                value={childName}
-                onChange={(e) => setChildName(e.target.value)}
+                name='studentName'
+                value={childCreds.studentName}
+                onChange={handelChange} 
                 style={{
                   padding: "8px",
                   width: "100%",
@@ -96,9 +108,9 @@ function RegisterChild() {
               </div>
         <Select
 		      className="form-input"
-          value={gender}
-          onChange={e=> setGender(e.target.value)}
-          onBlur={e=> setGender(e.target.value)}
+          name='studentGender'
+          value={childCreds.studentGender}
+          onChange={handelChange} 
           displayEmpty
           inputProps={{ 'aria-label': 'Without label' }}
 		      style={{ width: "100%", borderRadius: "3px", backgroundColor:'white' }}
@@ -118,9 +130,9 @@ function RegisterChild() {
                     Age: 
                     <select 
                     id="age" 
-                    value={age} 
-                    onChange={e=> setAge(e.target.value)}
-                    onBlur={e=> setAge(e.target.value)}
+                    name='studentAge'
+                    value={childCreds.studentAge} 
+                    onChange={handelChange} 
                     style={{padding: "10px", marginLeft:"10px", fontSize:"20px", borderRadius: "5px"}}
                     >
                         <option />
@@ -137,9 +149,10 @@ function RegisterChild() {
              
             </Box>
             <Box style={{ width: "80%", margin: "auto", textAlign: "center" }}>
-              <Link to={"/"}>
+              {/* <Link to={"/"}> */}
                 <ThemeProvider theme={redTheme}>
                   <Button
+                    type="submit"
                     className="auth-button"
                     variant="contained"
                     style={{
@@ -151,7 +164,7 @@ function RegisterChild() {
                     Add Child
                   </Button>
                 </ThemeProvider>
-              </Link>
+              {/* </Link> */}
             </Box>
             <Box
               style={{

@@ -1,18 +1,35 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import PersonIcon from "@mui/icons-material/Person";
 import AddIcon from "@mui/icons-material/Add";
 import Header from "../components/organisms/Header";
 import Footer from "../components/organisms/Footer";
-import { HashLink as Link } from "react-router-hash-link";
+import { HashLink as Link} from "react-router-hash-link";
+import { useNavigate } from 'react-router-dom';
 import "./auth.css";
 import jwt_decode from "jwt-decode";
+import API from '../redux/api/api';
 
 function SelectLearner() {
 
   const [user, setUser] = useState<any>(JSON.parse(localStorage.getItem('user-details') || '{}'))
+  const [userId, setUserId] = useState<any>(user?.username)
+  const [learnerList, setLearnerList] = useState<any>([])
+  const [learner, setLearner] = useState<any>('')
+  console.log(learner)
+  const navigate = useNavigate()
+  useEffect(() =>{
+    API.post('selectlearner', {userId : userId})
+    .then((res) => {
+      setLearnerList(res.data.result)
+      console.log(res.data.result)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+    
+  },[])
 
-  console.log(jwt_decode(user))
-  
+  console.log(learnerList.length)
   return (
     <>
       <Header />
@@ -25,8 +42,15 @@ function SelectLearner() {
           </p>
         </div>
         <div className="learner-overview">
+          {learnerList?.map((dataItem : any, index : any) => 
+          
           <div className="learner-choose">
             <PersonIcon
+              onClick = {() => {
+              localStorage.setItem('learner-details', JSON.stringify(dataItem))
+               navigate('/')
+                }
+              }
               className="learner-icon"
               style={{
                 color: "#917EBD",
@@ -37,42 +61,16 @@ function SelectLearner() {
               }}
             />
             <p className="learner-name md:text-left text-xl md:text-2xl mt-4 md:mt-8 font-bold text-stone-700">
-              Adeeb Shah
+              {dataItem?.student_name}
             </p>
           </div>
-          <div className="learner-choose">
-            <PersonIcon
-              className="learner-icon"
-              style={{
-                color: "#917EBD",
-                backgroundColor: "#F9EDF5",
-                padding: "20px",
-                fontSize: "150px",
-                borderRadius: "50%",
-              }}
-            />
-            <p className="learner-name md:text-left text-xl md:text-2xl mt-4 md:mt-8 font-bold text-stone-700">
-              Adeeb Shah
-            </p>
-          </div>
-          <div className="learner-choose">
-            <PersonIcon
-              className="learner-icon"
-              style={{
-                color: "#917EBD",
-                backgroundColor: "#F9EDF5",
-                padding: "20px",
-                fontSize: "150px",
-                borderRadius: "50%",
-              }}
-            />
-            <p className="learner-name md:text-left text-xl md:text-2xl mt-4 md:mt-8 font-bold text-stone-700">
-              Adeeb Shah
-            </p>
-          </div>
+          )}
+    
+          
         </div>
         <hr />
-        <div className="learner-choose" style={{ marginTop: "30px" }}>
+
+        {learnerList.length > 4 &&<div className="learner-choose" style={{ marginTop: "30px" }}>
           <Link to="/registerchild">
             <AddIcon
               className="learner-icon"
@@ -91,7 +89,7 @@ function SelectLearner() {
           >
             Add Learner
           </p>
-        </div>
+        </div>}
       </div>
       <Footer />
     </>

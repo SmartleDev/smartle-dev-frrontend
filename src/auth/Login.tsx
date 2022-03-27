@@ -53,7 +53,11 @@ const Login = () => {
       console.log(res.data)
       if(typeof res.data === 'object'){
         console.log(res.data.token)
-        localStorage.setItem('user-details', JSON.stringify(res.data.token))
+        localStorage.setItem('user-details', JSON.stringify({
+          token : res.data.token,
+          accessToken : res.data.accessToken,
+          username : res.data.username,
+        }))
         setErrorMsg('')
         navigate('/learner')
       }else if (res.data === 'User is not confirmed.'){
