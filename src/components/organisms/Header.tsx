@@ -19,6 +19,8 @@ const Header = () => {
     const isMobile = useMediaQuery('(max-width:1000px)');
     const location = useLocation();
     const [contactColor, setContactColor] = useState('color');
+    const [user, setUser] = useState<any>(JSON.parse(localStorage.getItem('user-details') || 'null'))
+    console.log(user)
     
     useEffect(() => {
         if (location.pathname === '/enterprise' || 
@@ -35,6 +37,13 @@ const Header = () => {
             setLinkAdd('/#contactForm')
         }
     }, [location]);
+
+    const handelLogout = () => {
+        localStorage.removeItem('user-details')
+        localStorage.removeItem('learner-details')
+        setUser(null)
+        // window.location.reload();
+    }
 
     return (
         <div className="bg-transparent pt-1 z-80">
@@ -73,12 +82,16 @@ const Header = () => {
                                     Contact Us
                                 </Button>
                         </Link>
-                        <Link to={"/login"}                            
-                            >
-                                <Button className={`bg-${contactColor}-400 text-white rounded-md font-bold shadow-none drop-shadow-lg px-8 py-2 ml-5`} >
+                        {user !== null ?
+                                <Button onClick = {handelLogout} className={`bg-${contactColor}-400 text-white rounded-md font-bold shadow-none drop-shadow-lg px-8 py-2 ml-5`} >
+                                    Logout
+                                </Button>       
+                            :
+                            <Link to={"/login"}> 
+                            <Button className={`bg-${contactColor}-400 text-white rounded-md font-bold shadow-none drop-shadow-lg px-8 py-2 ml-5`} >
                                     Login
                                 </Button>
-                        </Link>
+                        </Link>   }  
                     </div>
                 </>)
                 }

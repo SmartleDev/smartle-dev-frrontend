@@ -11,12 +11,13 @@ import API from '../redux/api/api';
 
 function SelectLearner() {
 
-  const [user, setUser] = useState<any>(JSON.parse(localStorage.getItem('user-details') || '{}'))
+  const [user, setUser] = useState<any>(JSON.parse(localStorage.getItem('user-details') || 'null'))
   const [userId, setUserId] = useState<any>(user?.username)
   const [learnerList, setLearnerList] = useState<any>([])
   const [learner, setLearner] = useState<any>('')
-  console.log(learner)
+  console.log(user)
   const navigate = useNavigate()
+
   useEffect(() =>{
     API.post('selectlearner', {userId : userId})
     .then((res) => {
@@ -30,9 +31,12 @@ function SelectLearner() {
   },[])
 
   console.log(learnerList.length)
+  if(user === null){
+    return(<h1>Hello</h1>)
+  }else{
   return (
     <>
-      <Header />
+      {/* <Header /> */}
 
       <div className="select-learner">
         <div>
@@ -94,6 +98,7 @@ function SelectLearner() {
       <Footer />
     </>
   );
+  }
 }
 
 export default SelectLearner;
