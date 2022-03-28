@@ -9,7 +9,7 @@ import Sidebar from "./Sidebar";
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Ripples from 'react-ripples';
 import routes from '../../util/routes';
-import { Logo, LogoAlt } from "../../util/resources";
+import { NewLogo } from "../../util/resources";
 
 import API from '../../redux/api/api';
 import jwt_decode from "jwt-decode";
@@ -64,18 +64,18 @@ const Header = () => {
     }
 
     return (
-        <div className="bg-transparent pt-1 z-80">
-            <Toolbar className="flex z-30 items-center w-11/12 mx-auto">
+        <div className="bg-transparent pt-1 z-80" style={{marginTop: "10px"}}>
+            <Toolbar className="flex z-30 items-center w-11/12 mx-auto" >
                 <div className={`${isMobile ? 'flex-grow' : 'mr-5'}`}>
                     <Link to="/" className={`block dark:hidden ${isMobile ? 'text-xl pt-3 pl-1' : ' text-2xl px-8 py-1 shadow-none rounded-sm'}`}>
-                            <img className='w-32' src={Logo.default} alt="" />
+                            <img className='w-40' src={NewLogo} alt="" />
                     </Link>
                     <Link to="/" className={`hidden dark:block  ${isMobile ? 'text-xl pt-3 pl-1' : 'text-2xl px-8 py-1 shadow-none rounded-sm'}`}>
                          {
                             location.pathname !== '/courses' ? (
-                                <img className='w-32' src={LogoAlt.default} alt="" />
+                                <img className='w-32' src={NewLogo} alt="" />
                             ) : (
-                                <img className='w-32' src={Logo.default} alt="" />
+                                <img className='w-32' src={NewLogo} alt="" />
                             )
                         }
                     </Link>

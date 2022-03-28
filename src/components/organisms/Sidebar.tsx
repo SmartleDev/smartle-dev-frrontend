@@ -1,7 +1,7 @@
 
-import React from 'react';
+import React, {useState} from 'react';
 import Drawer from '@mui/material/Drawer';
-import { IconButton } from '@mui/material';
+import { IconButton, Box, Button } from '@mui/material';
 import { HashLink as Link } from 'react-router-hash-link';
 import MenuIcon from '@mui/icons-material/Menu';
 import routes from '../../util/routes';
@@ -12,6 +12,16 @@ interface Props{
 }
 
 const Sidebar = ({ anchor, toggleSidebar}: Props) => {
+
+    const [user, setUser] = useState<any>(JSON.parse(localStorage.getItem('user-details') || 'null'))
+    console.log(user + "testing rn");
+    const handleLogout = () =>{
+        
+        localStorage.removeItem("user-details");
+        window.location.reload();
+        toggleSidebar();
+    }
+
     return (<>
         <Drawer
             transitionDuration={450}
@@ -31,9 +41,23 @@ const Sidebar = ({ anchor, toggleSidebar}: Props) => {
                     )
                  })}    
                 <div className='mb-6 mt-8'>
-                    <Link to='/#contactForm' onClick={()=>toggleSidebar()} className="bg-color-400 text-white hover:text-slate-900 py-2 px-10 rounded-md font-bold mx-8">
-                        Contact
-                    </Link>
+                    <Box sx={{marginBottom: "40px"}}>
+                    {user !== null ? <Button onClick={()=>toggleSidebar()} className="bg-color-400 text-white hover:text-slate-900 py-2 px-12 rounded-md font-bold mx-8">
+                                    Logout
+   
+                        </Button> :                            
+                          <Link to={"/login"}  onClick={()=>toggleSidebar()} className="bg-color-400 text-white hover:text-slate-900 py-2 px-12 rounded-md font-bold mx-8">
+                          Login
+
+                        </Link>
+                        }
+                        
+                    </Box>
+                    <Box>
+                        <Link to='/#contactForm' onClick={()=>toggleSidebar()} className="bg-color-400 text-white hover:text-slate-900 py-2 px-10 rounded-md font-bold mx-8">
+                            Contact
+                        </Link>
+                    </Box>
                 </div>
             </div>
         </Drawer>

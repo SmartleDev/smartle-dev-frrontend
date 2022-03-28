@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack';
 import React from 'react';
 import { HashLink as Link } from 'react-router-hash-link';
 import Socials from '../molecules/Socials';
-import { LogoAlt } from "../../util/resources";
+import { WhiteLogo } from "../../util/resources";
 
 const Footer = ()=> {
   return (
@@ -11,7 +11,7 @@ const Footer = ()=> {
       <div className="w-10/12 mx-auto pt-8 pb-4">
         <div className="mb-10">          
           <Link to='/'>
-            <img className="w-32" src={LogoAlt.default} alt="" />
+            <img className="w-40" src={WhiteLogo} alt="" />
           </Link>
         </div>
         <div className="flex flex-wrap gap-5">

@@ -16,3 +16,4 @@ export const IconAlt = require('./icon_alt.svg');
 export const Logo = require('./logo.svg');
 export const LogoAlt = require('./logo_alt.svg');
 export const NewLogo = require('./NewLogo.png');
+export const WhiteLogo = require('./whitelogo.png');
