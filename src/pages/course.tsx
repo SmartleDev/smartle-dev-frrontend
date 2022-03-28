@@ -1,6 +1,6 @@
 import CircularProgress from '@mui/material/CircularProgress';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import GradBlobBlueTR from '../components/atom/GradBlobBlueTR';
 import GradBlobResp from '../components/atom/GradBlobResp';
 import GradBlobRespBlue from '../components/atom/GradBlobRespBlue';
@@ -40,6 +40,7 @@ const Course = () => {
   const [courseView, setCourseView] = useState<courseViewer[]>([]);
    console.log(courseView)
   const [moduleView, setModuleView] = useState<moduleViewer[]>([]);
+  const [user, setUser] = useState<any>(JSON.parse(localStorage.getItem('user-details') || 'null'))
   //console.log(moduleView)
 
   //redux course_id saved use this as state
@@ -95,6 +96,24 @@ const Course = () => {
   const handleOpenInterest = () => setOpenInterest(true);
   const handleCloseInterest = () => setOpenInterest(false);
 
+  const navigate = useNavigate()
+
+  const handelBookCourse = () => {
+    if(user === null){
+      navigate('/login')
+    }else{
+      navigate('/bookcourse')
+    }
+  }
+
+  const handelBookTrial = () => {
+    if(user === null){
+      navigate('/login')
+    }else{
+      navigate('/bookcourse')
+    }
+  }
+
   return (
     <>
      
@@ -127,13 +146,13 @@ const Course = () => {
                       Register your interest
                     </Typography>
                     </Button>}
-                    {courseView[0]?.course_status === 'ACTIVE' && <><Button variant='contained' 
+                    {courseView[0]?.course_status === 'ACTIVE' && <><Button onClick = {handelBookCourse} variant='contained' 
                     style={{marginTop:"30px", marginRight:"30px",paddingLeft: "25px", paddingRight:"25px"}}>
                     <Typography fontWeight={"500"} fontSize="18px">
                       Book Course
                     </Typography>
                     </Button>
-                    <Button variant='contained' style={{marginTop:"30px", paddingLeft: "40px", paddingRight:"40px"}}>
+                    <Button  onClick = {handelBookTrial} variant='contained' style={{marginTop:"30px", paddingLeft: "40px", paddingRight:"40px"}}>
                     <Typography fontWeight={"500"} fontSize="18px">
                       Book Trial
                     </Typography>

@@ -74,7 +74,7 @@ function SelectLearner() {
         </div>
         <hr />
 
-        {learnerList.length > 4 &&<div className="learner-choose" style={{ marginTop: "30px" }}>
+        {learnerList.length < 4 &&<div className="learner-choose" style={{ marginTop: "30px" }}>
           <Link to="/registerchild">
             <AddIcon
               className="learner-icon"

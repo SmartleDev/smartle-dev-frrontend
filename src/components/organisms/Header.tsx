@@ -3,13 +3,16 @@ import {
     Toolbar,    
     Button
 } from "@mui/material";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { HashLink as Link } from 'react-router-hash-link';
 import Sidebar from "./Sidebar";
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Ripples from 'react-ripples';
 import routes from '../../util/routes';
 import { Logo, LogoAlt } from "../../util/resources";
+
+import API from '../../redux/api/api';
+import jwt_decode from "jwt-decode";
 
 const Header = () => {
     const [anchor, setAnchor] = useState<boolean>(false);
@@ -21,6 +24,11 @@ const Header = () => {
     const [contactColor, setContactColor] = useState('color');
     const [user, setUser] = useState<any>(JSON.parse(localStorage.getItem('user-details') || 'null'))
     console.log(user)
+    let details : any = {
+        email: ''
+    }
+
+    const navigate = useNavigate()
     
     useEffect(() => {
         if (location.pathname === '/enterprise' || 
@@ -39,9 +47,19 @@ const Header = () => {
     }, [location]);
 
     const handelLogout = () => {
+        details = jwt_decode(user.token)
+        console.log(details)
+        API.post('logout', {email : details?.email})
+        .then(res => {
+            console.log(res.data)
+        })
+        .catch(err => {
+            console.log(err)
+        })
         localStorage.removeItem('user-details')
         localStorage.removeItem('learner-details')
         setUser(null)
+        navigate('/')
         // window.location.reload();
     }
 

@@ -25,6 +25,7 @@ const Signup = () => {
       name: string;
       email: string;
       password: string;
+      confirmPassword: string;
     } 
   const [password, setPassword] = useState("");
 
@@ -35,7 +36,8 @@ const Signup = () => {
     {
       name: '',
       email: '',
-      password: ''
+      password: '',
+      confirmPassword : ''
     }
   );
   console.log(signupCreds)
@@ -53,7 +55,9 @@ const Signup = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
     event.preventDefault();
-  
+    if(signupCreds.password !== signupCreds.confirmPassword){
+      setErrorMsg('Password and Confirm Password Dont match')
+    }else{
     await API.post('signup', signupCreds)
     .then((res)=>{
       if(typeof res.data === 'object'){
@@ -67,8 +71,8 @@ const Signup = () => {
     }).catch((err) => {
       console.log(err)
     })
-
   }
+}
 
   // useEffect(() => {
 
@@ -143,9 +147,10 @@ const Signup = () => {
           <input 
           placeholder="Confirm Password"
             type={"password"}
+            name = 'confirmPassword'
             className = 'form-input'
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)}
+            value={signupCreds.confirmPassword} 
+            onChange={handelChange}
             style={{padding: "6px", width: "100%", borderRadius: "3px"}}></input>
          </Box>
          <Box style={{width: "80%", margin: "auto", textAlign:"center", marginTop: "20px"}}>

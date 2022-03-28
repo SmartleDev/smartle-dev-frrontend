@@ -35,6 +35,7 @@ const Legal = lazy(() => import('./pages/legal'));
 const PrivacyPolicy = lazy(() => import('./pages/privacyPolicy'));
 const Error = lazy(() => import('./pages/error'));
 const CourseContent = lazy(() => import('./pages/courseContent'));
+const BookCourse = lazy(() => import('./bookCourse/BookCourse'));
 
 const theme = createTheme();
 
@@ -83,6 +84,7 @@ function App() {
                 <Route path="/registerchild" element={<RegisterChild/>} />
                 <Route path="/learner" element={<SelectLearner/>} />
                 <Route path="/otp" element={<VerifyingUser/>} />
+                <Route path="/bookcourse" element={<BookCourse/>} />
                 <Route path="*" element={<CompleteError />} />
                
           </Routes>
