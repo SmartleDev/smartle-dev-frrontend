@@ -33,7 +33,7 @@ const routes: Array<RouteType> = [
 		element: <Courses />,
 		key: 'courses',
 		path: '/courses',
-		title: 'Explore courses',
+		title: ' courses',
 		show:true
 	},
 	{

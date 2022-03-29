@@ -77,6 +77,7 @@ const Login = () => {
         navigate('/learner')
       }else if (res.data === 'User is not confirmed.'){
         localStorage.setItem('username', loginCreds.email)
+        localStorage.setItem('username-p', loginCreds.password)
         navigate('/otp')
       }else{
         if(res.data === 'Missing required parameter USERNAME'){

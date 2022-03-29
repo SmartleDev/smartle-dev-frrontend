@@ -147,7 +147,7 @@ const Course = () => {
                     </Typography>
                     </Button>}
                     {courseView[0]?.course_status === 'ACTIVE' && <><Button onClick = {handelBookCourse} variant='contained' 
-                    style={{marginTop:"30px", marginRight:"30px",paddingLeft: "25px", paddingRight:"25px"}}>
+                    style={{marginTop:"30px", marginRight:"30px",paddingLeft: "25px", paddingRight:"25px"}} >
                     <Typography fontWeight={"500"} fontSize="18px">
                       Book Course
                     </Typography>
@@ -197,10 +197,10 @@ const Course = () => {
                   <div style={{ width: '0.5px' }} className="h-2/3 bg-slate-400 hidden md:block"></div>
 
                   <div className="w-40 text-center mt-2">
-                    <p className="text-gray-700">Live-class ratio</p>
+                    <p className="text-gray-700 ">Live-class ratio</p>
                       <div className={`font-black`}>
                           <span className='text-color-400 text-3xl'></span>
-                          <span className='text-color-400 text-5xl'>1:6</span></div>
+                          <span className='text-color-400 text-5xl pb-2'>1:6</span></div>
                       <p className="text-gray-700" style={{opacity: 0}}>""</p>
                   </div>
                   <div style={{ height: '0.5px' }} className="w-2/3 bg-slate-300 sm:hidden block"></div>
