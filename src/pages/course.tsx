@@ -141,8 +141,8 @@ const Course = () => {
                     </>)
                 }
                  <ThemeProvider theme={redTheme}>
-                  {courseView[0]?.course_status === 'WAITLISTED' && <Button variant='contained' style={{marginTop:"30px"}}>
-                    <Typography fontWeight={"500"} fontSize="18px">
+                  {courseView[0]?.course_status === 'WAITLISTED' && <Button variant='contained' style={{marginTop:"50px"}}>
+                    <Typography fontWeight={"600"} fontSize="14px" px={"30px"} py={"3px"}>
                       Register your interest
                     </Typography>
                     </Button>}
@@ -181,7 +181,7 @@ const Course = () => {
                     <div className={`font-black ${courseView[0]?.course_type.includes('Self-Paced') ? 'text-2xl' : 'text-5xl'} text-center text-color-400`}>
                           <span className='text-color-400 text-3xl'></span>
                           <span className='text-color-400 text-5xl'>{courseView[0]?.course_numberofclasses}</span></div>
-                      <p className="text-gray-700"></p>
+                      <p className="text-gray-700" style={{opacity: 0}}>""</p>
                   </div>
                   <div style={{ height: '0.5px' }} className="w-2/3 bg-slate-300 sm:hidden block"></div>
                   <div style={{ width: '0.5px' }} className="h-2/3 bg-slate-400 hidden md:block"></div>
@@ -201,7 +201,7 @@ const Course = () => {
                       <div className={`font-black`}>
                           <span className='text-color-400 text-3xl'></span>
                           <span className='text-color-400 text-5xl'>1:6</span></div>
-                      <p className="text-gray-700"></p>
+                      <p className="text-gray-700" style={{opacity: 0}}>""</p>
                   </div>
                   <div style={{ height: '0.5px' }} className="w-2/3 bg-slate-300 sm:hidden block"></div>
                   <div style={{ width: '0.5px' }} className="h-2/3 bg-slate-400 hidden md:block"></div>

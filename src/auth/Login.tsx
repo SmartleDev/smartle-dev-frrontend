@@ -1,4 +1,4 @@
-import { Typography, Box, Button, Grid } from '@mui/material';
+import { Typography, Box, Button, Grid, Snackbar } from '@mui/material';
 import React, { useState } from 'react';
 import { HashLink as Link } from 'react-router-hash-link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -28,6 +28,21 @@ const Login = () => {
   const [user, setUser] = useState<any>(JSON.parse(localStorage.getItem('user-details') || '{}'))
 
   const [loginToken, setLoginToken] = useState([]);
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
 
   const [loginCreds, setLoginCreds] : any = useState(
     {
@@ -64,7 +79,16 @@ const Login = () => {
         localStorage.setItem('username', loginCreds.email)
         navigate('/otp')
       }else{
-        setErrorMsg(res.data)
+        if(res.data === 'Missing required parameter USERNAME'){
+          setErrorMsg('Email cannot be empty');
+        }else if(res.data === 'Incorrect username or password.'){
+          setErrorMsg('Incorrect username or password. Please try again.');
+        }
+        else{
+          setErrorMsg(res.data)
+        }
+        
+        setOpen(true);
       }
     }).catch((err) => {
       console.log(err)
@@ -102,7 +126,7 @@ if(user === undefined || null){
             <Box style={{marginTop: "20px"}}>
               <label style={{marginTop: "100px"}}>Email</label>
             </Box>
-            <input type={"email"} 
+            <input type={"text"} 
              placeholder="Enter your email"
              className = 'form-input'
              name = 'email'
@@ -156,9 +180,11 @@ if(user === undefined || null){
               </ThemeProvider>
         </Link>
         <br/>
-         {errorMsg !== '' && <Alert style = {{marginTop: "20px"}} variant="outlined" severity="error">
-        {errorMsg}
-      </Alert>}
+         {errorMsg !== '' && <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert variant='filled' onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+          {errorMsg}
+        </Alert>
+      </Snackbar>}
         </Box>
         </form>
       </Box>

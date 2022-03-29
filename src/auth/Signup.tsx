@@ -1,4 +1,4 @@
-import { Typography, Box, Button, Grid } from '@mui/material';
+import { Typography, Box, Button, Snackbar } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { HashLink as Link } from 'react-router-hash-link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -7,9 +7,25 @@ import AuthHeader from '../components/organisms/AuthHeader';
 import API from '../redux/api/api';
 import Alert from '@mui/material/Alert';
 import { useNavigate } from 'react-router-dom';
+import PasswordChecklist from "react-password-checklist";
 import './auth.css'
 
 const Signup = () => {
+
+  const [open, setOpen] = React.useState(false);
+  console.log(open);
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
 
   const redTheme = createTheme({ palette: { primary:{
     main:  purple[900]}
@@ -30,7 +46,7 @@ const Signup = () => {
   const [password, setPassword] = useState("");
 
   const [errorMsg, setErrorMsg] = useState("");
-
+  console.log(errorMsg);
 
   const [signupCreds, setSignupCreds] = useState(
     {
@@ -55,9 +71,7 @@ const Signup = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
     event.preventDefault();
-    if(signupCreds.password !== signupCreds.confirmPassword){
-      setErrorMsg('Password and Confirm Password Dont match')
-    }else{
+
     await API.post('signup', signupCreds)
     .then((res)=>{
       if(typeof res.data === 'object'){
@@ -66,31 +80,29 @@ const Signup = () => {
         localStorage.setItem('username-p', signupCreds.password)
         navigate('/otp')
       }else{
-        setErrorMsg(res?.data)
+        if(signupCreds.name === ''){
+          setErrorMsg('Name cannot be empty.')
+        }
+        else if(signupCreds.password !== signupCreds.confirmPassword){
+          setErrorMsg('Password and Confirm Password did not match.')
+        }else if(res.data === 'An account with the given email already exists.'){
+          setErrorMsg('An account with the given email already exists. Please Use a different email.');
+        }
+        else{
+          setErrorMsg(res.data)
+        }
+        setOpen(true);
       }
     }).catch((err) => {
       console.log(err)
     })
-  }
 }
-
-  // useEffect(() => {
-
-  //   API.post<Signup>('/signup', name,email,password)
-  //   .then((res)=>{
-  //     console.log(res.data);
-  //   }).catch((err) => {
-  //     console.log(err)
-  //   })
-  // },[]);
-
 
   return (
     <>
     <Box style={{textAlign:"center"}}>
     <AuthHeader />
     <h1 className='font-black text-2xl mt-2'>Get started with smartle</h1>
-		<p className = 'text-stone-600'>have an account Login now !!</p>
     <p className='text-xl md:text-2xl mt-3 md:mt-5 text-stone-600'>
             Create Your Account
           </p>
@@ -119,7 +131,7 @@ const Signup = () => {
             <Box style={{marginTop: "20px"}}>
               <label style={{marginTop: "100px"}}>Email</label>
             </Box>
-            <input type={"email"} 
+            <input type={"text"} 
              className = 'form-input'
              name='email'
              placeholder="Enter your Email"
@@ -151,30 +163,31 @@ const Signup = () => {
             className = 'form-input'
             value={signupCreds.confirmPassword} 
             onChange={handelChange}
-            style={{padding: "6px", width: "100%", borderRadius: "3px"}}></input>
+            style={{padding: "6px", width: "100%", borderRadius: "3px", marginBottom: '10px'}}></input>
+                     <PasswordChecklist
+				rules={["minLength","specialChar","number","capital","match"]}
+				minLength={8}
+				value={signupCreds.password}
+				valueAgain={signupCreds.confirmPassword}
+				onChange={(isValid) => {}}
+			/>
          </Box>
+
          <Box style={{width: "80%", margin: "auto", textAlign:"center", marginTop: "20px"}}>
-          {/* <Link to={"/"}                            
-              > */}
                 <ThemeProvider theme={redTheme}>
               <Button type='submit' className = 'auth-button' style={{width:"100%", backgroundColor : '#917EBD'}} variant="contained">
                   Signup
               </Button>
               </ThemeProvider>
-        {/* </Link> */}
         </Box>
           <Box style={{width: "80%", margin: "auto", textAlign:"center", paddingBottom: "20px"}}>
-            <Link to={"/login"} >
-              <ThemeProvider theme={redTheme}>
-                <Button className = 'auth-button'  variant="outlined" style={{width:"100%", marginTop: "20px", color : '#917EBD', borderColor : '#917EBD'}} color="primary">
-                    Login
-                </Button>
-              </ThemeProvider>
-            </Link>
-            {errorMsg !== '' && <Alert style = {{marginTop: "20px"}} variant="outlined" severity="error">
-        {errorMsg}
-      </Alert>}
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Alert variant='filled' onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+            {errorMsg}
+          </Alert>
+        </Snackbar>
           </Box>
+
         </form>
       </Box>
     </>
