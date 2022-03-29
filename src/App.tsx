@@ -27,6 +27,7 @@ import SelectLearner from './auth/SelectLearner';
 
 // Lazy loaded components to improve base performance.
 const Home = lazy(() => import('./pages/home'));
+const LoggedUserHome = lazy(() => import('./LoggedInUser/HomePage'));
 const Courses = lazy(() => import('./pages/courses'));
 const Course = lazy(() => import('./pages/course'));
 // const About = lazy(() => import('../../pages/about'));
@@ -44,6 +45,9 @@ function App() {
   const location = useLocation();
   const dispatch = useDispatch();
   const { fetchUsers, fetchCourseID} = bindActionCreators(actionCreators, dispatch)
+
+  const [user, setUser] = useState<any>(JSON.parse(localStorage.getItem('user-details') || 'null'))
+  const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getItem('learner-details') || 'null'))
   
   useEffect(() => {
     fetchUsers()
@@ -72,7 +76,11 @@ function App() {
           >
             <div className="">
             <Routes>
-                <Route path="/" element={<CompleteHome />} />
+                { user !== null ?
+                  <Route path="/" element={<LoggedUserHome />} />
+                  :
+                  <Route path="/" element={<CompleteHome />} />
+                  }
                 <Route path="/courses" element={<CompleteCourses />} />
                 <Route path="/course/:id" element={<CompleteCourse />} />
                 <Route path="/enterprise" element={<CompleteEnterprise />} />

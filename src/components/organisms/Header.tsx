@@ -3,7 +3,7 @@ import {
     Toolbar,    
     Button
 } from "@mui/material";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Navigate } from "react-router-dom";
 import { HashLink as Link } from 'react-router-hash-link';
 import Sidebar from "./Sidebar";
 import useMediaQuery from '@mui/material/useMediaQuery'
@@ -23,12 +23,14 @@ const Header = () => {
     const location = useLocation();
     const [contactColor, setContactColor] = useState('color');
     const [user, setUser] = useState<any>(JSON.parse(localStorage.getItem('user-details') || 'null'))
+    const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getItem('learner-details') || 'null'))
     console.log(user)
     let details : any = {
         email: ''
     }
-
     const navigate = useNavigate()
+
+
     
     useEffect(() => {
         if (location.pathname === '/enterprise' || 
@@ -46,6 +48,22 @@ const Header = () => {
         }
     }, [location]);
 
+    const [learner, setLearner] = useState<any>('')
+    const [userId, setUserId] = useState<any>(user?.username)
+    const [learnerList, setLearnerList] = useState<any>([])
+  
+    useEffect(() =>{
+      API.post('selectlearner', {userId : userId})
+      .then((res) => {
+        setLearnerList(res.data.result)
+        console.log(res.data.result)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+      
+    },[])
+
     const handelLogout = () => {
         details = jwt_decode(user.token)
         console.log(details)
@@ -62,7 +80,13 @@ const Header = () => {
         navigate('/')
         // window.location.reload();
     }
-
+    // if(leanerUser === null){
+    //     if(learnerList.length === 0){
+    //         return(<Navigate to="/registerchild"  />)
+    //     }else{
+    //     return(<Navigate to="/learner"  />)
+    //     }
+    // }
     return (
         <div className="bg-transparent pt-1 z-80" style={{marginTop: "10px"}}>
             <Toolbar className="flex z-30 items-center w-11/12 mx-auto" >

@@ -30,7 +30,7 @@ const CoursesGrid = ({ courses, color = 'accent-200', elementWidth='sm:w-1/2 md:
     );
     // console.log(res)
     const json = await res.json();
-    setSubjects(json);
+    setSubjects(json.result);
 }
 
     const isMobile = useMediaQuery('(max-width:1000px)');
