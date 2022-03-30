@@ -1,0 +1,9 @@
+.my-courses{
+	display:flex;
+	justify-content:start;
+	flex : wrap;
+	width : 50%;
+}
+.home-page{
+	margin : 0 5% 0 5%;
+}

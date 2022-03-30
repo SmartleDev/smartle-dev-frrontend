@@ -21,6 +21,11 @@
 	/* border: 1px dashed #917EBD;
 	border-width: thin; */
 }
+.home-icon{
+	display : flex;
+	justify-content: end;
+	margin-right : 10%;
+}
 .learner-icon:hover{
 	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
