@@ -62,7 +62,7 @@ function App() {
       document.documentElement.style.setProperty('--scrollBarColor', '#5290F2');
     else
       document.documentElement.style.setProperty('--scrollBarColor', '#917ebd');
-  }, [location]);
+  }, [location, user, leanerUser, Route]);
   const state = useSelector((state: RootState) => state.fetchUsers)
 
   return (

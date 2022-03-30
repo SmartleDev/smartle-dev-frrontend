@@ -53,6 +53,7 @@ function SelectLearner() {
               onClick = {() => {
               localStorage.setItem('learner-details', JSON.stringify(dataItem))
                navigate('/')
+               window.location.reload();
                 }
               }
               className="learner-icon"

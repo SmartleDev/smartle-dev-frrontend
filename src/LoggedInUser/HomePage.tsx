@@ -14,8 +14,30 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Divider from '@mui/material/Divider';
 import Avatar from '@mui/material/Avatar';
 import {Link} from 'react-router-dom'
+import jwt_decode from "jwt-decode";
 
 function HomePage() {
+	const [user, setUser] = useState<any>(JSON.parse(localStorage.getItem('user-details') || 'null'))
+
+	let details : any = {
+        email: ''
+    }
+
+	const handelLogout = () => {
+        details = jwt_decode(user.token)
+        console.log(details)
+        API.post('logout', {email : details?.email})
+        .then(res => {
+            console.log(res.data)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+        localStorage.removeItem('user-details')
+        localStorage.removeItem('learner-details')
+        setUser(null)
+         window.location.reload();
+    }
 
 	const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 		height: 8,
@@ -30,6 +52,7 @@ function HomePage() {
 	  }));
 	
 	const [myCourses, setMyCourse] = useState([]);
+	const [recommendation, setRecommendation] = useState([]);
 	console.log(myCourses)
 	const [isEnterprise, setIsEnterprise] = useState<boolean>(false);
 
@@ -43,9 +66,15 @@ function HomePage() {
 	};
 
 	useEffect(() =>{
-		API.get('getcourseview/2')
+		API.get('coursesonhome')
 		.then(res => {
-			setMyCourse(res.data);
+			setMyCourse(res.data.result.slice(0,4));
+		}).catch(err=> {
+			console.log(err)
+		})
+		API.get('coursesonhome')
+		.then(res => {
+			setRecommendation(res.data.result.slice(0,4));
 		}).catch(err=> {
 			console.log(err)
 		})
@@ -133,7 +162,7 @@ function HomePage() {
           </ListItemIcon>
           Settings
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={handelLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
@@ -142,14 +171,14 @@ function HomePage() {
       </Menu>
 </div>
 	<h2 className="text-4xl pb-10 font-black">Continue Your Learning Journey</h2>
-<div className="my-courses">
+<div className="my-courses" style = {{display: 'flex', flexWrap : 'wrap'}}>
 		{ myCourses?.map((dataItem : any, index:number) =>
 		<>
 		<div>
-			<div className={`${isEnterprise ? 'bg-contrastAccent-200' : 'bg-accent-200'} rounded-md shadow-xl p-3 w-1/2 relative`}>
+			<div style = {{width: '380px', height: '260px', marginRight : '20px'}} className={`${isEnterprise ? 'bg-contrastAccent-200' : 'bg-accent-200'} rounded-md shadow-xl p-3 relative`}>
 			<img src={dataItem?.course_image} className="rounded-md w-full" alt="" />
 		</div>
-		<div className = 'p-2 w-1/2 relative'>
+		<div style = {{width: '380px'}} className = 'p-2 relative'>
 			<h1 className="text-2xl m-2 font-black">{dataItem.course_name}</h1>
 			<BorderLinearProgress variant="determinate" value={50} />
 			<p style = {{textAlign: "end", fontSize : '12px'}}>In Progress</p>
@@ -157,6 +186,26 @@ function HomePage() {
 			</div>
 		</>
 		 )}
+		 </div>
+
+		 <div className = 'recommendation'>
+		 <hr style = {{width : '100%', margin : '30px 0 30px 0'}}/>
+
+		 <h2 className="text-4xl pb-10 font-black">Top Courses We Recommend</h2>
+
+			<div style = {{display: 'flex', flexWrap : 'wrap', width: '50%'}}>
+		 { recommendation?.map((dataItem : any, index:number) =>
+		<div>
+			<div style = {{width: '300px', height: '205px', marginRight : '20px'}} className={`${isEnterprise ? 'bg-contrastAccent-200' : 'bg-accent-200'} rounded-md shadow-xl p-3 relative`}>
+			<img src={dataItem?.course_image} className="rounded-md w-full" alt="" />
+		</div>
+		<div style = {{width: '300px', height: '205px'}} className = 'p-2 relative'>
+			<h1 className="text-2x2 m-2 font-black">{dataItem.course_name}</h1>
+			<p>{dataItem?.course_description}</p>
+			</div>
+		</div>
+		 )}
+		 </div>
 		 </div>
 	</div>
   )
