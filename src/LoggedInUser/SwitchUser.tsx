@@ -5,7 +5,7 @@ import Header from "../components/organisms/Header";
 import Footer from "../components/organisms/Footer";
 import { HashLink as Link} from "react-router-hash-link";
 import { useNavigate } from 'react-router-dom';
-import "./auth.css";
+import "../auth/auth.css";
 import jwt_decode from "jwt-decode";
 import API from '../redux/api/api';
 
