@@ -45,7 +45,7 @@ const Course = () => {
 
   //redux course_id saved use this as state
   const course_id = useSelector((state: RootState) => state.courseIDFetch)
-  // console.log(course_id)
+   console.log(course_id)
 
   interface courseViewer {
     course_id: number;
@@ -71,14 +71,14 @@ const Course = () => {
 
   useEffect(() => {
 
-    API.get<courseViewer[]>('getcourseview/'+id)
+    API.get<courseViewer[]>('getcourseview/'+course_id)
     .then((res)=>{
       setCourseView(res.data)
     }).catch((err) => {
       console.log(err)
     })
 
-    API.get<moduleViewer[]>('/getmoduleforcourse/'+id)
+    API.get<moduleViewer[]>('/getmoduleforcourse/'+course_id)
     .then((res)=>{
       setModuleView(res.data)
     }).catch((err) => {

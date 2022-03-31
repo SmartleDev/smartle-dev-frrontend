@@ -100,7 +100,7 @@ function HomePage() {
                   navigate('/loggedcourseview')
                   } 
                 }
-                  style={{ width: "380px", height: "260px", marginRight: "20px" }}
+                  style={{ width: "380px",cursor : "pointer", height: "260px", marginRight: "20px" }}
                   className={`${
                     isEnterprise ? "bg-contrastAccent-200" : "bg-accent-200"
                   } rounded-md shadow-xl p-3 relative`}
@@ -137,7 +137,12 @@ function HomePage() {
           {recommendation?.map((dataItem: any, index: number) => (
             <div>
               <div
-                style={{ width: "300px", height: "205px", marginRight: "20px"}}
+              onClick={()=>{
+                fetchCourseID(dataItem.course_id)
+                navigate('/course/'+ course_id)
+                } 
+              }
+                style={{ width: "300px",cursor : "pointer",height: "205px", marginRight: "20px"}}
                 className={`${
                   isEnterprise ? "bg-contrastAccent-200" : "bg-accent-200"
                 } rounded-md shadow-xl p-3 relative`}
@@ -166,7 +171,12 @@ function HomePage() {
           {singleCourse?.map((dataItem: any, index: number) => (
             <div>
               <div
-                style={{ width: "600px", height: "405px", marginRight: "20px" }}
+                 onClick={()=>{
+                  fetchCourseID(dataItem.course_id)
+                  navigate('/course/'+ course_id)
+                  } 
+                }
+                style={{ width: "600px",cursor : "pointer", height: "405px", marginRight: "20px" }}
                 className={`${
                   isEnterprise ? "bg-contrastAccent-200" : "bg-accent-200"
                 } rounded-md shadow-xl p-3 relative`}
@@ -208,7 +218,12 @@ function HomePage() {
         {topLearners?.map((dataItem: any, index: number) => (
           <div>
             <div
-              style={{ width: "300px", height: "205px", marginRight: "20px" }}
+               onClick={()=>{
+                fetchCourseID(dataItem.course_id)
+                navigate('/course/'+ course_id)
+                } 
+              }
+              style={{ width: "300px",cursor : "pointer", height: "205px", marginRight: "20px" }}
               className={`${
                 isEnterprise ? "bg-contrastAccent-200" : "bg-accent-200"
               } rounded-md shadow-xl p-3 relative`}
