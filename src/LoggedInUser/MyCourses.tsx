@@ -2,18 +2,18 @@ import React, {useEffect, useState} from 'react';
 import {Box, Button} from '@mui/material';
 import Drawer from '@mui/material/Drawer';
 import Toolbar from '@mui/material/Toolbar';
-import { WhiteLogo } from "../../util/resources";
+import { WhiteLogo } from "../util/resources";
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useLocation } from "react-router-dom";
 import { HashLink as Link } from 'react-router-hash-link';
-import './LoggedSideDrawer';
+// import './LoggedSideDrawer.css';
 import { styled } from '@mui/material/styles';
-import HomePage from '../../LoggedInUser/HomePage';
-import Footer from './Footer';
+import HomePage from '../LoggedInUser/HomePage';
+import Footer from '../components/organisms/Footer';
 
 
 
-const LoggedSideDrawer = (props:any) => {
+const MyCourses = (props:any) => {
     const drawerWidth = 240;
     const[homeActive,setHomeActive] = useState(false);
     const isMobile = useMediaQuery('(max-width:1000px)');
@@ -83,7 +83,7 @@ const LoggedSideDrawer = (props:any) => {
                       </Link>
                       <Link to="/courses">
                       <Button variant="contained" sx={{width:'212px', height:'50px', borderRadius: '12px', background:'#F9EDF5;', mt:'30px', color: '#917EBD', fontWeight: '600'}}>
-                        Exlpore Courses
+                        Explore Courses
                       </Button>
                       </Link>
                       <Link to="/mycourses">
@@ -103,7 +103,7 @@ const LoggedSideDrawer = (props:any) => {
           sx={{ flexGrow: 1, bgcolor: 'background.default', p: 0, mt:-6 }}
         >
           <Toolbar />
-          <HomePage />
+          My Courses
           <Footer />
         </Box>
   
@@ -112,4 +112,4 @@ const LoggedSideDrawer = (props:any) => {
   }
   
 
-export default LoggedSideDrawer;
+export default MyCourses;

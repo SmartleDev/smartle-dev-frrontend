@@ -39,6 +39,7 @@ const PrivacyPolicy = lazy(() => import('./pages/privacyPolicy'));
 const Error = lazy(() => import('./pages/error'));
 const CourseContent = lazy(() => import('./pages/courseContent'));
 const BookCourse = lazy(() => import('./bookCourse/BookCourse'));
+const MyCourses = lazy(() => import('./LoggedInUser/MyCourses'));
 
 const theme = createTheme();
 
@@ -97,6 +98,7 @@ function App() {
                 <Route path="/bookcourse" element={<BookCourse/>} />
                 {/* <Route path="/" element={<LoggedSideDrawer />} /> */}
                 <Route path="/loggedcourseview" element={<CourseView />} />
+                <Route path="/mycourses" element={<MyCourses />} />
                 <Route path="*" element={<CompleteError />} />
 
                

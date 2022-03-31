@@ -19,3 +19,14 @@
 	transform: rotate(-90deg);
 
 }
+.line-home{
+	position: absolute;
+	width: 800px;
+	height: 0px;
+	left: 600px;
+	top: 110%;
+
+	border: 0.83px dashed #917EBD;
+	transform: rotate(-90deg);
+
+}

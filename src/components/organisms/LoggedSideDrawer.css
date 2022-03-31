@@ -1,6 +1,9 @@
 .active{
     background: #917EBD;
 }
+.active :hover{
+    background: #917EBD;
+}
 
 .notActive{
     background: #F9EDF5;

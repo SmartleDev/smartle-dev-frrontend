@@ -146,17 +146,12 @@ const Course = () => {
                       Register your interest
                     </Typography>
                     </Button>}
-                    {courseView[0]?.course_status === 'ACTIVE' && <><Button onClick = {handelBookCourse} variant='contained' 
-                    style={{marginTop:"30px", marginRight:"30px",paddingLeft: "25px", paddingRight:"25px"}} >
-                    <Typography fontWeight={"500"} fontSize="18px">
-                      Book Course
-                    </Typography>
-                    </Button>
-                    <Button  onClick = {handelBookTrial} variant='contained' style={{marginTop:"30px", paddingLeft: "40px", paddingRight:"40px"}}>
-                    <Typography fontWeight={"500"} fontSize="18px">
-                      Book Trial
-                    </Typography>
-                    </Button>
+                    {courseView[0]?.course_status === 'ACTIVE' && <>   <Button onClick = {handelBookCourse} className='mt-12 mx-5 rounded-md md:rounded-md shadow-xl font-bold py-3 px-10 md:w-auto md:px-10 lg:px-10 h-9 text-white bg-color-400 '>
+              Book Course
+            </Button>
+            <Button onClick = {handelBookTrial} className='mt-12 mx-5 rounded-md md:rounded-md shadow-xl font-bold py-3 px-10 md:w-auto md:px-10 lg:px-10 h-9 text-white bg-color-400 '>
+              Book Trial
+            </Button>
                     </>}
                   </ThemeProvider>
                 <RegisterInterestModal isEnterprise={false} courseId={id} openInterest={openInterest} handleCloseInterest={handleCloseInterest} />

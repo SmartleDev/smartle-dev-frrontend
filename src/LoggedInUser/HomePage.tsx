@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
+import Button  from "@mui/material/Button";
+import Typography  from "@mui/material/Typography";
 import API from "../redux/api/api";
 import LinearProgress, {
   linearProgressClasses,
@@ -9,6 +11,7 @@ import Header from "./Header";
 import Footer from "../components/organisms/Footer";
 import LoggedSideDrawer from "../components/organisms/LoggedSideDrawer";
 import { HashLink as Link } from 'react-router-hash-link';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 function HomePage() {
   const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
@@ -24,16 +27,21 @@ function HomePage() {
     },
   }));
 
+  const redTheme = createTheme({ palette: { primary:{
+    main:  '#917EBD'}
+  } });
+
   const [myCourses, setMyCourse] = useState([]);
   const [recommendation, setRecommendation] = useState([]);
   const [topLearners, setTopLearners] = useState([]);
+  const [singleCourse, setSingleCourse] = useState([]);
   console.log(myCourses);
   const [isEnterprise, setIsEnterprise] = useState<boolean>(false);
 
   useEffect(() => {
     API.get("coursesonhome")
       .then((res) => {
-        setMyCourse(res.data.result.slice(0, 4));
+        setMyCourse(res.data.result.slice(0, 3));
       })
       .catch((err) => {
         console.log(err);
@@ -48,7 +56,14 @@ function HomePage() {
 
     API.get("courses")
       .then((res) => {
-        setTopLearners(res.data.result.slice(8, 13));
+        setTopLearners(res.data.result.slice(8, 12));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    API.get("getcourseview/18")
+      .then((res) => {
+        setSingleCourse(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -95,14 +110,16 @@ function HomePage() {
 
       <div className="recommendation">
         <hr style={{ width: "100%", margin: "30px 0 30px 0" }} />
-
         <h2 className="text-4xl pb-10 font-black">Top Courses We Recommend</h2>
 
-        <div style={{ display: "flex", flexWrap: "wrap", width: "50%" }}>
+                  <div style = {{display: "flex", flexWrap: "wrap" }}>
+
+
+        <div style={{ display: "flex", flexWrap: "wrap", flex : '50%'  }}>
           {recommendation?.map((dataItem: any, index: number) => (
             <div>
               <div
-                style={{ width: "300px", height: "205px", marginRight: "20px" }}
+                style={{ width: "300px", height: "205px", marginRight: "20px"}}
                 className={`${
                   isEnterprise ? "bg-contrastAccent-200" : "bg-accent-200"
                 } rounded-md shadow-xl p-3 relative`}
@@ -125,6 +142,45 @@ function HomePage() {
             </div>
           ))}
         </div>
+        <div className='line-home'></div>
+
+        <div style={{ display: "flex", flexWrap: "wrap", flex : '50%' }}>
+          {singleCourse?.map((dataItem: any, index: number) => (
+            <div>
+              <div
+                style={{ width: "600px", height: "405px", marginRight: "20px" }}
+                className={`${
+                  isEnterprise ? "bg-contrastAccent-200" : "bg-accent-200"
+                } rounded-md shadow-xl p-3 relative`}
+              >
+                <img
+                  src={dataItem?.course_image}
+                  className="rounded-md w-full"
+                  alt=""
+                />
+              </div>
+              <div
+                style={{ width: "600px", height: "405px" }}
+                className="p-2 relative"
+              >
+                <h1 className="text-4xl m-2 font-black">
+                  {dataItem.course_name}
+                </h1>
+                <p className="text-2xl">{dataItem?.course_description}</p>
+                <ThemeProvider theme={redTheme}>
+                <Button className='mt-12 mx-5 rounded-md md:rounded-md shadow-xl font-bold py-3 px-10 md:w-auto md:px-10 lg:px-10 h-9 text-white bg-color-400 '>
+              Book Course
+            </Button>
+            <Button className='mt-12 mx-5 rounded-md md:rounded-md shadow-xl font-bold py-3 px-10 md:w-auto md:px-10 lg:px-10 h-9 text-white bg-color-400 '>
+              Book Trial
+            </Button>
+                    </ThemeProvider>
+              </div>
+            </div>
+          ))}
+        </div>
+
+</div>
       </div>
       <hr style={{ width: "100%", margin: "30px 0 30px 0" }} />
       <h2 className="text-4xl pb-10 font-black">

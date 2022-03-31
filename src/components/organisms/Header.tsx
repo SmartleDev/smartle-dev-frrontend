@@ -78,7 +78,7 @@ const Header = () => {
         localStorage.removeItem('learner-details')
         setUser(null)
         navigate('/')
-        // window.location.reload();
+        window.location.reload();
     }
     // if(leanerUser === null){
     //     if(learnerList.length === 0){
