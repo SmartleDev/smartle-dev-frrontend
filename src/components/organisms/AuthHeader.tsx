@@ -9,7 +9,7 @@ import Sidebar from "./Sidebar";
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Ripples from 'react-ripples';
 import routes from '../../util/routes';
-import { Logo, LogoAlt, NewLogo } from "../../util/resources";
+import { NewLogo } from "../../util/resources";
 
 const Header = () => {
     const [anchor, setAnchor] = useState<boolean>(false);

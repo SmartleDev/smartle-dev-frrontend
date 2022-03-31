@@ -7,3 +7,15 @@
 .home-page{
 	margin : 1% 5% 0 5%;
 }
+
+.line{
+	position: absolute;
+	width: 395px;
+	height: 0px;
+	left: 849px;
+	top: 463px;
+
+	border: 0.83px dashed #917EBD;
+	transform: rotate(-90deg);
+
+}

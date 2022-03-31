@@ -7,6 +7,8 @@ import LinearProgress, {
 import "./loggedUsers.css";
 import Header from "./Header";
 import Footer from "../components/organisms/Footer";
+import LoggedSideDrawer from "../components/organisms/LoggedSideDrawer";
+import { HashLink as Link } from 'react-router-hash-link';
 
 function HomePage() {
   const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
@@ -63,18 +65,20 @@ function HomePage() {
         {myCourses?.map((dataItem: any, index: number) => (
           <>
             <div>
-              <div
-                style={{ width: "380px", height: "260px", marginRight: "20px" }}
-                className={`${
-                  isEnterprise ? "bg-contrastAccent-200" : "bg-accent-200"
-                } rounded-md shadow-xl p-3 relative`}
-              >
-                <img
-                  src={dataItem?.course_image}
-                  className="rounded-md w-full"
-                  alt=""
-                />
-              </div>
+              <Link to="/loggedcourseview">
+                <div
+                  style={{ width: "380px", height: "260px", marginRight: "20px" }}
+                  className={`${
+                    isEnterprise ? "bg-contrastAccent-200" : "bg-accent-200"
+                  } rounded-md shadow-xl p-3 relative`}
+                >
+                  <img
+                    src={dataItem?.course_image}
+                    className="rounded-md w-full"
+                    alt=""
+                  />
+                </div>
+              </Link>
               <div style={{ width: "380px" }} className="p-2 relative">
                 <h1 className="text-2xl m-2 font-black">
                   {dataItem.course_name}
@@ -151,7 +155,6 @@ function HomePage() {
           </div>
         ))}
       </div>
-      <Footer />
     </div>
   );
 }
