@@ -12,6 +12,12 @@ import Footer from "../components/organisms/Footer";
 import LoggedSideDrawer from "../components/organisms/LoggedSideDrawer";
 import { HashLink as Link } from 'react-router-hash-link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {useNavigate} from 'react-router-dom'
+
+import { actionCreators } from '../redux';
+import { RootState } from '../redux/reducers';
+import { useDispatch, useSelector } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 function HomePage() {
   const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
@@ -26,6 +32,13 @@ function HomePage() {
       backgroundColor: theme.palette.mode === "light" ? "#917EBD" : "#F9EDF5",
     },
   }));
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { fetchUsers, fetchCourseID} = bindActionCreators(actionCreators, dispatch)
+
+  const course_id = useSelector((state: RootState) => state.courseIDFetch)
+  console.log(course_id)
+
 
   const redTheme = createTheme({ palette: { primary:{
     main:  '#917EBD'}
@@ -79,9 +92,14 @@ function HomePage() {
       <div className="my-courses" style={{ display: "flex", flexWrap: "wrap" }}>
         {myCourses?.map((dataItem: any, index: number) => (
           <>
-            <div>
-              <Link to="/loggedcourseview">
+            <div >
+              {/* <Link to="/loggedcourseview"> */}
                 <div
+                onClick={()=>{
+                  fetchCourseID(dataItem.course_id)
+                  navigate('/loggedcourseview')
+                  } 
+                }
                   style={{ width: "380px", height: "260px", marginRight: "20px" }}
                   className={`${
                     isEnterprise ? "bg-contrastAccent-200" : "bg-accent-200"
@@ -93,7 +111,7 @@ function HomePage() {
                     alt=""
                   />
                 </div>
-              </Link>
+              {/* </Link> */}
               <div style={{ width: "380px" }} className="p-2 relative">
                 <h1 className="text-2xl m-2 font-black">
                   {dataItem.course_name}
