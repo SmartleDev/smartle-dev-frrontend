@@ -102,6 +102,7 @@ function App() {
                 <Route path="/mycourses" element={<MyCourses />} />
                 <Route path="/switchlearner" element={<SwitchUser />} />
                 <Route path="*" element={<CompleteError />} />
+                <Route path='/course-content' element={<CourseContent/>} />
 
                
           </Routes>

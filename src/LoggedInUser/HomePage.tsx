@@ -142,7 +142,7 @@ function HomePage() {
             </div>
           ))}
         </div>
-        <div className='line-home'></div>
+        {/* <div className='line-home'></div> */}
 
         <div style={{ display: "flex", flexWrap: "wrap", flex : '50%' }}>
           {singleCourse?.map((dataItem: any, index: number) => (
