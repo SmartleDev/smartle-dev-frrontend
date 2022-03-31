@@ -79,7 +79,7 @@ function App() {
             <div className="">
             <Routes>
                 { user !== null ?
-                  <Route path="/" element={<LoggedUserHome />} />
+                  <Route path="/" element={<LoggedSideDrawer />} />
                   :
                   <Route path="/" element={<CompleteHome />} />
                   }
@@ -95,7 +95,7 @@ function App() {
                 <Route path="/learner" element={<SelectLearner/>} />
                 <Route path="/otp" element={<VerifyingUser/>} />
                 <Route path="/bookcourse" element={<BookCourse/>} />
-                <Route path="/testbar" element={<LoggedSideDrawer />} />
+                {/* <Route path="/" element={<LoggedSideDrawer />} /> */}
                 <Route path="/loggedcourseview" element={<CourseView />} />
                 <Route path="*" element={<CompleteError />} />
 
