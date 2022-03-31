@@ -10,6 +10,7 @@ import './LoggedSideDrawer';
 import { styled } from '@mui/material/styles';
 import HomePage from '../../LoggedInUser/HomePage';
 import Footer from './Footer';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 
 
@@ -21,6 +22,10 @@ const LoggedSideDrawer = (props:any) => {
     const [contactColor, setContactColor] = useState('color');
     const [anchor, setAnchor] = useState<boolean>(false);
     const [linkAdd, setLinkAdd] = useState<string>('/#contactForm');
+
+    const redTheme = createTheme({ palette: { primary:{
+      main:  '#F9EDF5'}
+    } });
     
     useEffect(() => {
         if (location.pathname === '/enterprise' || 
@@ -72,6 +77,7 @@ const LoggedSideDrawer = (props:any) => {
                             )
                         }
                     </Link>
+                    <ThemeProvider theme={redTheme}>
                     <Box className='buttons'>
                       <Link to="/">
                         <Button variant="contained" 
@@ -91,10 +97,8 @@ const LoggedSideDrawer = (props:any) => {
                         My Courses
                       </Button>
                       </Link>
-                      {/* <Button variant="contained" sx={{width:'212px', height:'50px', borderRadius: '12px', background:'#F9EDF5', mt:'30px', color: '#917EBD', fontWeight: '600'}}>
-                        Profile
-                      </Button> */}
                   </Box>
+                  </ThemeProvider>
             </Box>
             
         </Drawer>

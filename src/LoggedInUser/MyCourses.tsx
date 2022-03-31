@@ -10,6 +10,7 @@ import { HashLink as Link } from 'react-router-hash-link';
 import { styled } from '@mui/material/styles';
 import HomePage from '../LoggedInUser/HomePage';
 import Footer from '../components/organisms/Footer';
+import Header from "./Header";
 
 
 
@@ -103,6 +104,7 @@ const MyCourses = (props:any) => {
           sx={{ flexGrow: 1, bgcolor: 'background.default', p: 0, mt:-6 }}
         >
           <Toolbar />
+        <Header />
           My Courses
           <Footer />
         </Box>
