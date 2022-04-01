@@ -115,7 +115,7 @@ function Header() {
         </MenuItem>
         <Divider />
         <MenuItem>
-          <Link to="/switchlearner">
+          <Link to="/learner">
             <ListItemIcon>
               <GroupIcon fontSize="small" />
             </ListItemIcon>
