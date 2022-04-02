@@ -12,7 +12,7 @@ import Footer from "../components/organisms/Footer";
 import LoggedSideDrawer from "../components/organisms/LoggedSideDrawer";
 import { HashLink as Link } from 'react-router-hash-link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, Navigate} from 'react-router-dom'
 
 import { actionCreators } from '../redux';
 import { RootState } from '../redux/reducers';
@@ -37,24 +37,27 @@ function HomePage() {
   const { fetchUsers, fetchCourseID} = bindActionCreators(actionCreators, dispatch)
 
   const course_id = useSelector((state: RootState) => state.courseIDFetch)
-  console.log(course_id)
-
+  
+  const [learner, setLearner] = useState<any>(JSON.parse(localStorage.getItem('learner-details') || 'null'))
+console.log(learner)
 
   const redTheme = createTheme({ palette: { primary:{
     main:  '#917EBD'}
   } });
 
   const [myCourses, setMyCourse] = useState([]);
+  console.log(myCourses)
   const [recommendation, setRecommendation] = useState([]);
   const [topLearners, setTopLearners] = useState([]);
+
   const [singleCourse, setSingleCourse] = useState([]);
   console.log(myCourses);
   const [isEnterprise, setIsEnterprise] = useState<boolean>(false);
 
   useEffect(() => {
-    API.get("coursesonhome")
+    API.post("enrolledcourses", {studentId : learner?.student_id})
       .then((res) => {
-        setMyCourse(res.data.result.slice(0, 3));
+        setMyCourse(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -82,7 +85,9 @@ function HomePage() {
         console.log(err);
       });
   }, []);
-
+  if(learner === null ){
+    return(<Navigate to ='/learner' />)
+  }else{
   return (
     <div className="home-page">
       <Header />
@@ -116,7 +121,7 @@ function HomePage() {
                 <h1 className="text-2xl m-2 font-black">
                   {dataItem.course_name}
                 </h1>
-                <BorderLinearProgress variant="determinate" value={50} />
+                <BorderLinearProgress variant="determinate" value={dataItem.course_progress} />
                 <p style={{ textAlign: "end", fontSize: "12px" }}>
                   In Progress
                 </p>
@@ -246,6 +251,7 @@ function HomePage() {
       </div>
     </div>
   );
+  }
 }
 
 export default HomePage;

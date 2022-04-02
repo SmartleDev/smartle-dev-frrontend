@@ -110,9 +110,9 @@ function Header() {
         <MenuItem>
           <Avatar /> Profile
         </MenuItem>
-        <MenuItem>
+        {/* <MenuItem>
           <Avatar /> My account
-        </MenuItem>
+        </MenuItem> */}
         <Divider />
         <MenuItem>
           <Link to="/learner">
@@ -122,12 +122,12 @@ function Header() {
             Switch Learner
           </Link>
         </MenuItem>
-        <MenuItem>
+        {/* <MenuItem>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
           Settings
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem onClick={handelLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />

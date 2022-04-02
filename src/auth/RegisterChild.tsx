@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Typography, Box, Button} from "@mui/material";
 import { HashLink as Link } from "react-router-hash-link";
 import Header from "../components/organisms/Header";
@@ -33,8 +33,21 @@ function RegisterChild() {
       parentId: userId
     }
   );
+  const [learnerList, setLearnerList] = useState<any>([])
+  const [err, setErr] = useState<any>('')
 
   console.log(childCreds)
+  useEffect(() =>{
+    API.post('selectlearner', {userId : userId})
+    .then((res) => {
+      setLearnerList(res.data.result)
+      console.log(res.data.result)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+    
+  },[])
 
   const handelChange = (e: any) => {
 
@@ -45,8 +58,15 @@ function RegisterChild() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-   
-
+    if(childCreds.studentName.trim() === ''){
+      setErr('Enter Name of The Learner')
+    }else if(childCreds.studentGender === ''){
+      setErr('Select Gender of The Learner')
+    }else if(childCreds.studentAge === ''){
+      setErr('Select Age of The Learner')
+    } else if(learnerList.length >= 4){
+    setErr('You have Reach the maxium number of Children')
+   }else{
     await API.post('createchild', childCreds)
     .then(res => {
       console.log(res.data)
@@ -54,6 +74,7 @@ function RegisterChild() {
     }).catch(err => {
       console.log(err)
     })
+    }
   }
 
   return (
@@ -148,7 +169,7 @@ function RegisterChild() {
 
              
             </Box>
-            <Box style={{ width: "80%", margin: "auto", textAlign: "center" }}>
+            <Box style={{ width: "80%", margin: "auto", textAlign: "center",paddingBottom: "20px" }}>
               {/* <Link to={"/"}> */}
                 <ThemeProvider theme={redTheme}>
                   <Button
@@ -165,8 +186,10 @@ function RegisterChild() {
                   </Button>
                 </ThemeProvider>
               {/* </Link> */}
+    
+              <h1 style = {{paddingTop : '10px', color : 'red'}}>{err}</h1>
             </Box>
-            <Box
+            {/* <Box
               style={{
                 width: "80%",
                 margin: "auto",
@@ -190,7 +213,7 @@ function RegisterChild() {
                   </Button>
                 </ThemeProvider>
               </Link>
-            </Box>
+            </Box> */}
           </form>
         </Box>
       </div>
