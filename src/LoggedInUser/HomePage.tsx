@@ -92,12 +92,24 @@ console.log(learner)
     <div className="home-page">
       <Header />
       <h2 className="text-4xl pb-10 font-black">
-        Continue Your Learning Journey
+        {myCourses.length === 0 ? 'Explore and Get the Right Course' : 'Continue Your Learning Journey'}
       </h2>
       <div className="my-courses" style={{ display: "flex", flexWrap: "wrap" }}>
-        {myCourses?.map((dataItem: any, index: number) => (
+        {myCourses.length === 0 ?
+        <div
+        onClick = {() => navigate('/courses')}
+          style={{ width: "380px",cursor : "pointer", height: "260px", marginRight: "20px", border : '3px dashed' }}
+          className={`${
+            isEnterprise ? "bg-contrastAccent-200" : "bg-accent-200"
+          } rounded-md shadow-xl p-3 relative`}
+        >
+          <h1 className="text-2x2 m-2 font-black"
+           style = {{display : 'flex', justifyContent : 'center', alignItems : 'center', minHeight :'100%'}}>
+             Enroll Into a Course Now!!</h1>
+        </div>
+         : myCourses?.map((dataItem: any, index: number) => (
           <>
-            <div >
+            <div style = {{position: "relative", height : '400px'}}>
               {/* <Link to="/loggedcourseview"> */}
                 <div
                 onClick={()=>{
@@ -121,10 +133,12 @@ console.log(learner)
                 <h1 className="text-2xl m-2 font-black">
                   {dataItem.course_name}
                 </h1>
+                <div style = {{position: 'absolute', top : '0px', width: "380px"}}>
                 <BorderLinearProgress variant="determinate" value={dataItem.course_progress} />
                 <p style={{ textAlign: "end", fontSize: "12px" }}>
                   In Progress
                 </p>
+                </div>
               </div>
             </div>
           </>
