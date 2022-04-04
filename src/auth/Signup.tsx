@@ -7,7 +7,7 @@ import AuthHeader from '../components/organisms/AuthHeader';
 import API from '../redux/api/api';
 import Alert from '@mui/material/Alert';
 import { useNavigate } from 'react-router-dom';
-import PasswordChecklist from "react-password-checklist";
+import PasswordStrengthBar from 'react-password-strength-bar';
 import './auth.css'
 
 const Signup = () => {
@@ -44,6 +44,7 @@ const Signup = () => {
       confirmPassword: string;
     } 
   const [password, setPassword] = useState("");
+  const [showPassStrength, setShowPassStrength] = useState(false);
 
   const [errorMsg, setErrorMsg] = useState("");
   console.log(errorMsg);
@@ -62,9 +63,11 @@ const Signup = () => {
 
     const {name, value} = e.target
     setSignupCreds({...signupCreds, [name]:value})
+    setShowPassStrength(true)
   }
 
   const [rememberme, setRemberme] = useState(false);
+
 
   // console.log("name: " + name + "\nemail: " + email + "\npassword: " + password + "\nremberme: " + rememberme);
 
@@ -164,13 +167,8 @@ const Signup = () => {
             value={signupCreds.confirmPassword} 
             onChange={handelChange}
             style={{padding: "6px", width: "100%", borderRadius: "3px", marginBottom: '10px'}}></input>
-                     <PasswordChecklist
-				rules={["minLength","specialChar","number","capital","match"]}
-				minLength={8}
-				value={signupCreds.password}
-				valueAgain={signupCreds.confirmPassword}
-				onChange={(isValid) => {}}
-			/>
+
+         {showPassStrength ? <PasswordStrengthBar password={signupCreds.password}/> : null}
          </Box>
 
          <Box style={{width: "80%", margin: "auto", textAlign:"center", marginTop: "20px"}}>

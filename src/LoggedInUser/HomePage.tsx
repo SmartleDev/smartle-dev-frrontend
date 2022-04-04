@@ -65,13 +65,6 @@ console.log(learner)
     API.get("courses")
       .then((res) => {
         setRecommendation(res.data.result.slice(4, 8));
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    API.get("courses")
-      .then((res) => {
         setTopLearners(res.data.result.slice(8, 12));
       })
       .catch((err) => {
