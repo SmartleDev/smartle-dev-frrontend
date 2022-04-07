@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import {Drawer, Toolbar, Divider, Stack, Typography, Box, Grid, Accordion, AccordionDetails} from '@mui/material';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -7,9 +7,62 @@ import AssignmentIndRoundedIcon from '@mui/icons-material/AssignmentIndRounded';
 import ArticleRoundedIcon from '@mui/icons-material/ArticleRounded';
 import VideogameAssetRoundedIcon from '@mui/icons-material/VideogameAssetRounded';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
+import GroupsIcon from '@mui/icons-material/Groups';
+import PausePresentationIcon from '@mui/icons-material/PausePresentation';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+
+import API from "../../../redux/api/api";
+import {useParams} from 'react-router-dom'
+import { RootState } from '../../../redux/reducers';
+import { useDispatch, useSelector } from 'react-redux';
+interface moduleViewer {
+    module_id: number;
+    module_name: string;
+    module_duration ?: string | null;
+    module_description: string;
+    module_objective:string;
+  }
+  interface topicViewer {
+    module_id: number;
+    module_topic_id : number;
+    topic_id : number;
+    topic_name: string;
+    topic_duration ?: string | null;
+    topic_type: string;
+    module_objective:string;
+    topic_path : string;
+    topiccol:string
+}
 
 const CourseContentDrawer = ():JSX.Element => {
-    const drawerWidth:number = 240;
+
+    const [moduleView, setModuleView] = useState<moduleViewer[]>([]);
+    console.log(moduleView)
+    const [topicView, setTopiceView] = useState<topicViewer[]>([]);
+  
+    const module_id = useSelector((state: RootState) => state.moduleIDFetch)
+    console.log(module_id)
+
+    console.log(moduleView)
+    
+      useEffect(() => {
+    
+        API.get<moduleViewer[]>('getModuleView/'+module_id)
+        .then((res)=>{
+          setModuleView(res.data)
+        }).catch((err) => {
+          console.log(err)
+        })
+
+        API.get<topicViewer[]>('/gettopicformodule/'+module_id)
+        .then((res)=>{
+         setTopiceView(res.data)
+        }).catch((err) => {
+          console.log(err)
+        })
+    
+      }, [])
+    const drawerWidth:number = 340;
 
     const topics = [
         {
@@ -62,12 +115,12 @@ const CourseContentDrawer = ():JSX.Element => {
         }}
       >
         <Toolbar />
-        <Box sx={{ overflow: 'auto' }}>
+        <Box sx={{ overflow: 'auto', }}>
             <Box sx={{mt: '70px'}} className='module-overview' component={Stack} direction="column" justifyContent="center">
                 <Typography variant='h6' >Module Overview</Typography>
             </Box>
             <Typography paragraph sx={{pl: '10px', pr: '10px', mt: '10px'}}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. l aenean urna,
+                {moduleView[0]?.module_description}
             </Typography>
             <Divider />
             <Box sx={{ flexGrow: 1, mt:'10px', ml:'10px',mr:'10px' }}>
@@ -80,8 +133,8 @@ const CourseContentDrawer = ():JSX.Element => {
                     </Grid>
                 </Grid>
             </Box>
-            {topics.map((topic: any, topicId:number) =>{
-                if (!topic.topicId) return(<React.Fragment key={topicId}></React.Fragment>);
+            {topicView?.map((dataItem: any, topicId:number) =>{
+                // if (!topicView) return(<React.Fragment key={topicId}></React.Fragment>);
                 return (
                     <Accordion key={topicId}>
                         <AccordionSummary
@@ -90,12 +143,13 @@ const CourseContentDrawer = ():JSX.Element => {
                         id="panel1a-header"
                         sx={{mt: '10px'}} className='activity-title' 
                         >
-                        {topic.icon}
-                        <Typography sx={{ml: '5px'}}>{topic.text}</Typography>
+                            {dataItem.topic_type === 'Self paced' ? <ArticleRoundedIcon/> : dataItem.topic_type === 'Instructor Led' ? <GroupsIcon /> : dataItem.topic_type === 'Video' ? <PausePresentationIcon /> : dataItem.topic_type === 'Document'? <AttachFileIcon/> :dataItem.topic_type === 'Assignment' ? <AssignmentIndRoundedIcon/> : <ArticleRoundedIcon/>}
+                        {/* <ArticleRoundedIcon/> */}
+                        <Typography sx={{ml: '5px'}}>{dataItem.topic_name}</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                         <Typography>
-                            {topic.desc}
+                            {dataItem.topic_type}
                         </Typography>
                         </AccordionDetails>
                     </Accordion>

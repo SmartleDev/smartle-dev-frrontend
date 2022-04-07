@@ -13,8 +13,13 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import BookIcon from '@mui/icons-material/Book';
 import CoPresentIcon from '@mui/icons-material/CoPresent';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+
 import { RootState } from '../redux/reducers';
 import { useDispatch, useSelector } from 'react-redux';
+import { actionCreators } from '../redux';
+import { bindActionCreators } from 'redux';
+
+
 import API from "../redux/api/api";
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
@@ -42,6 +47,7 @@ const CourseViewContent = () => {
         course_numberofclasses: number;
         course_duration: number;
         course_status: string | null;
+        course_progress : number;
     }
     
       interface moduleViewer {
@@ -52,18 +58,36 @@ const CourseViewContent = () => {
         module_objective:string;
     }
     
+      interface topicViewer {
+        module_id: number;
+        module_topic_id : number;
+        topic_id : number;
+        topic_name: string;
+        topic_duration ?: string | null;
+        topic_type: string;
+        module_objective:string;
+        topic_path : string;
+        topiccol:string
+    }
+    const navigate = useNavigate()
+    const dispatch = useDispatch();
+    const { fetchUsers, fetchModuleID} = bindActionCreators(actionCreators, dispatch)
     
       const course_id = useSelector((state: RootState) => state.courseIDFetch)
-      console.log(course_id)
+      const [topicId, setTopicId] = useState('');
+      console.log(topicId)
 
       const [courseView, setCourseView] = useState<courseViewer[]>([]);
       console.log(courseView)
      const [moduleView, setModuleView] = useState<moduleViewer[]>([]);
-     console.log(moduleView)
+     const [topicView, setTopiceView] = useState<topicViewer[]>([]);
+     const [learner, setLearner] = useState<any>(JSON.parse(localStorage.getItem('learner-details') || 'null'))
+     console.log(topicView)
+
 
     useEffect(() => {
 
-        API.get<courseViewer[]>('getcourseview/'+course_id)
+        API.post("getEnrolledCourseView", {studentId : learner?.student_id, courseId : course_id})
         .then((res)=>{
           setCourseView(res.data)
         }).catch((err) => {
@@ -76,57 +100,24 @@ const CourseViewContent = () => {
         }).catch((err) => {
           console.log(err)
         })
+
+        API.get<topicViewer[]>('/gettopicformodule/'+topicId)
+        .then((res)=>{
+         setTopiceView(res.data)
+        }).catch((err) => {
+          console.log(err)
+        })
     
-      }, [course_id, id])
+      }, [course_id, id, topicId])
 
 
-    const topics = [
-        {
-            topicId : 1,
-            icon : <PersonRoundedIcon/>,
-            text: "Week 1: Lorem Ipsum",
-            desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,"
-        },
-        {
-            topicId : 2,
-            icon : <ArticleRoundedIcon/>,
-            text: "Week 2: Lorem Ipsum",
-            desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,"
-        },
-        {
-            topicId : 3,
-            icon : <PersonRoundedIcon/>,
-            text: "Week 3: Lorem Ipsum",
-            desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,"
-        },
-        {
-            topicId : 4,
-            icon : <VideogameAssetRoundedIcon/>,
-            text: "Week 4: Lorem Ipsum",
-            desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,"
-        },
-    ]
-
-    const moduleTopics =[
-        {
-            icon : <PersonRoundedIcon/>,
-            text: "Self Paced: Learning Video-1",
-            tickIcon: <CheckCircleIcon style={{color: 'green', opacity: '0.2'}}/>
-        },
-        {
-            icon : <VideogameAssetRoundedIcon/>,
-            text: "Simulation: Fun game",
-            tickIcon: <CheckCircleIcon style={{color: 'green', opacity: '0.2'}}/>
-        },
-    ]
-
-    const percentage = 66;
+    const percentage = courseView.length === 0 ? 0 : courseView[0]?.course_progress
 
     return (
         <Box>
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 <Grid item xs={6} borderRight="1px dashed #917EBD">
-                 {courseView.map((dataItem, index) =>
+                 {courseView?.map((dataItem, index) =>
                  <Box m={'60px'}>
                  <Box mb={"10px"}><Typography variant='h4' fontWeight={600}>{dataItem.course_name}</Typography></Box>
                  <Typography>{dataItem.course_description}</Typography>
@@ -207,38 +198,44 @@ const CourseViewContent = () => {
             <Box width={"90%"} margin="auto" borderTop={'1px dashed #917EBD'} sx={{marginTop:'20px'}}>
                 <Typography variant='h5' fontWeight={600} marginTop="20px">Modules</Typography>
                 <Box>
-                    {topics.map((topic: any, topicId:number) =>{
-                        if (!topic.topicId) return(<React.Fragment key={topicId}></React.Fragment>);
+                    {moduleView?.map((dataItem: any, topicId:number) =>{
+                        if (!dataItem.module_id) return(<React.Fragment key={topicId}></React.Fragment>);
                         return (
                             <Accordion key={topicId} >
                                 <AccordionSummary
+                                 onClick = {() => setTopicId(dataItem.module_id)}
                                 expandIcon={<ExpandMoreIcon />}
                                 aria-controls="panel1a-content"
                                 id="panel1a-header"
                                 sx={{mt: '10px', background: '#F9EDF5'}} className='activity-title' 
                                 >
-                                <Typography sx={{ml: '5px'}}>{topic.text}</Typography>
+                                <Typography sx={{ml: '5px'}}>{dataItem.module_name}</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails sx={{border: '1px solid #917EBD', borderRadius: '3px'}}>
                                 <Typography>
                                     Activities
                                 </Typography>
                                 <Box>
-                                    {moduleTopics.map((topic: any, topicId:number) =>{
+                                    {topicView?.map((topicDataItem: any, topicId:number) =>{
                                          return (
                                             <Grid 
+                                            style = {{cursor : 'pointer'}}
+                                            onClick = {() =>{
+                                                fetchModuleID(topicDataItem.module_id)
+                                                navigate('/course-content')}
+                                            }
                                                 container rowSpacing={1} 
                                                 columnSpacing={{ xs: 1, sm: 2, md: 3 }}
                                                 sx={{borderBottom:'1px dashed #917EBD', padding: '20px'}}
                                                >
                                                 <Grid item xs={1}>
-                                                    <Box sx={{textAlign:'right'}}>{topic.icon}</Box>
+                                                    <Box sx={{textAlign:'right'}}><PersonRoundedIcon/></Box>
                                                 </Grid>
                                                 <Grid item xs={10}>
-                                                    <Typography>{topic.text}</Typography>
+                                                    <Typography>{topicDataItem.topic_name}</Typography>
                                                 </Grid>
                                                 <Grid item xs={1} >
-                                                    <Box>{topic.tickIcon}</Box>
+                                                    <Box><CheckCircleIcon style={{color: 'green', opacity: '0.2'}}/></Box>
                                                 </Grid>
                                             </Grid>
                                          )
