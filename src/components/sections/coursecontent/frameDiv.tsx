@@ -50,7 +50,7 @@ const FrameDiv = () => {
     return (
         <Box sx={{}}>
             <iframe src="https://smartle-video-content.s3.amazonaws.com/Time+Machine+Concept/story.html" 
-                title="W3Schools Free Online Web Tutorials" 
+                title="W3Schools Free Online Web Tutorials"     
                 style={{justifyContent:'center', width:"70vw", height: "90vh"}}
                 className="content-resize">
             </iframe> 
@@ -77,7 +77,7 @@ const FrameDiv = () => {
                         </Grid>
                     </Grid>
                 </Box>
-                {topics.map((topic: any, topicId:number) =>{
+                {/* {topics.map((topic: any, topicId:number) =>{
                      if (!topic.topicId) return(<React.Fragment key={topicId}></React.Fragment>);
                      return (
                         <Accordion key={topicId}>
@@ -98,7 +98,7 @@ const FrameDiv = () => {
                         </Accordion>
                     )
                 })
-                }
+                } */}
             </> ) }
         </Box>
             

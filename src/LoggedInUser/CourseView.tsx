@@ -138,11 +138,11 @@ const CourseViewContent = () => {
                                             value={percentage}
                                             text={`${percentage}%`}
                                             background
-                                            backgroundPadding={6}
+                                            backgroundPadding={4}
                                             styles={buildStyles({
-                                            backgroundColor: '#917EBD',
-                                            textColor: "#fff",
-                                            pathColor: "#fff",
+                                            backgroundColor: '#fff',
+                                            textColor: "#917EBD",
+                                            pathColor: "#917EBD",
                                             trailColor: "transparent"
                                             })}
                                         />
