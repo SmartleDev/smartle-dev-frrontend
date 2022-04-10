@@ -18,6 +18,8 @@ import { RootState } from '../redux/reducers';
 import { useDispatch, useSelector } from 'react-redux';
 import { actionCreators } from '../redux';
 import { bindActionCreators } from 'redux';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 
 
 import API from "../redux/api/api";
@@ -160,7 +162,7 @@ const CourseViewContent = () => {
                                         <BookIcon style={{color:'#917EBD', backgroundColor:'#F9EDF5', marginBottom: '10px'}}/>
                                     </Grid>
                                     <Grid item xs={10}>
-                                        <Typography>06 Modules</Typography>
+                                        <Typography>{moduleView.length} Modules</Typography>
                                     </Grid>
                                     <Grid item xs={2}>
                                         <ScheduleIcon style={{color:'#917EBD', backgroundColor:'#F9EDF5', marginBottom: '10px'}}/>
@@ -308,8 +310,9 @@ const CourseViewContent = () => {
                         <ThemeProvider theme={redTheme}><Box sx={{padding: '20px', textAlign: 'center', marginLeft: '-80px'}}><Button variant='contained'>Join Event</Button></Box></ThemeProvider>
                     </Grid>
                     <Grid item xs={6}>
-                        <Box>
-                            <Typography marginTop={"5px"} fontSize="18px">Januray 2022</Typography>
+                        <Typography marginTop={"5px"} fontSize="18px" fontWeight={600}>Events</Typography>
+                            <Box margin={'20px'}>
+                                <Calendar defaultValue={[new Date(2022, 3, 1), new Date(2022, 3, 8) ]} />
                         </Box>
                     </Grid>
                 </Grid>

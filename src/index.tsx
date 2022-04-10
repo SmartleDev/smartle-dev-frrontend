@@ -3,17 +3,19 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import './styles/index.scss';
 import App from './App';
+import Drawer from './LoggedInUser/Drawer';
 import CssBaseline from '@mui/material/CssBaseline'
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import { store } from './redux';
-
+import AuthRoutesChange from './AuthRoutesChange'
 ReactDOM.render(
   <BrowserRouter>
     <React.StrictMode>
     <Provider store={store}>
       <CssBaseline />
-      <App />
+      <AuthRoutesChange />
+      {/* <App /> */}
       </Provider>
     </React.StrictMode>
   </BrowserRouter>,

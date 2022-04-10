@@ -41,6 +41,7 @@ const CourseContent = lazy(() => import('./pages/courseContent'));
 const BookCourse = lazy(() => import('./bookCourse/BookCourse'));
 const MyCourses = lazy(() => import('./LoggedInUser/MyCourses'));
 const SwitchUser = lazy(() => import('./LoggedInUser/SwitchUser'));
+const Drawer = lazy(() => import('./LoggedInUser/Drawer'));
 
 const theme = createTheme();
 
@@ -102,9 +103,6 @@ function App() {
                 <Route path="/mycourses" element={<MyCourses />} />
                 <Route path="/switchlearner" element={<SwitchUser />} />
                 <Route path="*" element={<CompleteError />} />
-                <Route path='/course-content' element={<CourseContent/>} />
-
-               
           </Routes>
             </div>
           </Suspense>
