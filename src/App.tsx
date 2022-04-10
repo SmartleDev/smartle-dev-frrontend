@@ -81,11 +81,7 @@ function App() {
           >
             <div className="">
             <Routes>
-                { user !== null ?
-                  <Route path="/" element={<LoggedSideDrawer />} />
-                  :
                   <Route path="/" element={<CompleteHome />} />
-                  }
                 <Route path="/courses" element={<CompleteCourses />} />
                 <Route path="/course/:id" element={<CompleteCourse />} />
                 <Route path="/enterprise" element={<CompleteEnterprise />} />

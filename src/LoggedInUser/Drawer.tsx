@@ -46,6 +46,7 @@ import Signup from '../auth/Signup';
 import RegisterChild from '../auth/RegisterChild';
 import SelectLearner from '../auth/SelectLearner';
 import LoggedSideDrawer from '../components/organisms/LoggedSideDrawer';
+import ShortTextIcon from '@mui/icons-material/ShortText';
 import CourseView from '../LoggedInUser/CourseView';
 
 const drawerWidth = 240;
@@ -173,20 +174,26 @@ export default function MiniDrawer() {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <Drawer variant="permanent" open={open}>
+      <Drawer variant="permanent" open={open}
+      PaperProps={{
+        style: {
+          background: 'linear-gradient(to right bottom, #A18CD1, #FBC2EB)',
+        }
+      }}>
 	  <IconButton
-	  	
-            color="inherit"
+          
+            color="primary"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
-			style = {{color : 'black', margin : '10px 0 0 0px'}}
+			style = {{color : 'black', margin : '10px 0px 5px 0px'}}
             sx={{
               marginRight: 5,
               ...(open && { display: 'none' }),
             }}
           >
-            <MenuIcon />
+            <ShortTextIcon fontSize='large'/>
+            
           </IconButton>
 		  {open && <DrawerHeader>
            <IconButton onClick={handleDrawerClose}>
@@ -236,7 +243,7 @@ export default function MiniDrawer() {
             </ListItemButton>
 			</Link>
 
-			<Link to ='mycourses'>
+			{/* <Link to ='mycourses'>
             <ListItemButton
               sx={{
                 minHeight: 48,
@@ -255,7 +262,7 @@ export default function MiniDrawer() {
               </ListItemIcon>
               <ListItemText primary= 'My Courses' sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
-			</Link>
+			</Link> */}
               
         </List>
         <Divider />
