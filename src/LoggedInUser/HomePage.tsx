@@ -62,9 +62,16 @@ console.log(learner)
       .catch((err) => {
         console.log(err);
       });
+    API.post("getRecommendedCourses", {learnerAge : Number(learner?.student_age)})
+      .then((res) => {
+        console.log(res.data)
+        setRecommendation(res.data.slice(0, 4));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     API.get("courses")
       .then((res) => {
-        setRecommendation(res.data.result.slice(4, 8));
         setTopLearners(res.data.result.slice(8, 12));
       })
       .catch((err) => {
