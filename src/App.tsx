@@ -99,8 +99,6 @@ function App() {
                 <Route path="/otp" element={<VerifyingUser/>} />
                 <Route path="/bookcourse" element={<BookCourse/>} />
                 {/* <Route path="/" element={<LoggedSideDrawer />} /> */}
-                <Route path="/loggedcourseview" element={<CourseView />} />
-                <Route path="/mycourses" element={<MyCourses />} />
                 <Route path="/switchlearner" element={<SwitchUser />} />
                 <Route path="*" element={<CompleteError />} />
           </Routes>

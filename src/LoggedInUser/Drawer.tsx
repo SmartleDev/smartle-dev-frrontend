@@ -272,11 +272,7 @@ export default function MiniDrawer() {
           >
             <div className="">
             <Routes>
-                { user !== null ?
-                  <Route path="/" element={<LoggedUserHome />} />
-                  :
-                  <Route path="/" element={<CompleteHome />} />
-                  }
+                <Route path="/" element={<LoggedUserHome />} />
                 <Route path="/courses" element={<CompleteCourses />} />
                 <Route path="/course/:id" element={<CompleteCourse />} />
                 <Route path="/enterprise" element={<CompleteEnterprise />} />
@@ -292,7 +288,7 @@ export default function MiniDrawer() {
                 {/* <Route path="/" element={<LoggedSideDrawer />} /> */}
                 <Route path="/loggedcourseview" element={<CourseView />} />
                 <Route path="/mycourses" element={<MyCourses />} />
-                <Route path="/switchlearner" element={<SwitchUser />} />
+                {/* <Route path="/switchlearner" element={<SwitchUser />} /> */}
                 <Route path="*" element={<CompleteError />} />
                 <Route path='/course-content' element={<CourseContent/>} />
                 {/* <Route path='/drawer' element={<Drawer/>} /> */}
