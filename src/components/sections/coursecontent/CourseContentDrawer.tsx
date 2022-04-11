@@ -104,20 +104,13 @@ const CourseContentDrawer = ():JSX.Element => {
                 return (
                     <Accordion key={topicId}>
                         <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
                         aria-controls="panel1a-content"
                         id="panel1a-header"
                         sx={{mt: '10px'}} className='activity-title' 
                         >
                             {dataItem.topic_type === 'Self paced' ? <ArticleRoundedIcon/> : dataItem.topic_type === 'Instructor Led' ? <GroupsIcon /> : dataItem.topic_type === 'Video' ? <PausePresentationIcon /> : dataItem.topic_type === 'Document'? <AttachFileIcon/> :dataItem.topic_type === 'Assignment' ? <AssignmentIndRoundedIcon/> : <ArticleRoundedIcon/>}
-                        {/* <ArticleRoundedIcon/> */}
                         <Typography sx={{ml: '5px'}}>{dataItem.topic_name}</Typography>
                         </AccordionSummary>
-                        <AccordionDetails>
-                        <Typography>
-                            {dataItem.topic_type}
-                        </Typography>
-                        </AccordionDetails>
                     </Accordion>
                 )
                 })
