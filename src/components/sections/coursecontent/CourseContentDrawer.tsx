@@ -63,40 +63,6 @@ const CourseContentDrawer = ():JSX.Element => {
     
       }, [])
     const drawerWidth:number = 340;
-
-    const topics = [
-        {
-            topicId : 1,
-            icon : <PersonRoundedIcon/>,
-            text: "Self Paced",
-            desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,"
-        },
-        {
-            topicId : 2,
-            icon : <ArticleRoundedIcon/>,
-            text: "Simulation",
-            desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,"
-        },
-        {
-            topicId : 3,
-            icon : <PersonRoundedIcon/>,
-            text: "Self Paced",
-            desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,"
-        },
-        {
-            topicId : 4,
-            icon : <VideogameAssetRoundedIcon/>,
-            text: "Reference Document",
-            desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,"
-        },
-        {
-            topicId : 5,
-            icon : <AssignmentIndRoundedIcon/>,
-            text: "Assignment",
-            desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,"
-        },
-    ]
-
     
     return (
         <Drawer
@@ -115,8 +81,8 @@ const CourseContentDrawer = ():JSX.Element => {
         }}
       >
         <Toolbar />
-        <Box sx={{ overflow: 'auto', }}>
-            <Box sx={{mt: '70px'}} className='module-overview' component={Stack} direction="column" justifyContent="center">
+        <Box sx={{ overflow: 'auto', mt: '70px'}}>
+            {/* <Box sx={{mt: '70px'}} className='module-overview' component={Stack} direction="column" justifyContent="center">
                 <Typography variant='h6' >Module Overview</Typography>
             </Box>
             <Typography paragraph sx={{pl: '10px', pr: '10px', mt: '10px'}}>
@@ -132,7 +98,7 @@ const CourseContentDrawer = ():JSX.Element => {
                         <Typography>1/5</Typography>
                     </Grid>
                 </Grid>
-            </Box>
+            </Box> */}
             {topicView?.map((dataItem: any, topicId:number) =>{
                 // if (!topicView) return(<React.Fragment key={topicId}></React.Fragment>);
                 return (

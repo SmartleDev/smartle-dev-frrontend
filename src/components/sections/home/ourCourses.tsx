@@ -12,6 +12,7 @@ import CourseGridElement from '../../molecules/CourseGridElement';
 
 const OurCourses = () => {
   const [courses, setCourses] = useState<any>(undefined);
+  console.log(courses)
   const [fail, setFail] = useState<any>(undefined);
   const isMobile = useMediaQuery('(max-width:1000px)');
 

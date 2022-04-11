@@ -21,7 +21,7 @@ import { bindActionCreators } from 'redux';
 
 function HomePage() {
   const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
-    height: 5,
+    height: 7,
     borderRadius: 5,
     [`&.${linearProgressClasses.colorPrimary}`]: {
       backgroundColor:
@@ -133,7 +133,7 @@ console.log(learner)
                 <h1 className="text-2xl m-2 font-black">
                   {dataItem.course_name}
                 </h1>
-                <div style = {{position: 'absolute', top : '0px', width: "380px"}}>
+                <div style = {{position: 'absolute', top : '0px', width: "370px"}}>
                 <BorderLinearProgress variant="determinate" value={dataItem.course_progress} />
                 <p style={{ textAlign: "end", fontSize: "12px" }}>
                   In Progress

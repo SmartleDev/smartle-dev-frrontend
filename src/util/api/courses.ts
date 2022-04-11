@@ -1,20 +1,24 @@
 // import { base } from '../api';
 import { isNull } from '../helpers';
 import { courseList, instructorList } from './data';
+import API from '../../redux/api/api'
 
 
 export const videoBase = "https://www.youtube.com/embed/";
 
+
 export async function getCourses(param?: any, value?: any, compare: any = "=", ent:boolean=false) {
 
-  const res = await fetch(
-    `https://www.backend.smartle.co/coursesonhome`
-  );
- 
-  const json = await res.json();
-  console.log(json)
- 
-  let cl = json.result;
+    let cl : any = [];
+    let json : any = [];
+ await API.get('coursesonhome')
+  .then((res)=>{
+   json = res.data;
+  cl = json;
+  }).catch((err) => {
+    console.log(err)
+  })
+
   
 
   if (param && value) {
@@ -33,8 +37,7 @@ export async function getCourses(param?: any, value?: any, compare: any = "=", e
     }
     finalCourses.push(lclCourse);
   })
-  const courses: any = json.result;
-  console.log(courses);
+  const courses: any = json;
   return courses;
 }
 

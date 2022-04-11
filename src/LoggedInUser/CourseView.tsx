@@ -96,14 +96,14 @@ const CourseViewContent = () => {
           console.log(err)
         })
     
-        API.get<moduleViewer[]>('/getmoduleforcourse/'+course_id)
+        API.get<moduleViewer[]>('getmoduleforcourse/'+course_id)
         .then((res)=>{
           setModuleView(res.data)
         }).catch((err) => {
           console.log(err)
         })
 
-        API.get<topicViewer[]>('/gettopicformodule/'+topicId)
+        API.get<topicViewer[]>('gettopicformodule/'+topicId)
         .then((res)=>{
          setTopiceView(res.data)
         }).catch((err) => {
