@@ -7,6 +7,7 @@ import List from '@mui/material/List';
 import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
+import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -26,6 +27,7 @@ import VerifyingUser from '../auth/VerifyingUser';
 import ExploreIcon from '@mui/icons-material/Explore';
 import HomeIcon from '@mui/icons-material/Home';
 import SchoolIcon from '@mui/icons-material/School';
+import { logoText, logoNoText } from "../util/resources"
 
 //redux copy
 import { actionCreators } from '../redux';
@@ -45,7 +47,6 @@ import Login from '../auth/Login';
 import Signup from '../auth/Signup';
 import RegisterChild from '../auth/RegisterChild';
 import SelectLearner from '../auth/SelectLearner';
-import LoggedSideDrawer from '../components/organisms/LoggedSideDrawer';
 import ShortTextIcon from '@mui/icons-material/ShortText';
 import CourseView from '../LoggedInUser/CourseView';
 
@@ -205,23 +206,27 @@ export default function MiniDrawer() {
 			<Link to ='/'>
             <ListItemButton
               sx={{
-                minHeight: 48,
+                minHeight: 60,
                 justifyContent: open ? 'initial' : 'center',
                 px: 2.5,
               }}
             >
 				<ListItemIcon
                 sx={{
+                  my : '20px',
                   minWidth: 0,
                   mr: open ? 3 : 'auto',
                   justifyContent: 'center',
                 }}
               >
-                 <HomeIcon />
+                  <img className='w-12' src={logoNoText} alt="" />
               </ListItemIcon>
-              <ListItemText primary= 'Home' sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemText>
+              <img className='w-40' src={logoText} alt="" />
+              </ListItemText>
             </ListItemButton>
 			</Link>
+      <Divider />
 		<Link to='courses'>
             <ListItemButton
               sx={{
@@ -239,7 +244,35 @@ export default function MiniDrawer() {
               >
                  <ExploreIcon />
               </ListItemIcon>
-              <ListItemText primary= 'Explore' sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemText>
+              <Button variant="contained"  sx={{width:'150px', height:'50px', borderRadius: '12px',marginLeft : '18px', backgroundColor:'#917EBD', fontWeight: '600'}}>
+            Explore
+           </Button>
+                </ListItemText>
+            </ListItemButton>
+			</Link>
+		<Link to='mycourses'>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? 'initial' : 'center',
+                px: 2.5,
+              }}
+            >
+				<ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
+                }}
+              >
+                 <SchoolIcon />
+              </ListItemIcon>
+              <ListItemText>
+              <Button variant="contained"  sx={{width:'150px', height:'50px', borderRadius: '12px',marginLeft : '18px', backgroundColor:'#917EBD', fontWeight: '600'}}>
+            My Courses
+           </Button>
+                </ListItemText>
             </ListItemButton>
 			</Link>
 

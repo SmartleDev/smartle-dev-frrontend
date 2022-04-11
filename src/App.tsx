@@ -95,7 +95,6 @@ function App() {
                 <Route path="/otp" element={<VerifyingUser/>} />
                 <Route path="/bookcourse" element={<BookCourse/>} />
                 {/* <Route path="/" element={<LoggedSideDrawer />} /> */}
-                <Route path="/switchlearner" element={<SwitchUser />} />
                 <Route path="*" element={<CompleteError />} />
           </Routes>
             </div>

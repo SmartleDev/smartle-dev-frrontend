@@ -9,7 +9,7 @@ function AuthRoutesChange() {
 
   return (
 	  <>
-	{user !== null && leanerUser !== null ?
+	{user !== null || leanerUser !== null ?
 		<Drawer />
 		:
 		<App />

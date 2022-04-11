@@ -17,3 +17,5 @@ export const Logo = require('./logo.svg');
 export const LogoAlt = require('./logo_alt.svg');
 export const NewLogo = require('./NewLogo.png');
 export const WhiteLogo = require('./whitelogo.png');
+export const logoText = require('./logoText.png');
+export const logoNoText = require('./logoNoText.png');
