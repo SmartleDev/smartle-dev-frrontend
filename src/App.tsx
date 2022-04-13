@@ -26,6 +26,7 @@ import RegisterChild from './auth/RegisterChild';
 import SelectLearner from './auth/SelectLearner';
 import LoggedSideDrawer from './components/organisms/LoggedSideDrawer';
 import CourseView from './LoggedInUser/CourseView';
+import BookTrial from './bookCourse/BookTrial';
 
 // Lazy loaded components to improve base performance.
 const Home = lazy(() => import('./pages/home'));
@@ -94,6 +95,7 @@ function App() {
                 <Route path="/learner" element={<SelectLearner/>} />
                 <Route path="/otp" element={<VerifyingUser/>} />
                 <Route path="/bookcourse" element={<BookCourse/>} />
+                <Route path="/booktrial" element={<BookTrial/>} />
                 {/* <Route path="/" element={<LoggedSideDrawer />} /> */}
                 <Route path="*" element={<CompleteError />} />
           </Routes>

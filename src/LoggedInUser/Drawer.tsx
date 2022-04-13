@@ -49,6 +49,7 @@ import RegisterChild from '../auth/RegisterChild';
 import SelectLearner from '../auth/SelectLearner';
 import ShortTextIcon from '@mui/icons-material/ShortText';
 import CourseView from '../LoggedInUser/CourseView';
+import BookTrial from '../bookCourse/BookTrial';
 
 const drawerWidth = 240;
 
@@ -325,6 +326,7 @@ export default function MiniDrawer() {
                 <Route path="/learner" element={<SelectLearner/>} />
                 <Route path="/otp" element={<VerifyingUser/>} />
                 <Route path="/bookcourse" element={<BookCourse/>} />
+                <Route path="/booktrial" element={<BookTrial/>} />
                 {/* <Route path="/" element={<LoggedSideDrawer />} /> */}
                 <Route path="/loggedcourseview" element={<CourseView />} />
                 <Route path="/mycourses" element={<MyCourses />} />

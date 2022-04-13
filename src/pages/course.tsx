@@ -110,7 +110,7 @@ const Course = () => {
     if(user === null){
       navigate('/login')
     }else{
-      navigate('/bookcourse')
+      navigate('/booktrial')
     }
   }
 
