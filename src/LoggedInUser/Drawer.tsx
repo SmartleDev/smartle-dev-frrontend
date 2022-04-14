@@ -134,6 +134,7 @@ const CourseContent = lazy(() => import('../pages/courseContent'));
 const BookCourse = lazy(() => import('../bookCourse/BookCourse'));
 const MyCourses = lazy(() => import('../LoggedInUser/MyCourses'));
 const SwitchUser = lazy(() => import('../LoggedInUser/SwitchUser'));
+const LearnerProfile = lazy(() => import('../LoggedInUser/LearnerProfile'));
 // const Drawer = lazy(() => import('../LoggedInUser/Drawer'));
 
 const theme = createTheme();
@@ -333,6 +334,7 @@ export default function MiniDrawer() {
                 {/* <Route path="/switchlearner" element={<SwitchUser />} /> */}
                 <Route path="*" element={<CompleteError />} />
                 <Route path='/course-content' element={<CourseContent/>} />
+                <Route path='/profile' element={<LearnerProfile/>} />
                 {/* <Route path='/drawer' element={<Drawer/>} /> */}
 
                

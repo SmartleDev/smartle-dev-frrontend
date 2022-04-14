@@ -94,8 +94,6 @@ function App() {
                 <Route path="/registerchild" element={<RegisterChild/>} />
                 <Route path="/learner" element={<SelectLearner/>} />
                 <Route path="/otp" element={<VerifyingUser/>} />
-                <Route path="/bookcourse" element={<BookCourse/>} />
-                <Route path="/booktrial" element={<BookTrial/>} />
                 {/* <Route path="/" element={<LoggedSideDrawer />} /> */}
                 <Route path="*" element={<CompleteError />} />
           </Routes>
