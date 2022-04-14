@@ -124,7 +124,7 @@ const CourseViewContent = () => {
                  <Box mb={"10px"}><Typography variant='h4' fontWeight={600}>{dataItem.course_name}</Typography></Box>
                  <Typography>{dataItem.course_description}</Typography>
                  <Box sx={{marginTop:'20px'}}><Typography>Begin you course</Typography></Box>
-                 <ThemeProvider theme={redTheme}><Box><Button variant='contained' sx={{marginTop:'10px'}}>Begin now</Button></Box></ThemeProvider>
+                 <ThemeProvider theme={redTheme}><Box><Link to = 'course-content'><Button variant='contained' sx={{marginTop:'10px'}}>Begin now</Button></Link></Box></ThemeProvider>
              </Box>
                  )}
                 </Grid>

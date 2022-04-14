@@ -1,6 +1,6 @@
-import { UserType, CourseType, ModuleType } from "../action-types/index"
+import { UserType, CourseType, ModuleType, InstructorType } from "../action-types/index"
 import { UserAction } from "../actions/user"
-import { CourseIDAction, ModuleIDAction } from "../actions/user"
+import { CourseIDAction, ModuleIDAction, InstructorIDAction } from "../actions/user"
 
 
 export const fetchUsers = (users: null | {}[] = null, action: UserAction): {}[] | any => {
@@ -28,5 +28,13 @@ export const moduleIDFetch = (module_id: number = 0, action: ModuleIDAction): nu
             return action.payload;
         default:
             return module_id
+    }
+}
+export const InstructorIDFetch = (instructor_id: number = 0, action: InstructorIDAction): number => {
+    switch (action.type){
+        case InstructorType.INSTRUCTOR_ID:
+            return action.payload;
+        default:
+            return instructor_id
     }
 }

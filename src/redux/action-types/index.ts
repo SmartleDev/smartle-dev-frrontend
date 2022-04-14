@@ -8,3 +8,6 @@ export enum CourseType {
 export enum ModuleType {
     MODULE_ID = "module_id"
 }
+export enum InstructorType {
+    INSTRUCTOR_ID = "instructor_id"
+}

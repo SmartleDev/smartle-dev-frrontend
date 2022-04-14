@@ -13,12 +13,15 @@ import { isNull } from '../util/helpers';
 import RegisterInterestModal from '../components/organisms/RegisterInterestModal';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import {InstructorList} from '../bookCourse/InstructorList'
 
 import Transition from '../components/atom/Transition';
 
 //reduc imports for globalstae of courseID
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/reducers';
+import { bindActionCreators } from 'redux';
+import { actionCreators } from '../redux';
 import axios from 'axios'
 
 import API from '../redux/api/api'
@@ -31,16 +34,34 @@ const Course = () => {
   const redTheme = createTheme({ palette: { primary:{
     main:  '#917EBD'}
   } });
+  const emails = ['username@gmail.com', 'user02@gmail.com'];
+
+  const [open, setOpen] = React.useState(false);
+  const [selectedValue, setSelectedValue] = React.useState(emails[1]);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (value: string) => {
+    setOpen(false);
+    setSelectedValue(value);
+  };
+  const dispatch = useDispatch();
+  const {fetchInstructorID} = bindActionCreators(actionCreators, dispatch)
+
 
   const [course, setCourse] = useState<any>(undefined);
   const [fail, setFail] = useState<string | undefined>(undefined);
-  const [instructor, setInstructor] = useState<any>(undefined);
   const [isEnterprise, setIsEnterprise] = useState<boolean>(false);
 
   const [courseView, setCourseView] = useState<courseViewer[]>([]);
    console.log(courseView)
   const [moduleView, setModuleView] = useState<moduleViewer[]>([]);
   const [user, setUser] = useState<any>(JSON.parse(localStorage.getItem('user-details') || 'null'))
+  
+  const [instructors, setInstructors] = useState<instrcutorViewer[]>([]);
+  console.log(instructors)
   //console.log(moduleView)
 
   //redux course_id saved use this as state
@@ -68,6 +89,15 @@ const Course = () => {
     module_description: string;
     module_objective:string;
 }
+  interface instrcutorViewer {
+    instructor_course_id: number;
+    instructor_id: number;
+    course_id ?: number | null;
+    instructor_name: string;
+    instructor_email:string;
+    instructor_timing : string | null;
+    instructor_description : string | null;
+}
 
   useEffect(() => {
 
@@ -77,6 +107,13 @@ const Course = () => {
     }).catch((err) => {
       console.log(err)
     })
+    API.post("getinstructorlist", {courseId : course_id})
+    .then((res) => {
+    setInstructors(res.data);
+    })
+    .catch((err) => {
+    console.log(err);
+    });
 
     API.get<moduleViewer[]>('/getmoduleforcourse/'+course_id)
     .then((res)=>{
@@ -110,7 +147,12 @@ const Course = () => {
     if(user === null){
       navigate('/login')
     }else{
-      navigate('/booktrial')
+      if(instructors.length > 1){
+        handleClickOpen()
+      }else{
+        fetchInstructorID(instructors[0]?.instructor_id)
+        navigate('/booktrial')
+      }
     }
   }
 
@@ -267,6 +309,15 @@ const Course = () => {
   </div>
         </div>
         <CourseCTA isEnterprise={isEnterprise} courseId={id} status={courseView[0]?.course_status}/>
+        {/* {instructor.length > 1 && */}
+        <>
+          <InstructorList
+        selectedValue={selectedValue}
+        instructorListing = {instructors}
+        open={open}
+        onClose={handleClose}
+      />
+        </>
         </>
       );
 }
