@@ -75,7 +75,7 @@ interface sessionViewer{
     }).catch((err) => {
       console.log(err)
     })
-    API.post('getsessionview/', {instructorId : instructor_id})
+    API.post('getsessionview/', {instructorId : instructor_id, courseId : course_id})
     .then((res)=>{
       setSessionDetails(res.data)
     }).catch((err) => {
