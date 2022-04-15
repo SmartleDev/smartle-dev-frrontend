@@ -67,6 +67,13 @@ interface sessionViewer{
   const [instructorCourseView, setInstructorCourseView] = useState<courseInstructorViewer[]>([]);
   console.log(instructorCourseView)
 
+  // const dateToTime = (date : any) => date.toLocaleString('en-US', {
+  //   hour: 'numeric',
+  //   minute: 'numeric'
+  // });
+  // var today = new Date()
+  // console.log(today)
+  // console.log(`${dateToTime(today)}`);
 
   useEffect(() => {
     API.post('getcourseandinstructordetails/', {courseId : course_id, instructorId : instructor_id})
@@ -155,7 +162,10 @@ interface sessionViewer{
                     borderRadius: '8px',
                     fontSize: '14px',
                     fontWeight: '700',
-                    color: '#917EBD'}}>{timing?.session_time}</Box>
+                    color: '#917EBD'}}>{new Date(timing?.session_time).toLocaleString('en-US', {
+                      hour: 'numeric',
+                      minute: 'numeric'
+                    })}</Box>
               )
             })}
           </Stack>
