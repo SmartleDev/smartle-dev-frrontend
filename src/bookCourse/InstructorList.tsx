@@ -74,27 +74,26 @@ export function InstructorList(props: SimpleDialogProps) {
   };
 
   return (
-    <Dialog onClose={handleClose} open={open}>
+    <Dialog onClose={handleClose} open={open} style = {{width : '100%'}}>
       <DialogTitle>Select an Instructor</DialogTitle>
-      <div style = {{ display : 'flex', padding : '50px' }}>
+      <div style = {{ display : 'flex', padding : '20px', width : '50vw' }}>
       {instructors?.map((dataItem, index) => (
         <Box
-          sx={{ minWidth: 120 }}
+          sx={{ minWidth: 200 }}
           style={{
             background: "#F9EDF5",
             borderRadius: "8px",
             boxShadow: "1.66298px 8.31489px 23.2817px rgba(0, 0, 0, 0.12)",
-            padding: "20px",
             marginRight : '20px'
           }}
         >
           <CardContent>
             <Box style={{ textAlign: "center" }}>
               <Typography fontSize={"16px"} fontWeight="600"> {dataItem?.instructor_name}</Typography>
+            </Box>
               <Typography fontSize={"10px"} fontWeight="400">
                 {dataItem?.instructor_description}
               </Typography>
-            </Box>
           </CardContent>
           <CardActions style={{ textAlign: "center" }}>
             <Box style={{ margin: "auto" }}>
