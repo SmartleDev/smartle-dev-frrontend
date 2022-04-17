@@ -22,15 +22,14 @@ function BookTrial() {
 
   const timings = ["11:00 AM", "6:00 PM"];
 
-  const [instructors, setInstructors] = useState();
-
+  const [instructor, setInstructor] = useState(0);
+  const [sessionId, setSessionId] = useState<any>('');
+console.log(instructor)
 	const dispatch = useDispatch();
-
-	const { fetchUsers, fetchCourseID} = bindActionCreators(actionCreators, dispatch)
+	const {fetchInstructorID} = bindActionCreators(actionCreators, dispatch)
 
 	const course_id = useSelector((state: RootState) => state.courseIDFetch)
   const instructor_id = useSelector((state: RootState) => state.InstructorIDFetch)
-  console.log(instructor_id ,course_id)
   interface courseInstructorViewer {
     course_id: number;
     course_name: string;
@@ -53,19 +52,24 @@ function BookTrial() {
 
 interface sessionViewer{
   session_id : number;
-  session_startdate : string | any;
-  session_time : any;
+  session_datetime : string | any;
   session_type : any;
   session_avalibility : number;
   instructor_id : number;
   session_seats : number;
 
 }
+const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getItem('learner-details') || 'null'))
 
   const [sessionDetails, setSessionDetails] = useState<sessionViewer[]>([]);
-  console.log(sessionDetails)
+  const [confrim, setConfrim] = useState<any>('');
+  const [selected, setSelected] = useState<any>('');
+  console.log(confrim)
   const [instructorCourseView, setInstructorCourseView] = useState<courseInstructorViewer[]>([]);
   console.log(instructorCourseView)
+
+
+
 
   // const dateToTime = (date : any) => date.toLocaleString('en-US', {
   //   hour: 'numeric',
@@ -75,21 +79,39 @@ interface sessionViewer{
   // console.log(today)
   // console.log(`${dateToTime(today)}`);
 
-  useEffect(() => {
-    API.post('getcourseandinstructordetails/', {courseId : course_id, instructorId : instructor_id})
-    .then((res)=>{
-      setInstructorCourseView(res.data)
+  const handelConfirmTrial = () => {
+    API.post('enrollLearner', {courseId : course_id, studentId : leanerUser?.student_id, studentFeeStatus : null, sessionId : sessionId, enrollmentType : 'trial'})
+      .then((res)=>{
+        setConfrim(res.data)
     }).catch((err) => {
       console.log(err)
     })
-    API.post('getsessionview/', {instructorId : instructor_id, courseId : course_id})
+  }
+
+  useEffect(() => {
+
+      // API.post('getcourseandinstructordetails', {courseId : course_id, instructorId : instructor})
+      // .then((res)=>{
+      //   setInstructorCourseView(res.data)
+      // }).catch((err) => {
+      //   console.log(err)
+      // })
+
+      API.get<courseInstructorViewer[]>('getcourseview/'+course_id)
+      .then((res)=>{
+        setInstructorCourseView(res.data)
+      }).catch((err) => {
+        console.log(err)
+      })
+
+    API.post('getsessionview', {courseId : course_id})
     .then((res)=>{
       setSessionDetails(res.data)
     }).catch((err) => {
       console.log(err)
     })
 
-	  }, []);
+	  }, [instructor]);
 
   return (
     <Box>
@@ -103,8 +125,8 @@ interface sessionViewer{
          <Typography fontSize={"16px"} fontWeight="700">{dataItem?.course_name}</Typography>
          <Typography width={"80%"}>{dataItem?.course_description}</Typography>
          <Typography fontSize={"16px"} fontWeight="500" mt={"80px"}>Instructor:</Typography>
-         <Typography fontSize={"16px"} fontWeight="700">{dataItem?.instructor_name}</Typography>
-         <Typography fontSize={"14px"} fontWeight="400">{dataItem?.instructor_description}</Typography>
+         {/* <Typography fontSize={"16px"} fontWeight="700">{dataItem?.instructor_name}</Typography>
+         <Typography fontSize={"14px"} fontWeight="400">{dataItem?.instructor_description}</Typography> */}
        </Box>
          )}
         </Grid>
@@ -125,20 +147,41 @@ interface sessionViewer{
                         }}>
                     <CardContent>
                       <Box style={{textAlign: 'center'}}><Typography fontSize={"14px"} fontWeight="600" margin={"auto"}>
-                      {moment(session?.session_startdate).format('dddd')}
+                      {moment(session?.session_datetime).format('dddd')}
                       </Typography>
                      
                       <Typography fontSize={"16px"} fontWeight="600">
-                        {moment(session?.session_startdate).format("MMM Do")}
+                        {moment(session?.session_datetime).format("MMM Do")}
                       </Typography>
                       <Typography fontSize={"10px"} fontWeight="400">
                         No. of spots left: {session?.session_avalibility}/{session?.session_seats}
                       </Typography>
                       </Box>
+                      <Box 
+                  style={{
+                    cursor: 'pointer',
+                    width: '80px',
+                    margin: '10px 0 0 8px',
+                    height: '20px',
+                    background:"#F9EDF5", 
+                    textAlign: 'center',
+                    border: '1.08671px solid #917EBD',
+                    borderRadius: '8px',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    color: '#917EBD'}}>{new Date(session?.session_datetime).toLocaleString('en-US', {
+                      hour: 'numeric',
+                      minute: 'numeric'
+                    })}</Box>
                     </CardContent>
                     <CardActions style={{textAlign: 'center'}}>
                       <Box style={{margin: 'auto'}}>
-                        <Button size='small' style={{background: '#917EBD', color: 'white',paddingLeft: '20px', paddingRight: '20px', fontSize:'10px'}}>Enroll Now</Button>
+                        <Button onClick = {() => {
+                          fetchInstructorID(session?.instructor_id)
+                          setInstructor(session?.instructor_id)
+                          setSessionId(session?.session_id)
+                          }} 
+                          size='small' style={{background: '#917EBD', color: 'white',paddingLeft: '20px', paddingRight: '20px', fontSize:'10px'}}>Enroll Now</Button>
                       </Box>
                     </CardActions>
                   </Box>
@@ -147,32 +190,10 @@ interface sessionViewer{
             }
           </Stack>
           <Typography mt={"60px"} mb="5px" color="#505D68" fontWeight={"600"} fontSize="14px">Select Time</Typography>
-          <Stack direction={"row"} spacing={2} marginBottom="60px">
-            {sessionDetails?.map(timing =>{
-              return(
-                <Box 
-                  style={{
-                    cursor: 'pointer',
-                    width: '120px',
-                    height: '35px',
-                    background:"#F9EDF5", 
-                    padding: '5px', 
-                    textAlign: 'center',
-                    border: '1.08671px solid #917EBD',
-                    borderRadius: '8px',
-                    fontSize: '14px',
-                    fontWeight: '700',
-                    color: '#917EBD'}}>{new Date(timing?.session_time).toLocaleString('en-US', {
-                      hour: 'numeric',
-                      minute: 'numeric'
-                    })}</Box>
-              )
-            })}
-          </Stack>
           <Box style={{background: '#F9EDF5', height: '150px', borderRadius: '20px', textAlign: 'center'}}>
             <Box paddingTop={"30px"} style={{color: '#505D68', fontSize: '14px'}} fontWeight="900"><Typography >Other details:</Typography></Box>
             <Typography>Zoom conferencing details will be sent to your registered mail upon confirmation.</Typography>
-            <Button style={{background: '#917EBD', color: 'white', marginTop: '10px', paddingLeft: '30px', paddingRight: '30px'}}>Confirm Trial</Button>
+            <Button style={{background: '#917EBD', color: 'white', marginTop: '10px', paddingLeft: '30px', paddingRight: '30px'}} onClick = {handelConfirmTrial}>Confirm Trial</Button>
           </Box>
           </Box>
         </Grid>

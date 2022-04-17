@@ -50,6 +50,8 @@ const Course = () => {
   const dispatch = useDispatch();
   const {fetchInstructorID} = bindActionCreators(actionCreators, dispatch)
 
+  const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getItem('learner-details') || 'null'))
+
 
   const [course, setCourse] = useState<any>(undefined);
   const [fail, setFail] = useState<string | undefined>(undefined);
@@ -58,6 +60,8 @@ const Course = () => {
   const [courseView, setCourseView] = useState<courseViewer[]>([]);
    console.log(courseView)
   const [moduleView, setModuleView] = useState<moduleViewer[]>([]);
+  const [bookTrialMessage, setBookTrialMessage] = useState<any>('');
+  console.log(bookTrialMessage)
   const [user, setUser] = useState<any>(JSON.parse(localStorage.getItem('user-details') || 'null'))
   
   const [instructors, setInstructors] = useState<instrcutorViewer[]>([]);
@@ -150,8 +154,19 @@ const Course = () => {
       if(instructors.length > 1){
         handleClickOpen()
       }else{
-        fetchInstructorID(instructors[0]?.instructor_id)
-        navigate('/booktrial')
+        if(courseView[0]?.course_type === 'Self-Paced'){      
+      API.post('enrollLearner', {courseId : course_id, studentId : leanerUser?.student_id, studentFeeStatus : null, sessionId : null, enrollmentType : 'trial'})
+      .then((res)=>{
+      setOpen(true);
+      setBookTrialMessage(res.data)
+    }).catch((err) => {
+      console.log(err)
+    })
+        }else{
+          setOpen(false);
+          // fetchInstructorID(instructors[0]?.instructor_id)
+          navigate('/booktrial')
+        }
       }
     }
   }
@@ -312,8 +327,8 @@ const Course = () => {
         {/* {instructor.length > 1 && */}
         <>
           <InstructorList
-        selectedValue={selectedValue}
-        instructorListing = {instructors}
+          selectedValue = {selectedValue}
+        message = {bookTrialMessage}
         open={open}
         onClose={handleClose}
       />

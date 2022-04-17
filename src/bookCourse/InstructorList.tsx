@@ -9,6 +9,8 @@ import Dialog from "@mui/material/Dialog";
 import PersonIcon from "@mui/icons-material/Person";
 import AddIcon from "@mui/icons-material/Add";
 import { blue } from "@mui/material/colors";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import ErrorIcon from '@mui/icons-material/Error';
 import {
   Grid,
   Box,
@@ -38,13 +40,13 @@ interface instrcutorViewer {
 
 export interface SimpleDialogProps {
   open: boolean;
-  instructorListing: {}[];
+  message: any;
   selectedValue: string;
   onClose: (value: string) => void;
 }
 
 export function InstructorList(props: SimpleDialogProps) {
-  const { onClose, selectedValue, open } = props;
+  const { onClose, selectedValue, open, message } = props;
   const [instructors, setInstructors] = React.useState<instrcutorViewer[]>([]);
   const course_id = useSelector((state: RootState) => state.courseIDFetch);
 
@@ -57,13 +59,13 @@ export function InstructorList(props: SimpleDialogProps) {
   );
 
   React.useEffect(() => {
-    API.post("getinstructorlist", { courseId: course_id })
-      .then((res) => {
-        setInstructors(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // API.post("getinstructorlist", { courseId: course_id })
+    //   .then((res) => {
+    //     setInstructors(res.data);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   }, []);
   const handleClose = () => {
     onClose(selectedValue);
@@ -77,48 +79,8 @@ export function InstructorList(props: SimpleDialogProps) {
     <Dialog onClose={handleClose} open={open} style = {{width : '100%'}}>
       <DialogTitle>Select an Instructor</DialogTitle>
       <div style = {{ display : 'flex', padding : '20px', width : '50vw' }}>
-      {instructors?.map((dataItem, index) => (
-        <Box
-          sx={{ minWidth: 200 }}
-          style={{
-            background: "#F9EDF5",
-            borderRadius: "8px",
-            boxShadow: "1.66298px 8.31489px 23.2817px rgba(0, 0, 0, 0.12)",
-            marginRight : '20px'
-          }}
-        >
-          <CardContent>
-            <Box style={{ textAlign: "center" }}>
-              <Typography fontSize={"16px"} fontWeight="600"> {dataItem?.instructor_name}</Typography>
-            </Box>
-              <Typography fontSize={"10px"} fontWeight="400">
-                {dataItem?.instructor_description}
-              </Typography>
-          </CardContent>
-          <CardActions style={{ textAlign: "center" }}>
-            <Box style={{ margin: "auto" }}>
-              <Button
-                onClick={() => {
-                  fetchInstructorID(dataItem.instructor_id);
-                  onClose("hello");
-                  navigate("/booktrial");
-                }}
-                key={index}
-                size="small"
-                style={{
-                  background: "#917EBD",
-                  color: "white",
-                  paddingLeft: "20px",
-                  paddingRight: "20px",
-                  fontSize: "10px",
-                }}
-              >
-                Select
-              </Button>
-            </Box>
-          </CardActions>
-        </Box>
-      ))}
+      {/* {message?.status === 'success'  ? <CheckCircleIcon> : <ErrorIcon/>} */}
+        <h1>{message?.message}</h1> 
       </div>
     </Dialog>
   );
