@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {Grid, Box, Typography, CardContent, CardActions, Button, Stack} from '@mui/material';
+import {Grid, Box, Typography, CardContent, CardActions, Button, Stack, Snackbar, Alert} from '@mui/material';
 
 import { actionCreators } from '../redux';
 import { RootState } from '../redux/reducers';
@@ -7,24 +7,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import API from "../redux/api/api";
 import moment from "moment";
+import { useNavigate } from 'react-router-dom';
 
 function BookTrial() {
-  const sessions = [
-    {day: 'Monday',
-    date: '17 Jan',
-    spots: '2/10'
-    },
-    {day: 'Wednesday',
-    date: '24 Jan',
-    spots: '2/10'
-    }
-  ]
 
-  const timings = ["11:00 AM", "6:00 PM"];
+  const navigate = useNavigate()
 
   const [instructor, setInstructor] = useState(0);
-  const [sessionId, setSessionId] = useState<any>('');
-console.log(instructor)
+  const [sessionId, setSessionId] = useState<any>(null);
+  const [msgStatus,setMsgStatus] = useState<any>('error');
+  console.log(instructor, "INSTRUCTOR")
 	const dispatch = useDispatch();
 	const {fetchInstructorID} = bindActionCreators(actionCreators, dispatch)
 
@@ -63,8 +55,19 @@ const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getIt
 
   const [sessionDetails, setSessionDetails] = useState<sessionViewer[]>([]);
   const [confrim, setConfrim] = useState<any>('');
-  const [selected, setSelected] = useState<any>('');
-  console.log(confrim)
+  const [selectedDate, setSelectedDate] = useState('Not Selected');
+  const [selectedTime, setSelectedTime] = useState('Not Selected');
+  const [open, setOpen] = React.useState(false);
+
+  const [msg, setMsg] = useState("");
+  const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+  console.log(confrim.message)
   const [instructorCourseView, setInstructorCourseView] = useState<courseInstructorViewer[]>([]);
   console.log(instructorCourseView)
 
@@ -80,9 +83,21 @@ const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getIt
   // console.log(`${dateToTime(today)}`);
 
   const handelConfirmTrial = () => {
-    API.post('enrollLearner', {courseId : course_id, studentId : leanerUser?.student_id, studentFeeStatus : null, sessionId : sessionId, enrollmentType : 'trial'})
+      setMsgStatus('error')
+      setMsg('Please select a session in order to confirm a trial');
+      setOpen(true);
+  }
+
+  const handleProperConfirmTrial = () => {
+      API.post('enrollLearner', {courseId : course_id, studentId : leanerUser?.student_id, studentFeeStatus : null, sessionId : sessionId, enrollmentType : 'trial'})
       .then((res)=>{
+        setMsgStatus('success');
+        setMsg(confrim.message);
+        setOpen(true);
         setConfrim(res.data)
+        if(open === true){
+          navigate('/loggedcourseview/');
+        }
     }).catch((err) => {
       console.log(err)
     })
@@ -124,9 +139,15 @@ const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getIt
          <Typography>Course:</Typography>
          <Typography fontSize={"16px"} fontWeight="700">{dataItem?.course_name}</Typography>
          <Typography width={"80%"}>{dataItem?.course_description}</Typography>
-         <Typography fontSize={"16px"} fontWeight="500" mt={"80px"}>Instructor:</Typography>
+         <Typography fontSize={"16px"} fontWeight="500" mt={"80px"}>Session Details:</Typography>
          {/* <Typography fontSize={"16px"} fontWeight="700">{dataItem?.instructor_name}</Typography>
          <Typography fontSize={"14px"} fontWeight="400">{dataItem?.instructor_description}</Typography> */}
+         <Box width={'250px'} sx={{background: '#F9EDF5', borderRadius: '7px', padding: '20px'}}>
+           <Typography>Date</Typography>
+           <Typography variant='h6' fontWeight={600} style={{color: '#5D6878'}}>{selectedDate}</Typography>
+           <Typography mt={2}>Time</Typography>
+           <Typography variant='h6' fontWeight={600} style={{color: '#5D6878'}}>{selectedTime}</Typography>
+         </Box>
        </Box>
          )}
         </Grid>
@@ -180,6 +201,11 @@ const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getIt
                           fetchInstructorID(session?.instructor_id)
                           setInstructor(session?.instructor_id)
                           setSessionId(session?.session_id)
+                          setSelectedDate(moment(session?.session_datetime).format("MMM Do"))
+                          setSelectedTime(new Date(session?.session_datetime).toLocaleString('en-US', {
+                            hour: 'numeric',
+                            minute: 'numeric'
+                          }))
                           }} 
                           size='small' style={{background: '#917EBD', color: 'white',paddingLeft: '20px', paddingRight: '20px', fontSize:'10px'}}>Enroll Now</Button>
                       </Box>
@@ -193,11 +219,16 @@ const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getIt
           <Box style={{background: '#F9EDF5', height: '150px', borderRadius: '20px', textAlign: 'center'}}>
             <Box paddingTop={"30px"} style={{color: '#505D68', fontSize: '14px'}} fontWeight="900"><Typography >Other details:</Typography></Box>
             <Typography>Zoom conferencing details will be sent to your registered mail upon confirmation.</Typography>
-            <Button style={{background: '#917EBD', color: 'white', marginTop: '10px', paddingLeft: '30px', paddingRight: '30px'}} onClick = {handelConfirmTrial}>Confirm Trial</Button>
+            {sessionId !== null ? <Button style={{background: '#917EBD', color: 'white', marginTop: '10px', paddingLeft: '30px', paddingRight: '30px'}} onClick = {handleProperConfirmTrial}>Confirm Trial</Button> : <Button style={{background: 'gray', color: 'white', marginTop: '10px', paddingLeft: '30px', paddingRight: '30px'}} onClick = {handelConfirmTrial}>Confirm Trial</Button>}
           </Box>
           </Box>
         </Grid>
       </Grid>
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert variant='filled' onClose={handleClose} severity={msgStatus} sx={{ width: '100%' }}>
+          {msg}
+        </Alert>
+      </Snackbar>
     </Box>
   )
 }
