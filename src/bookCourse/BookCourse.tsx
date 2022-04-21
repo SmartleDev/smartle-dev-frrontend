@@ -22,12 +22,23 @@ function BookCourse() {
 	const timings = ["11:00 AM", "6:00 PM"];
 
 	const [instructors, setInstructors] = useState();
+	const [confrim, setConfrim] = useState<any>('');
+	const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getItem('learner-details') || 'null'))
 
 	const dispatch = useDispatch();
 
 	const { fetchUsers, fetchCourseID} = bindActionCreators(actionCreators, dispatch)
 
 	const course_id = useSelector((state: RootState) => state.courseIDFetch)
+
+	// const handelConfirmCourse = () => {
+	// 	API.post('enrollLearner', {courseId : course_id, studentId : leanerUser?.student_id, studentFeeStatus : true, sessionId : sessionId, enrollmentType : 'paid'})
+	// 	  .then((res)=>{
+	// 		setConfrim(res.data)
+	// 	}).catch((err) => {
+	// 	  console.log(err)
+	// 	})
+	//   }
 
 	useEffect(() => {
 		API.post("getinstructorlist", {courseId : course_id})

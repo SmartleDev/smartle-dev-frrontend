@@ -85,7 +85,7 @@ const CourseViewContent = () => {
   );
 
   const course_id = useSelector((state: RootState) => state.courseIDFetch);
-
+  const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getItem('learner-details') || 'null'))
   const [courseView, setCourseView] = useState<any>([]);
   const [sessionView, setSessionView] = useState<any>([]);
   console.log(sessionView);
@@ -103,7 +103,7 @@ const CourseViewContent = () => {
       .then((response) => {
         setCourseView(response.data);
         if (response?.data?.session_id !== null) {
-          API.post("getenrolledsessiondetails", { courseId: course_id })
+          API.post("getenrolledsessiondetails", { courseId: course_id, studentId: leanerUser?.student_id})
             .then((res) => {
               setSessionView(res.data);
             })
@@ -155,8 +155,8 @@ const CourseViewContent = () => {
             </Box>
           ))}
         </Grid>
-        <Grid item xs={6}>
-          <Grid
+        {courseView[0]?.enrollment_type === 'paid' && <Grid item xs={6}>
+        <Grid
             container
             rowSpacing={1}
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}
@@ -259,7 +259,7 @@ const CourseViewContent = () => {
               </Grid>
             </Box>
           </Box>
-        </Grid>
+        </Grid>}
       </Grid>
       {courseView[0]?.enrollment_type === "paid" ? (
         <PaidView moduleViewPaid={moduleView} />

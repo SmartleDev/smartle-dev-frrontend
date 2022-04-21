@@ -111,14 +111,14 @@ function TrialView(props: PaidModuleView) {
 
 
 <Box width={"90%"} margin="auto" sx={{marginTop:'20px'}}>
-	<Typography variant='h5' fontWeight={600} marginTop="20px">Buy Course To Unlock</Typography>
+	
 	<Box>
 		{moduleViewTrial.slice(2)?.map((dataItem: any, topicId:number) =>{
 			if (!dataItem.module_id) return(<React.Fragment key={topicId}></React.Fragment>);
 			return (
 				<Accordion key={topicId} >
 					<AccordionSummary
-					 onClick = {() => setTopicId(dataItem.module_id)}
+					//  onClick = {() => setTopicId(dataItem.module_id)}
 					expandIcon={<LockIcon />}
 					aria-controls="panel1a-content"
 					id="panel1a-header"
@@ -126,37 +126,6 @@ function TrialView(props: PaidModuleView) {
 					>
 					<Typography sx={{ml: '5px'}}>{dataItem.module_name}</Typography>
 					</AccordionSummary>
-					<AccordionDetails sx={{border: '1px solid #F0F0F0', borderRadius: '3px'}}>
-					<Typography>
-						Activities
-					</Typography>
-					<Box>
-						{topicView?.map((topicDataItem: any, topicId:number) =>{
-							 return (
-								<Grid 
-								style = {{cursor : 'pointer'}}
-								onClick = {() =>{
-									navigate('/bookcourse')}
-								}
-									container rowSpacing={1} 
-									columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-									sx={{borderBottom:'1px dashed #E5DEDE', padding: '20px'}}
-								   >
-									<Grid item xs={1}>
-										<Box sx={{textAlign:'right'}}><PersonRoundedIcon/></Box>
-									</Grid>
-									<Grid item xs={10}>
-										<Typography>{topicDataItem.topic_name}</Typography>
-									</Grid>
-									<Grid item xs={1} >
-										<Box><CheckCircleIcon style={{color: 'green', opacity: '0.2'}}/></Box>
-									</Grid>
-								</Grid>
-							 )
-							})
-						}
-					</Box>
-					</AccordionDetails>
 				</Accordion>
 			)
 			})

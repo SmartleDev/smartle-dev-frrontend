@@ -13,7 +13,8 @@ function BookTrial() {
 
   const navigate = useNavigate()
 
-  const [instructor, setInstructor] = useState(0);
+  const [instructor, setInstructor] = useState<any>([]);
+  console.log(instructor)
   const [sessionId, setSessionId] = useState<any>(null);
   const [msgStatus,setMsgStatus] = useState<any>('error');
   console.log(instructor, "INSTRUCTOR")
@@ -82,11 +83,11 @@ const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getIt
   // console.log(today)
   // console.log(`${dateToTime(today)}`);
 
-  const handelConfirmTrial = () => {
-      setMsgStatus('error')
-      setMsg('Please select a session in order to confirm a trial');
-      setOpen(true);
-  }
+  // const handelConfirmTrial = () => {
+  //     setMsgStatus('error')
+  //     setMsg('Please select a session in order to confirm a trial');
+  //     setOpen(true);
+  // }
 
   const handleProperConfirmTrial = () => {
       API.post('enrollLearner', {courseId : course_id, studentId : leanerUser?.student_id, studentFeeStatus : null, sessionId : sessionId, enrollmentType : 'trial'})
@@ -105,13 +106,6 @@ const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getIt
 
   useEffect(() => {
 
-      // API.post('getcourseandinstructordetails', {courseId : course_id, instructorId : instructor})
-      // .then((res)=>{
-      //   setInstructorCourseView(res.data)
-      // }).catch((err) => {
-      //   console.log(err)
-      // })
-
       API.get<courseInstructorViewer[]>('getcourseview/'+course_id)
       .then((res)=>{
         setInstructorCourseView(res.data)
@@ -126,7 +120,7 @@ const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getIt
       console.log(err)
     })
 
-	  }, [instructor]);
+	  }, []);
 
   return (
     <Box>
@@ -139,6 +133,13 @@ const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getIt
          <Typography>Course:</Typography>
          <Typography fontSize={"16px"} fontWeight="700">{dataItem?.course_name}</Typography>
          <Typography width={"80%"}>{dataItem?.course_description}</Typography>
+         {instructor.length !== 0 &&
+         <>
+         <Typography fontSize={"16px"} fontWeight="800" mt={"80px"}>Instructor Details:</Typography>
+         <Typography fontSize={"18px"} fontWeight="600">{instructor[0]?.instructor_name}</Typography>
+         <Typography fontSize={"16px"} fontWeight="500">{instructor[0]?.instructor_description}</Typography>
+         </>
+         }
          <Typography fontSize={"16px"} fontWeight="500" mt={"80px"}>Session Details:</Typography>
          {/* <Typography fontSize={"16px"} fontWeight="700">{dataItem?.instructor_name}</Typography>
          <Typography fontSize={"14px"} fontWeight="400">{dataItem?.instructor_description}</Typography> */}
@@ -198,8 +199,16 @@ const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getIt
                     <CardActions style={{textAlign: 'center'}}>
                       <Box style={{margin: 'auto'}}>
                         <Button onClick = {() => {
+                              API.get('getInstructorDetails/'+session?.instructor_id)
+                              .then((res)=>{
+                                setInstructor(res.data)
+                                console.log(res.data)
+                              }).catch((err) => {
+                                console.log(err)
+                              })
+                                      
                           fetchInstructorID(session?.instructor_id)
-                          setInstructor(session?.instructor_id)
+                          // setInstructor(session?.instructor_id)
                           setSessionId(session?.session_id)
                           setSelectedDate(moment(session?.session_datetime).format("MMM Do"))
                           setSelectedTime(new Date(session?.session_datetime).toLocaleString('en-US', {
@@ -215,12 +224,29 @@ const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getIt
               })
             }
           </Stack>
-          <Typography mt={"60px"} mb="5px" color="#505D68" fontWeight={"600"} fontSize="14px">Select Time</Typography>
+          <Typography mt={"80px"} mb="5px" color="#505D68" fontWeight={"600"} fontSize="14px"></Typography>
+          {sessionId !== null &&
+          <>
           <Box style={{background: '#F9EDF5', height: '150px', borderRadius: '20px', textAlign: 'center'}}>
             <Box paddingTop={"30px"} style={{color: '#505D68', fontSize: '14px'}} fontWeight="900"><Typography >Other details:</Typography></Box>
             <Typography>Zoom conferencing details will be sent to your registered mail upon confirmation.</Typography>
-            {sessionId !== null ? <Button style={{background: '#917EBD', color: 'white', marginTop: '10px', paddingLeft: '30px', paddingRight: '30px'}} onClick = {handleProperConfirmTrial}>Confirm Trial</Button> : <Button style={{background: 'gray', color: 'white', marginTop: '10px', paddingLeft: '30px', paddingRight: '30px'}} onClick = {handelConfirmTrial}>Confirm Trial</Button>}
-          </Box>
+             <Button style={{background: '#917EBD', color: 'white', marginTop: '10px', paddingLeft: '30px', paddingRight: '30px'}} onClick = {handleProperConfirmTrial}>Confirm Trial</Button>
+           </Box>
+           </>}
+          {/* {sessionId !== null ?
+          <>
+            <Box paddingTop={"30px"} style={{color: '#505D68', fontSize: '14px'}} fontWeight="900"><Typography >Other details:</Typography></Box>
+            <Typography>Zoom conferencing details will be sent to your registered mail upon confirmation.</Typography>
+             <Button style={{background: '#917EBD', color: 'white', marginTop: '10px', paddingLeft: '30px', paddingRight: '30px'}} onClick = {handleProperConfirmTrial}>Confirm Trial</Button>
+             </>
+             
+              :
+              <>
+              <Box paddingTop={"30px"} style={{color: '#505D68', fontSize: '14px'}} fontWeight="900">
+                <Typography >Note:</Typography></Box>
+            <Typography>Select a Session to Move Forward with Booking of the Course.</Typography>
+              <Button style={{background: 'gray', color: 'white', marginTop: '10px', paddingLeft: '30px', paddingRight: '30px'}} >Confirm Trial</Button>
+           </>} */}
           </Box>
         </Grid>
       </Grid>

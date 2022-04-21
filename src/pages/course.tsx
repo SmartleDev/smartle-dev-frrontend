@@ -206,8 +206,8 @@ interface instrcutorViewer {
                   <Box mt={5}>
                     <Typography variant='h6' fontWeight={800}>You have already purchased this course.</Typography>
                     <ThemeProvider theme={redTheme}>
-                      <Button variant='contained' style={{marginTop:"20px"}}>
-                        <Typography fontWeight={"600"} fontSize="14px" px={"30px"} py={"3px"}><Link to="/loggedcourseview">Go to course</Link></Typography>
+                      <Button variant='contained' style={{marginTop:"20px"}} onClick = {() => navigate('/loggedcourseview')}>
+                        <Typography fontWeight={"600"} fontSize="14px" px={"30px"} py={"3px"}>Go to course</Typography>
                       </Button>
                     </ThemeProvider>
                   </Box>
