@@ -4,14 +4,17 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import LockIcon from '@mui/icons-material/Lock';
+import Modal from '@mui/material/Modal';
 
 import { RootState } from '../redux/reducers';
 import { useDispatch, useSelector } from 'react-redux';
 import { actionCreators } from '../redux';
 import { bindActionCreators } from 'redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import API from "../redux/api/api";
+import './loggedUsers.css';
 
 export interface PaidModuleView {
 	moduleViewTrial : {}[];
@@ -39,6 +42,9 @@ function TrialView(props: PaidModuleView) {
 	const { fetchUsers, fetchModuleID} = bindActionCreators(actionCreators, dispatch)
 	const [topicId, setTopicId] = useState('');
 	const [topicView, setTopiceView] = useState<topicViewer[]>([]);
+	const [open, setOpen] = React.useState(false);
+	const handleOpen = () => setOpen(true);
+	const handleClose = () => setOpen(false);
 	console.log(topicId)
 
 	useEffect(() => {
@@ -50,11 +56,43 @@ function TrialView(props: PaidModuleView) {
         })
 	},[topicId])
 
+	const style = {
+		position: 'absolute' as 'absolute',
+		top: '50%',
+		left: '50%',
+		transform: 'translate(-50%, -50%)',
+		width: 400,
+		bgcolor: 'background.paper',
+		border: '2px solid #000',
+		boxShadow: 24,
+		p: 4
+	  };
+
+	  const redTheme = createTheme({ palette: { primary:{
+		main:  '#917EBD'}
+	  } });
+
   return (
 	  <>
 	<Box width={"90%"} margin="auto" borderTop={'1px dashed #917EBD'} sx={{marginTop:'20px'}}>
 	<Typography variant='h5' fontWeight={600} marginTop="20px">Modules</Typography>
 	<Box>
+		<Modal
+			open={open}
+			onClose={handleClose}
+			aria-labelledby="modal-modal-title"
+			aria-describedby="modal-modal-description"
+		>
+			<Box className="modal">
+				<Typography variant='h5' fontWeight={800} marginBottom="60px">You are currently on trial version</Typography>
+				<Typography>To unlock all modules click on the button below</Typography>
+				<ThemeProvider theme={redTheme}>
+                      <Button variant='contained' style={{marginTop:"20px"}} onClick = {() => navigate('/loggedcourseview')}>
+                        <Typography fontWeight={"600"} fontSize="14px" px={"30px"} py={"3px"}>Book Course</Typography>
+                      </Button>
+                </ThemeProvider>
+			</Box>
+		</Modal>
 		{moduleViewTrial.slice(0,2)?.map((dataItem: any, topicId:number) =>{
 			if (!dataItem.module_id) return(<React.Fragment key={topicId}></React.Fragment>);
 			return (
@@ -79,7 +117,9 @@ function TrialView(props: PaidModuleView) {
 								style = {{cursor : 'pointer'}}
 								onClick = {() =>{
 									fetchModuleID(topicDataItem.module_id)
-									navigate('/course-content')}
+									navigate('/course-content')
+									setOpen(true)
+									}	
 								}
 									container rowSpacing={1} 
 									columnSpacing={{ xs: 1, sm: 2, md: 3 }}
@@ -118,7 +158,7 @@ function TrialView(props: PaidModuleView) {
 			return (
 				<Accordion key={topicId} >
 					<AccordionSummary
-					//  onClick = {() => setTopicId(dataItem.module_id)}
+					onClick = {() => setOpen(true)}
 					expandIcon={<LockIcon />}
 					aria-controls="panel1a-content"
 					id="panel1a-header"
