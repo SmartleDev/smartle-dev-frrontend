@@ -6,6 +6,7 @@ import { RootState } from '../redux/reducers';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
+import moment from "moment";
 import API from "../redux/api/api";
 
 function BookCourse() {
@@ -26,7 +27,7 @@ function BookCourse() {
 		course_name: string;
 		course_age: string;
 		enrollment_type?: string | null;
-		course_cost: string;
+		course_cost: number;
 		course_description: string;
 		course_learningobjective: string;
 		course_image: string;
@@ -34,18 +35,54 @@ function BookCourse() {
 		course_duration: number;
 		course_status: string | null;
 		course_progress: number;
+		course_type: string;
 	  }
 
+	  interface sessionViewer{
+		session_id : number;
+		session_datetime : string | any;
+		session_type : any;
+		session_avalibility : number;
+		instructor_id : number;
+		session_seats : number;
+	  
+	  }
+
+	  interface courseInstructorViewer {
+		course_id: number;
+		course_name: string;
+		course_age: string;
+		course_type: string;
+		course_cost:string;
+		course_description: string;
+		course_learningobjective: string;
+		course_image: string;
+		course_numberofclasses: number;
+		course_duration: number;
+		course_status: string | null;
+		instructor_course_id: number;
+		instructor_id: number;
+		instructor_name: string;
+		instructor_email:string;
+		instructor_timing : string | null;
+		instructor_description : string | null;
+	}
+
 	const [instructors, setInstructors] = useState();
-	const [sessionID, setSessionID] = useState(null);
+	const [instructor, setInstructor] = useState<any>([]);
+	const [sessionID, setSessionID] = useState<any>(null);
+	const [selectedDate, setSelectedDate] = useState('Not Selected');
+	const [selectedTime, setSelectedTime] = useState('Not Selected');
 	console.log(sessionID)
 	const course_id = useSelector((state: RootState) => state.courseIDFetch)
 	console.log(course_id)
 	const enrollment_id = useSelector((state: RootState) => state.EnrollmentIDFetch)
-	const [sessionDetails, setSessionDetails] = useState<any>();
+	const [sessionDetails, setSessionDetails] = useState<sessionViewer[]>();
 	console.log(sessionDetails)
-	const [courseView, setCourseView] = useState<any>();
+	const [courseView, setCourseView] = useState<courseViewer[]>();
+	console.log(courseView)
 	const [confrim, setConfrim] = useState<any>('');
+	const [instructorCourseView, setInstructorCourseView] = useState<courseInstructorViewer[]>([]);
 	const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getItem('learner-details') || 'null'))
 
 	const dispatch = useDispatch();
@@ -55,6 +92,7 @@ function BookCourse() {
 		API.post('getsessionview', {courseId : course_id})
 		.then((res)=>{
 		  setSessionDetails(res.data)
+		  console.log("Session Details", sessionDetails);
 		  setSessionID(res.data.session_id)
 		}).catch((err) => {
 		  console.log(err)
@@ -65,7 +103,14 @@ function BookCourse() {
 		}).catch((err) => {
 		  console.log(err)
 		})
-
+		
+		API.post("getinstructorlist", {courseId : course_id})
+		  .then((res) => {
+			setInstructors(res.data);
+		  })
+		  .catch((err) => {
+			console.log(err);
+		  });
 	}, [])
 
 	const { fetchUsers, fetchInstructorID} = bindActionCreators(actionCreators, dispatch)
@@ -132,22 +177,38 @@ function BookCourse() {
 	     <Box>
 			<Grid container spacing={2}>
 				<Grid item xs={4} style={{height: '98vh',borderRight: '0.83px dashed #917EBD'}}>
-				<Box width={"90%"} margin="auto">
-					<Typography style={{fontSize: '14px', fontWeight: '900'}}>Buy Course</Typography>
-					<Typography marginTop='30px'>Course:</Typography>
-					<Typography fontSize={"16px"} fontWeight="700">Financial Literacy</Typography>
-					<Typography width={"80%"}>Become financially savvy in managing money matters in a fun & interactive manner, helping develop the right behaviour & attitude towards money... </Typography>
-					<Typography fontSize={"16px"} fontWeight="500" mt={"80px"}>Instructor:</Typography>
-					<Typography fontSize={"16px"} fontWeight="700">George Smith</Typography>
-					<Typography fontSize={"14px"} fontWeight="400">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Amet sapien as.</Typography>
-				</Box>
+				{instructorCourseView?.map((dataItem, index) => 
+         <Box width={"90%"} margin="auto">
+         <Typography color={"#505D68"} style={{fontSize: '14px', fontWeight: '900'}}>Book a Trial</Typography>
+         <Typography variant='h5' fontWeight={"900"} marginTop="10px" mb={"30px"}>Trial Details</Typography>
+         <Typography>Course:</Typography>
+         <Typography fontSize={"16px"} fontWeight="700">{dataItem?.course_name}</Typography>
+         <Typography width={"80%"}>{dataItem?.course_description}</Typography>
+         {instructor.length !== 0 &&
+         <>
+         <Typography fontSize={"16px"} fontWeight="800" mt={"80px"}>Instructor Details:</Typography>
+         <Typography fontSize={"18px"} fontWeight="600">{instructor[0]?.instructor_name}</Typography>
+         <Typography fontSize={"16px"} fontWeight="500">{instructor[0]?.instructor_description}</Typography>
+         </>
+         }
+         <Typography fontSize={"16px"} fontWeight="500" mt={"80px"}>Session Details:</Typography>
+         {/* <Typography fontSize={"16px"} fontWeight="700">{dataItem?.instructor_name}</Typography>
+         <Typography fontSize={"14px"} fontWeight="400">{dataItem?.instructor_description}</Typography> */}
+         <Box width={'250px'} sx={{background: '#F9EDF5', borderRadius: '7px', padding: '20px'}}>
+           <Typography>Date</Typography>
+           <Typography variant='h6' fontWeight={600} style={{color: '#5D6878'}}>{selectedDate}</Typography>
+           <Typography mt={2}>Time</Typography>
+           <Typography variant='h6' fontWeight={600} style={{color: '#5D6878'}}>{selectedTime}</Typography>
+         </Box>
+       </Box>
+         )}
 				</Grid>
 				<Grid item xs={8}>
 				<Box width={"90%"} margin="auto">
 				<Typography fontSize={"14px"} fontWeight="600" color={"#505D68"} mb={"10px"}>Select Session</Typography>
 				<Stack direction={"row"} spacing={2}>
 					{
-					sessions.map(session => {
+					sessionDetails !== undefined  && sessionDetails.map(session => {
 						return (
 							<Box 
 							sx={{ minWidth: 120 }}
@@ -159,20 +220,39 @@ function BookCourse() {
 								}}>
 							<CardContent>
 							<Box style={{textAlign: 'center'}}><Typography fontSize={"14px"} fontWeight="600" margin={"auto"}>
-								{session.day}
+								{moment(session?.session_datetime).format('dddd')}
 							</Typography>
 							
 							<Typography fontSize={"16px"} fontWeight="600">
-								{session.date}
+								{moment(session?.session_datetime).format("MMM Do")}
 							</Typography>
 							<Typography fontSize={"10px"} fontWeight="400">
-								No. of spots left: {session.spots}
+								No. of spots left: {session?.session_avalibility}/{session?.session_seats}
 							</Typography>
 							</Box>
 							</CardContent>
 							<CardActions style={{textAlign: 'center'}}>
 							<Box style={{margin: 'auto'}}>
-								<Button size='small' style={{background: '#917EBD', color: 'white',paddingLeft: '20px', paddingRight: '20px', fontSize:'10px'}}>Enroll Now</Button>
+								<Button 
+									onClick = {() => {
+										API.get('getInstructorDetails/'+session?.instructor_id)
+										.then((res)=>{
+										  setInstructor(res.data)
+										  console.log(res.data)
+										}).catch((err) => {
+										  console.log(err)
+										})
+												
+									fetchInstructorID(session?.instructor_id)
+									// setInstructor(session?.instructor_id)
+									setSessionID(session?.session_id)
+									setSelectedDate(moment(session?.session_datetime).format("MMM Do"))
+									setSelectedTime(new Date(session?.session_datetime).toLocaleString('en-US', {
+									  hour: 'numeric',
+									  minute: 'numeric'
+									}))
+									}} 
+								size='small' style={{background: '#917EBD', color: 'white',paddingLeft: '20px', paddingRight: '20px', fontSize:'10px'}}>Enroll Now</Button>
 							</Box>
 							</CardActions>
 						</Box>
@@ -222,18 +302,19 @@ function BookCourse() {
 							</Grid>
 							<Grid item xs={6}>
 								<Stack spacing={1} style={{float: 'right'}}>
-									<Typography>Financial Literacy</Typography>
-									<Typography>Hybrid</Typography>
-									<Typography>06</Typography>
-									<Typography>60 Minutes</Typography>
-									<Typography>8$</Typography>
-									<Typography>17 Jan</Typography>
-									<Typography>11:00 AM</Typography>
+									<Typography>{courseView !== undefined && courseView[0]?.course_name}</Typography>
+									<Typography>{courseView !== undefined && courseView[0]?.course_type}</Typography>
+									<Typography>{courseView !== undefined && courseView[0]?.course_numberofclasses}</Typography>
+									<Typography>{courseView !== undefined && courseView[0]?.course_duration/60} minutes</Typography>
+									<Typography>${courseView !== undefined && courseView[0]?.course_cost}</Typography>
+									<Typography>{selectedDate}</Typography>
+									<Typography>{selectedTime}</Typography>
 								</Stack>
 							</Grid>
 						</Grid>
 					</Box>
-					<Button style={{background: '#917EBD', color: 'white', marginTop: '20px', paddingLeft: '30px', paddingRight: '30px', float: 'right'}} onClick = {handelBuyCourse}>Pay Now</Button>
+					<Typography style={{textAlign: 'right', marginRight: '10px', marginTop: '10px'}} variant='h5' fontWeight={800}>Total Cost : ${courseView !== undefined && courseView[0]?.course_numberofclasses * courseView[0]?.course_cost}</Typography>
+					<Button style={{background: '#917EBD', color: 'white', marginTop: '10px', paddingLeft: '70px', paddingRight: '70px', float: 'right'}} onClick = {handelBuyCourse}>Pay Now</Button>
 				</Box>
 				</Box>
 				</Grid>
