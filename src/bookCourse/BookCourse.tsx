@@ -107,7 +107,7 @@ function BookCourse() {
 		
 	}, [])
 
-	const { fetchUsers, fetchInstructorID} = bindActionCreators(actionCreators, dispatch)
+	const {fetchInstructorID} = bindActionCreators(actionCreators, dispatch)
 
 
 	// const handelConfirmCourse = () => {
@@ -173,8 +173,8 @@ function BookCourse() {
 				<Grid item xs={4} style={{height: '98vh',borderRight: '0.83px dashed #917EBD'}}>
 				{instructorCourseView?.map((dataItem, index) => 
          <Box width={"90%"} margin="auto">
-         <Typography color={"#505D68"} style={{fontSize: '14px', fontWeight: '900'}}>Book a Trial</Typography>
-         <Typography variant='h5' fontWeight={"900"} marginTop="10px" mb={"30px"}>Trial Details</Typography>
+         <Typography color={"#505D68"} style={{fontSize: '14px', fontWeight: '900'}}>Book Course</Typography>
+         <Typography variant='h5' fontWeight={"900"} marginTop="10px" mb={"30px"}>Course Details</Typography>
          <Typography>Course:</Typography>
          <Typography fontSize={"16px"} fontWeight="700">{dataItem?.course_name}</Typography>
          <Typography width={"80%"}>{dataItem?.course_description}</Typography>
@@ -185,7 +185,9 @@ function BookCourse() {
          <Typography fontSize={"16px"} fontWeight="500">{instructor[0]?.instructor_description}</Typography>
          </>
          }
-         <Typography fontSize={"16px"} fontWeight="500" mt={"80px"}>Session Details:</Typography>
+         {instructorCourseView[0]?.course_type !== 'Self-Paced' &&
+		 <>
+		 <Typography fontSize={"16px"} fontWeight="500" mt={"80px"}>Session Details:</Typography>
          {/* <Typography fontSize={"16px"} fontWeight="700">{dataItem?.instructor_name}</Typography>
          <Typography fontSize={"14px"} fontWeight="400">{dataItem?.instructor_description}</Typography> */}
          <Box width={'250px'} sx={{background: '#F9EDF5', borderRadius: '7px', padding: '20px'}}>
@@ -194,16 +196,19 @@ function BookCourse() {
            <Typography mt={2}>Time</Typography>
            <Typography variant='h6' fontWeight={600} style={{color: '#5D6878'}}>{selectedTime}</Typography>
          </Box>
+		 </>
+	   }
        </Box>
          )}
 				</Grid>
 				<Grid item xs={8}>
 				<Box width={"90%"} margin="auto">
-				<Typography fontSize={"14px"} fontWeight="600" color={"#505D68"} mb={"10px"}>Select Session</Typography>
-				<Stack direction={"row"} spacing={2}>
+					{instructorCourseView[0]?.course_type !== 'Self-Paced' &&<Typography fontSize={"14px"} fontWeight="600" color={"#505D68"} mb={"10px"}>Select Session</Typography>}
+					<Stack direction={"row"} spacing={2}>
 					{
-					sessionDetails !== undefined  && sessionDetails.map(session => {
-						return (
+						sessionDetails !== undefined  && sessionDetails.map(session => {
+							return (
+								<>
 							<Box 
 							sx={{ minWidth: 120 }}
 							style={{
@@ -266,9 +271,10 @@ function BookCourse() {
 							</Box>
 							</CardActions>
 						</Box>
+				</>
 						)
 					})
-					}
+				}
 				</Stack>
 		
 				<Box style={{background: '#F9EDF5', borderRadius: '30px', padding: '10px 20px 70px 20px', marginTop : '80px'}}>
