@@ -53,7 +53,7 @@ function BookCourse() {
 		course_name: string;
 		course_age: string;
 		course_type: string;
-		course_cost:string;
+		course_cost:number;
 		course_description: string;
 		course_learningobjective: string;
 		course_image: string;
@@ -80,9 +80,9 @@ function BookCourse() {
 	const [sessionDetails, setSessionDetails] = useState<sessionViewer[]>();
 	console.log(sessionDetails)
 	const [courseView, setCourseView] = useState<courseViewer[]>();
-	console.log(courseView)
 	const [confrim, setConfrim] = useState<any>('');
 	const [instructorCourseView, setInstructorCourseView] = useState<courseInstructorViewer[]>([]);
+	console.log(instructorCourseView)
 	const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getItem('learner-details') || 'null'))
 
 	const dispatch = useDispatch();
@@ -97,20 +97,14 @@ function BookCourse() {
 		}).catch((err) => {
 		  console.log(err)
 		})
-		API.get<courseViewer[]>('getcourseview/'+course_id)
-		.then((res)=>{
-		  setCourseView(res.data)
-		}).catch((err) => {
-		  console.log(err)
-		})
+
+		API.get<courseInstructorViewer[]>('getcourseview/'+course_id)
+      .then((res)=>{
+        setInstructorCourseView(res.data)
+      }).catch((err) => {
+        console.log(err)
+      })
 		
-		API.post("getinstructorlist", {courseId : course_id})
-		  .then((res) => {
-			setInstructors(res.data);
-		  })
-		  .catch((err) => {
-			console.log(err);
-		  });
 	}, [])
 
 	const { fetchUsers, fetchInstructorID} = bindActionCreators(actionCreators, dispatch)
@@ -159,7 +153,7 @@ function BookCourse() {
 			}
 		}	
 	}
-
+	
 	useEffect(() => {
 		// API.post("getinstructorlist", {courseId : course_id})
 		//   .then((res) => {
@@ -168,7 +162,7 @@ function BookCourse() {
 		//   .catch((err) => {
 		// 	console.log(err);
 		//   });
-	  }, []);
+	  }, []);	
 
 	  console.log(instructors);
 
@@ -229,6 +223,22 @@ function BookCourse() {
 							<Typography fontSize={"10px"} fontWeight="400">
 								No. of spots left: {session?.session_avalibility}/{session?.session_seats}
 							</Typography>
+							<Box 
+                  style={{
+                    cursor: 'pointer',
+                    width: '80px',
+                    margin: '10px 0 0 8px',
+                    height: '20px',
+                    background:"#F9EDF5", 
+                    textAlign: 'center',
+                    border: '1.08671px solid #917EBD',
+                    borderRadius: '8px',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    color: '#917EBD'}}>{new Date(session?.session_datetime).toLocaleString('en-US', {
+                      hour: 'numeric',
+                      minute: 'numeric'
+                    })}</Box>
 							</Box>
 							</CardContent>
 							<CardActions style={{textAlign: 'center'}}>
@@ -260,26 +270,8 @@ function BookCourse() {
 					})
 					}
 				</Stack>
-				<Typography mt={"20px"} mb="5px" color="#505D68" fontWeight={"600"} fontSize="14px">Select Time</Typography>
-				<Stack direction={"row"} spacing={2} marginBottom="20px">
-					{timings.map(timing =>{
-					return(
-						<Box 
-						style={{
-							width: '120px',
-							height: '30px',
-							background:"#F9EDF5", 
-							padding: '5px', 
-							textAlign: 'center',
-							border: '1.08671px solid #917EBD',
-							borderRadius: '8px',
-							fontSize: '12px',
-							fontWeight: '700',
-							color: '#917EBD'}}>{timing}</Box>
-					)
-					})}
-				</Stack>
-				<Box style={{background: '#F9EDF5', borderRadius: '30px', padding: '10px 20px 70px 20px'}}>
+		
+				<Box style={{background: '#F9EDF5', borderRadius: '30px', padding: '10px 20px 70px 20px', marginTop : '80px'}}>
 					<Box style={{color: '#505D68'}} fontWeight="900" ><Typography fontSize={"23px"}>Billing Details</Typography></Box>
 					<Box style={{
 						borderRadius: '18px',
@@ -302,18 +294,18 @@ function BookCourse() {
 							</Grid>
 							<Grid item xs={6}>
 								<Stack spacing={1} style={{float: 'right'}}>
-									<Typography>{courseView !== undefined && courseView[0]?.course_name}</Typography>
-									<Typography>{courseView !== undefined && courseView[0]?.course_type}</Typography>
-									<Typography>{courseView !== undefined && courseView[0]?.course_numberofclasses}</Typography>
-									<Typography>{courseView !== undefined && courseView[0]?.course_duration/60} minutes</Typography>
-									<Typography>${courseView !== undefined && courseView[0]?.course_cost}</Typography>
+									<Typography>{instructorCourseView !== undefined && instructorCourseView[0]?.course_name}</Typography>
+									<Typography>{instructorCourseView !== undefined && instructorCourseView[0]?.course_type}</Typography>
+									<Typography>{instructorCourseView !== undefined && instructorCourseView[0]?.course_numberofclasses}</Typography>
+									<Typography>{instructorCourseView !== undefined && instructorCourseView[0]?.course_duration/60} minutes</Typography>
+									<Typography>${instructorCourseView !== undefined && instructorCourseView[0]?.course_cost}</Typography>
 									<Typography>{selectedDate}</Typography>
 									<Typography>{selectedTime}</Typography>
 								</Stack>
 							</Grid>
 						</Grid>
 					</Box>
-					<Typography style={{textAlign: 'right', marginRight: '10px', marginTop: '10px'}} variant='h5' fontWeight={800}>Total Cost : ${courseView !== undefined && courseView[0]?.course_numberofclasses * courseView[0]?.course_cost}</Typography>
+					<Typography style={{textAlign: 'right', marginRight: '10px', marginTop: '10px'}} variant='h5' fontWeight={800}>Total Cost : ${instructorCourseView !== undefined && instructorCourseView[0]?.course_numberofclasses * instructorCourseView[0]?.course_cost}</Typography>
 					<Button style={{background: '#917EBD', color: 'white', marginTop: '10px', paddingLeft: '70px', paddingRight: '70px', float: 'right'}} onClick = {handelBuyCourse}>Pay Now</Button>
 				</Box>
 				</Box>
