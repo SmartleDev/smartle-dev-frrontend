@@ -4,6 +4,7 @@ import {Grid, Box, Typography, CardContent, CardActions, Button, Stack} from '@m
 import { actionCreators } from '../redux';
 import { RootState } from '../redux/reducers';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import API from "../redux/api/api";
 
@@ -20,16 +21,55 @@ function BookCourse() {
 	  ]
 	
 	const timings = ["11:00 AM", "6:00 PM"];
+	interface courseViewer {
+		course_id: number;
+		course_name: string;
+		course_age: string;
+		enrollment_type?: string | null;
+		course_cost: string;
+		course_description: string;
+		course_learningobjective: string;
+		course_image: string;
+		course_numberofclasses: number;
+		course_duration: number;
+		course_status: string | null;
+		course_progress: number;
+	  }
 
 	const [instructors, setInstructors] = useState();
+	const [sessionID, setSessionID] = useState(null);
+	console.log(sessionID)
+	const course_id = useSelector((state: RootState) => state.courseIDFetch)
+	console.log(course_id)
+	const enrollment_id = useSelector((state: RootState) => state.EnrollmentIDFetch)
+	const [sessionDetails, setSessionDetails] = useState<any>();
+	console.log(sessionDetails)
+	const [courseView, setCourseView] = useState<any>();
 	const [confrim, setConfrim] = useState<any>('');
 	const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getItem('learner-details') || 'null'))
 
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
-	const { fetchUsers, fetchCourseID} = bindActionCreators(actionCreators, dispatch)
+	useEffect(() => {
+		API.post('getsessionview', {courseId : course_id})
+		.then((res)=>{
+		  setSessionDetails(res.data)
+		  setSessionID(res.data.session_id)
+		}).catch((err) => {
+		  console.log(err)
+		})
+		API.get<courseViewer[]>('getcourseview/'+course_id)
+		.then((res)=>{
+		  setCourseView(res.data)
+		}).catch((err) => {
+		  console.log(err)
+		})
 
-	const course_id = useSelector((state: RootState) => state.courseIDFetch)
+	}, [])
+
+	const { fetchUsers, fetchInstructorID} = bindActionCreators(actionCreators, dispatch)
+
 
 	// const handelConfirmCourse = () => {
 	// 	API.post('enrollLearner', {courseId : course_id, studentId : leanerUser?.student_id, studentFeeStatus : true, sessionId : sessionId, enrollmentType : 'paid'})
@@ -40,14 +80,49 @@ function BookCourse() {
 	// 	})
 	//   }
 
-	useEffect(() => {
-		API.post("getinstructorlist", {courseId : course_id})
+	const handelBuyCourse = () => {
+
+		if(enrollment_id !== 0){
+			API.post("convertTrialToBuyCourse", {enrollmentId : enrollment_id})
 		  .then((res) => {
-			setInstructors(res.data);
+			console.log(res.data)
+			fetchInstructorID(0)
+			navigate('/loggedcourseview')
 		  })
 		  .catch((err) => {
 			console.log(err);
 		  });
+		}else{
+			if(sessionID === null){
+				API.post('enrollLearner', {courseId : course_id, studentId : leanerUser?.student_id, studentFeeStatus : true, sessionId : null, enrollmentType : 'paid'})
+				.then((res) => {
+					console.log(res.data)
+					navigate('/loggedcourseview')
+				  })
+				  .catch((err) => {
+					console.log(err);
+				  });	
+			}else{
+				API.post('enrollLearner', {courseId : course_id, studentId : leanerUser?.student_id, studentFeeStatus : true, sessionId : sessionID, enrollmentType : 'paid'})
+				.then((res) => {
+					console.log(res.data)
+					navigate('/loggedcourseview')
+				  })
+				  .catch((err) => {
+					console.log(err);
+				  });	
+			}
+		}	
+	}
+
+	useEffect(() => {
+		// API.post("getinstructorlist", {courseId : course_id})
+		//   .then((res) => {
+		// 	setInstructors(res.data);
+		//   })
+		//   .catch((err) => {
+		// 	console.log(err);
+		//   });
 	  }, []);
 
 	  console.log(instructors);
@@ -158,7 +233,7 @@ function BookCourse() {
 							</Grid>
 						</Grid>
 					</Box>
-					<Button style={{background: '#917EBD', color: 'white', marginTop: '20px', paddingLeft: '30px', paddingRight: '30px', float: 'right'}}>Pay Now</Button>
+					<Button style={{background: '#917EBD', color: 'white', marginTop: '20px', paddingLeft: '30px', paddingRight: '30px', float: 'right'}} onClick = {handelBuyCourse}>Pay Now</Button>
 				</Box>
 				</Box>
 				</Grid>

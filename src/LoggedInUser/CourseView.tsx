@@ -79,12 +79,14 @@ const CourseViewContent = () => {
   }
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { fetchUsers, fetchModuleID } = bindActionCreators(
+  const { fetchUsers, fetchEnrollmentID } = bindActionCreators(
     actionCreators,
     dispatch
   );
 
   const course_id = useSelector((state: RootState) => state.courseIDFetch);
+  const enrollment_id = useSelector((state: RootState) => state.EnrollmentIDFetch);
+  console.log(enrollment_id)
   const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getItem('learner-details') || 'null'))
   const [courseView, setCourseView] = useState<any>([]);
   const [sessionView, setSessionView] = useState<any>([]);
@@ -102,14 +104,14 @@ const CourseViewContent = () => {
     })
       .then((response) => {
         setCourseView(response.data);
-        if (response?.data?.session_id !== null) {
-          API.post("getenrolledsessiondetails", { courseId: course_id, studentId: leanerUser?.student_id})
-            .then((res) => {
-              setSessionView(res.data);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
+            if (response?.data?.session_id !== null) {
+              API.post("getenrolledsessiondetails", { courseId: course_id, studentId: leanerUser?.student_id})
+                .then((res) => {
+                 setSessionView(res.data);
+             })
+                .catch((err) => {
+                 console.log(err);
+              });
         }
       })
       .catch((err) => {
@@ -264,7 +266,7 @@ const CourseViewContent = () => {
       {courseView[0]?.enrollment_type === "paid" ? (
         <PaidView moduleViewPaid={moduleView} />
       ) : (
-        <TrialView moduleViewTrial={moduleView} />
+        <TrialView moduleViewTrial={moduleView} enrollmentID = {courseView[0]?.enrollment_id} />
       )}
        {sessionView?.map((dataItem : any, index : any) =>
     <>

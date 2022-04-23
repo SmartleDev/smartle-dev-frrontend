@@ -11,3 +11,6 @@ export enum ModuleType {
 export enum InstructorType {
     INSTRUCTOR_ID = "instructor_id"
 }
+export enum EnrollmentType {
+    ENROLLMENT_ID = "enrollment_id"
+}

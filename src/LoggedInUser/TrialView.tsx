@@ -18,12 +18,13 @@ import './loggedUsers.css';
 
 export interface PaidModuleView {
 	moduleViewTrial : {}[];
+	enrollmentID : number;
   }
 
 
 function TrialView(props: PaidModuleView) {
 
-	const { moduleViewTrial } = props;
+	const { moduleViewTrial, enrollmentID } = props;
 
 	interface topicViewer {
         module_id: number;
@@ -39,7 +40,9 @@ function TrialView(props: PaidModuleView) {
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate()
-	const { fetchUsers, fetchModuleID} = bindActionCreators(actionCreators, dispatch)
+	const { fetchUsers, fetchModuleID, fetchEnrollmentID} = bindActionCreators(actionCreators, dispatch)
+	const enrollment_id = useSelector((state: RootState) => state.EnrollmentIDFetch);
+	console.log(enrollment_id)
 	const [topicId, setTopicId] = useState('');
 	const [topicView, setTopiceView] = useState<topicViewer[]>([]);
 	const [open, setOpen] = React.useState(false);
@@ -87,7 +90,12 @@ function TrialView(props: PaidModuleView) {
 				<Typography variant='h5' fontWeight={800} marginBottom="60px">You are currently on trial version</Typography>
 				<Typography>To unlock all modules click on the button below</Typography>
 				<ThemeProvider theme={redTheme}>
-                      <Button variant='contained' style={{marginTop:"20px"}} onClick = {() => navigate('/loggedcourseview')}>
+                      <Button variant='contained' style={{marginTop:"20px"}} onClick = {
+						  () => {
+						fetchEnrollmentID(enrollmentID)
+						 navigate('/bookcourse')
+						  }
+						  }>
                         <Typography fontWeight={"600"} fontSize="14px" px={"30px"} py={"3px"}>Book Course</Typography>
                       </Button>
                 </ThemeProvider>
@@ -158,7 +166,11 @@ function TrialView(props: PaidModuleView) {
 			return (
 				<Accordion key={topicId} >
 					<AccordionSummary
-					onClick = {() => setOpen(true)}
+					onClick = {() => 
+							{
+							setOpen(true)
+							}
+						}
 					expandIcon={<LockIcon />}
 					aria-controls="panel1a-content"
 					id="panel1a-header"

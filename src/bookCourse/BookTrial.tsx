@@ -96,6 +96,7 @@ const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getIt
         setMsg(confrim.message);
         setOpen(true);
         setConfrim(res.data)
+        navigate('/loggedcourseview/');
         if(open === true){
           navigate('/loggedcourseview/');
         }
