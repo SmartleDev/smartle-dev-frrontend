@@ -97,8 +97,14 @@ const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getIt
         setOpen(true);
         setConfrim(res.data)
         navigate('/loggedcourseview/');
+        window.addEventListener("popstate", () => {
+          navigate(1);
+        });
         if(open === true){
           navigate('/loggedcourseview/');
+          window.addEventListener("popstate", () => {
+						navigate(1);
+					});
         }
     }).catch((err) => {
       console.log(err)

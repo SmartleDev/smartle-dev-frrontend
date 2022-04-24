@@ -119,6 +119,7 @@ function BookCourse() {
 	// 	})
 	//   }
 
+
 	const handelBuyCourse = () => {
 
 		if(enrollment_id !== 0){
@@ -127,6 +128,9 @@ function BookCourse() {
 			console.log(res.data)
 			fetchInstructorID(0)
 			navigate('/loggedcourseview')
+			window.addEventListener("popstate", () => {
+				navigate(1);
+			});
 		  })
 		  .catch((err) => {
 			console.log(err);
@@ -137,6 +141,9 @@ function BookCourse() {
 				.then((res) => {
 					console.log(res.data)
 					navigate('/loggedcourseview')
+					window.addEventListener("popstate", () => {
+						navigate(1);
+					});
 				  })
 				  .catch((err) => {
 					console.log(err);
@@ -146,6 +153,9 @@ function BookCourse() {
 				.then((res) => {
 					console.log(res.data)
 					navigate('/loggedcourseview')
+					window.addEventListener("popstate", () => {
+						navigate(1);
+					});
 				  })
 				  .catch((err) => {
 					console.log(err);
