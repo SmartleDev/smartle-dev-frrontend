@@ -12,6 +12,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import BookIcon from "@mui/icons-material/Book";
 import CoPresentIcon from "@mui/icons-material/CoPresent";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import Header from './Header'
 
 import { RootState } from "../redux/reducers";
 import { useDispatch, useSelector } from "react-redux";
@@ -131,6 +132,8 @@ const CourseViewContent = () => {
     courseView.length === 0 ? 0 : courseView[0]?.course_progress;
 
   return (
+    <>
+    <Header/>
     <Box>
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
         <Grid item xs={6} borderRight="1px dashed #917EBD">
@@ -234,7 +237,7 @@ const CourseViewContent = () => {
               </Box>
             </Grid>
           </Grid>
-          <Box
+          {/* <Box
             width={"80%"}
             sx={{ background: "#F9EDF5", borderRadius: "5px", padding: "15px" }}
           >
@@ -260,7 +263,7 @@ const CourseViewContent = () => {
                 </Grid>
               </Grid>
             </Box>
-          </Box>
+          </Box> */}
         </Grid>}
       </Grid>
       {courseView[0]?.enrollment_type === "paid" ? (
@@ -359,6 +362,7 @@ const CourseViewContent = () => {
       </>
             )}
     </Box>
+    </>
   );
 };
 

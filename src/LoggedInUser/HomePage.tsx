@@ -13,6 +13,8 @@ import LoggedSideDrawer from "../components/organisms/LoggedSideDrawer";
 import { HashLink as Link } from 'react-router-hash-link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {useNavigate, Navigate} from 'react-router-dom'
+import trialBanner2 from '../util/resources/img/trialBanner2.png'
+import trialBanner from '../util/resources/img/trialBanner.png'
 
 import { actionCreators } from '../redux';
 import { RootState } from '../redux/reducers';
@@ -127,6 +129,20 @@ console.log(learner)
                     className="rounded-md w-full"
                     alt=""
                   />
+                {/* {dataItem?.enrollment_type === 'trial' &&<img
+                    src={trialBanner2}
+                    height="130px"
+                    width="130px"
+                    style = {{position: "absolute", top : -15, left : -8}}
+                    alt=""
+                  />} */}
+                {dataItem?.enrollment_type === 'trial' &&<img
+                    src={trialBanner}
+                    height="130px"
+                    width="130px"
+                    style = {{position: "absolute", top : -15, right : -30, transform: 'rotate(40deg)'}}
+                    alt=""
+                  />}
                 </div>
               {/* </Link> */}
               <div style={{ width: "380px" }} className="p-2 relative">
