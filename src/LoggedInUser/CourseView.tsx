@@ -347,7 +347,7 @@ const CourseViewContent = () => {
             </ThemeProvider>
 
           </Grid>
-          <Grid item xs={6}>
+          {/* <Grid item xs={6}>
             <Typography marginTop={"5px"} fontSize="18px" fontWeight={600}>
               Events
             </Typography>
@@ -356,7 +356,7 @@ const CourseViewContent = () => {
                 defaultValue={[new Date(2022, 3, 1), new Date(2022, 3, 8)]}
               />
             </Box>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Box>
       </>
