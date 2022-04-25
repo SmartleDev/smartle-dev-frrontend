@@ -25,12 +25,13 @@ const CoursesGrid = ({ courses, color = 'accent-200', elementWidth='sm:w-1/2 md:
   }, []);
     
   async function requestSubjects() {
-    const res = await fetch(
-      `https://www.backend.smartle.co/coursesonhome`
-    );
-    // console.log(res)
-    const json = await res.json();
-    setSubjects(json.result);
+    API.get("coursesonhome/")
+    .then((res) => {
+      setSubjects(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 }
 
     const isMobile = useMediaQuery('(max-width:1000px)');
