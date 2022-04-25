@@ -24,6 +24,7 @@ const Courses = () => {
   const [fail, setFail] = useState(undefined);
   const [filterValue, setFilterValue] = useState<string | undefined>(undefined);
   const [filterAge, setFilterAge] = useState<string | undefined>('All');
+  const [learner, setLearner] = useState<any>(JSON.parse(localStorage.getItem('learner-details') || 'null'))
   
   const dispatch = useDispatch();
   const { fetchUsers, fetchCourseID} = bindActionCreators(actionCreators, dispatch)
@@ -37,18 +38,34 @@ const Courses = () => {
   useEffect(() => {
     ( async () => {
 			try {
+       if(learner !== null){
+        API.post("getRecommendedCourses", {learnerAge : Number(learner?.student_age)})
+        .then((res)=>{
+          const json = res.data;
+          if(filterValue !== undefined){
+            console.log(json)
+           setCourses(json?.filter((dataItem: any, index: any) => dataItem.course_name?.toLowerCase().includes(filterValue?.toLowerCase())))
+         }else if (filterAge !== 'All'){
+           setCourses(json?.filter((dataItem: any, index: any) => dataItem.course_age === filterAge))
+         }else{
+            setCourses(json);
+          }
+        }).catch((err) => {
+          console.log(err)
+        })
+       }else{
         const res = await fetch(
           `https://www.backend.smartle.co/courses`
         );
-
-        const json = await res.json();
-       if(filterValue !== undefined){
-         console.log(json.result)
-        setCourses(json.result?.filter((dataItem: any, index: any) => dataItem.course_name?.toLowerCase().includes(filterValue?.toLowerCase())))
-      }else if (filterAge !== 'All'){
-        setCourses(json.result?.filter((dataItem: any, index: any) => dataItem.course_age === filterAge))
-      }else{
-         setCourses(json.result);
+         const json = await res.json();
+        if(filterValue !== undefined){
+          console.log(json.result)
+         setCourses(json.result?.filter((dataItem: any, index: any) => dataItem.course_name?.toLowerCase().includes(filterValue?.toLowerCase())))
+       }else if (filterAge !== 'All'){
+         setCourses(json.result?.filter((dataItem: any, index: any) => dataItem.course_age === filterAge))
+       }else{
+          setCourses(json.result);
+        }
        }
 			} catch (e: any) {
 				setFail(e.message);
@@ -147,7 +164,7 @@ const Courses = () => {
       
       </div>
       <div className=" mt-10 mb-5">
-        <div className="flex flex-wrap justify-center w-10/12 mx-auto">
+     {learner === null && <div className="flex flex-wrap justify-center w-10/12 mx-auto">
           <div
           onClick={()=>{setFilterAge('All')}}
           className={`${filterAge === 'All' ? 'dark:text-white border-2 border-accent-400 bg-accent-400':'bg-white border-2 border-accent-400'} w-full sm:w-5/12 md:w-auto mx-auto text-center text-slate-900  my-2 cursor-pointer px-6 py-1 rounded shadow-lg font-bold`}>All</div>
@@ -160,7 +177,7 @@ const Courses = () => {
           <div
           onClick={()=>{setFilterAge('13-14')}}
           className={`${filterAge === '13-14' ? 'dark:text-white border-2 border-accent-400 bg-accent-400':'bg-white border-2 border-accent-400'} w-full sm:w-5/12 md:w-auto mx-auto text-center text-slate-900  my-2 cursor-pointer px-6 py-1 rounded shadow-lg font-bold`}>13-14 Yrs</div>
-        </div>
+        </div>}
       </div>
       {
         (!isNull(courses) && courses && updateCourses) && (
