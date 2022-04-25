@@ -94,7 +94,7 @@ function BookCourse() {
 		.then((res)=>{
 		  setSessionDetails(res.data)
 		  console.log("Session Details", sessionDetails);
-		  setSessionID(res.data.session_id)
+		  
 		}).catch((err) => {
 		  console.log(err)
 		})
@@ -337,7 +337,8 @@ function BookCourse() {
 				:
 				<Typography style={{textAlign: 'right', marginRight: '10px', marginTop: '10px'}} variant='h5' fontWeight={800}>Total Cost : ${instructorCourseView !== undefined && instructorCourseView[0]?.course_cost}</Typography>
 				}
-					<Button style={{background: '#917EBD', color: 'white', marginTop: '10px', paddingLeft: '70px', paddingRight: '70px', float: 'right'}} onClick = {handelBuyCourse}>Pay Now</Button>
+					{sessionID !== null &&<Button style={{background: '#917EBD', color: 'white', marginTop: '10px', paddingLeft: '70px', paddingRight: '70px', float: 'right'}} onClick = {handelBuyCourse}>Pay Now</Button>}
+					{instructorCourseView[0]?.course_type === 'Self-Paced' &&<Button style={{background: '#917EBD', color: 'white', marginTop: '10px', paddingLeft: '70px', paddingRight: '70px', float: 'right'}} onClick = {handelBuyCourse}>Pay Now</Button>}
 				</Box>
 				</Box>
 				</Grid>
