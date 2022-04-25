@@ -69,6 +69,7 @@ function BookCourse() {
 	}
 
 	const [instructors, setInstructors] = useState();
+	const [checked, setChecked] = useState<any>(false);
 	const [instructor, setInstructor] = useState<any>([]);
 	const [sessionID, setSessionID] = useState<any>(null);
 	const [selectedDate, setSelectedDate] = useState('Not Selected');
@@ -260,6 +261,7 @@ function BookCourse() {
 							<Box style={{margin: 'auto'}}>
 								<Button 
 									onClick = {() => {
+										setChecked(true)
 										API.get('getInstructorDetails/'+session?.instructor_id)
 										.then((res)=>{
 										  setInstructor(res.data)
@@ -277,7 +279,7 @@ function BookCourse() {
 									  minute: 'numeric'
 									}))
 									}} 
-								size='small' style={{background: '#917EBD', color: 'white',paddingLeft: '20px', paddingRight: '20px', fontSize:'10px'}}>Enroll Now</Button>
+								size='small' style={{background: '#917EBD', color: 'white',paddingLeft: '20px', paddingRight: '20px', fontSize:'10px'}}> Enroll Now</Button>
 							</Box>
 							</CardActions>
 						</Box>
@@ -315,13 +317,26 @@ function BookCourse() {
 									<Typography>{instructorCourseView !== undefined && instructorCourseView[0]?.course_numberofclasses}</Typography>
 									<Typography>{instructorCourseView !== undefined && instructorCourseView[0]?.course_duration/60} minutes</Typography>
 									<Typography>${instructorCourseView !== undefined && instructorCourseView[0]?.course_cost}</Typography>
+									{instructorCourseView[0]?.course_type !== 'Self-Paced' ?
+									<>
 									<Typography>{selectedDate}</Typography>
 									<Typography>{selectedTime}</Typography>
+									</>
+									:
+									<>
+									<Typography>-</Typography>
+									<Typography>-</Typography>
+									</>
+									}
 								</Stack>
 							</Grid>
 						</Grid>
 					</Box>
+					{instructorCourseView[0]?.course_type !== 'Self-Paced' ? 
 					<Typography style={{textAlign: 'right', marginRight: '10px', marginTop: '10px'}} variant='h5' fontWeight={800}>Total Cost : ${instructorCourseView !== undefined && instructorCourseView[0]?.course_numberofclasses * instructorCourseView[0]?.course_cost}</Typography>
+				:
+				<Typography style={{textAlign: 'right', marginRight: '10px', marginTop: '10px'}} variant='h5' fontWeight={800}>Total Cost : ${instructorCourseView !== undefined && instructorCourseView[0]?.course_cost}</Typography>
+				}
 					<Button style={{background: '#917EBD', color: 'white', marginTop: '10px', paddingLeft: '70px', paddingRight: '70px', float: 'right'}} onClick = {handelBuyCourse}>Pay Now</Button>
 				</Box>
 				</Box>
