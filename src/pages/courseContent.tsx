@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import {Box, Slide, AppBar, CssBaseline, Toolbar, Typography, Grid} from '@mui/material';
+import {Box, Slide, AppBar, CssBaseline, Toolbar, Typography, Grid,Stack, Divider,Button,Accordion, Drawer } from '@mui/material';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import ArticleRoundedIcon from '@mui/icons-material/ArticleRounded';
 import GradBlobCourseContent from '../components/atom/GradBlobCourseContent';
 import MobileHeader from '../components/organisms/MobileHeader';
 import FrameDiv from '../components/sections/coursecontent/frameDiv';
@@ -9,9 +11,21 @@ import useScrollTrigger from '@mui/material/useScrollTrigger';
 import "../styles/coursecontent.scss";
 import API from "../redux/api/api";
 import {useParams} from 'react-router-dom'
-
+import { bindActionCreators } from 'redux';
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { actionCreators } from '../redux';
 import { RootState } from '../redux/reducers';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import AssignmentIndRoundedIcon from '@mui/icons-material/AssignmentIndRounded';
+import VideogameAssetRoundedIcon from '@mui/icons-material/VideogameAssetRounded';
+import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
+import GroupsIcon from '@mui/icons-material/Groups';
+import PausePresentationIcon from '@mui/icons-material/PausePresentation';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+
 
 interface Props {
   /**
@@ -29,6 +43,27 @@ interface moduleViewer {
   module_description: string;
   module_objective:string;
 }
+
+interface topicViewer {
+  module_id: number;
+  module_topic_id : number;
+  topic_id : number;
+  topic_name: string;
+  topic_duration ?: string | null;
+  topic_type: string;
+  module_objective:string;
+  topic_path : string;
+  topiccol:string
+}
+
+interface singleTopicViewer {
+  topic_id : number;
+  topic_name: string;
+  topic_duration ?: string | null;
+  topic_type: string;
+  topic_path : string;
+}
+
 function HideOnScroll(props: Props) {
   const { children, window } = props;
   // Note that you normally won't need to set the window ref as useScrollTrigger
@@ -37,6 +72,8 @@ function HideOnScroll(props: Props) {
   const trigger = useScrollTrigger({
     target: window ? window() : undefined,
   });
+
+  
 
   return (
     <Slide appear={false} direction="down" in={!trigger}>
@@ -47,9 +84,17 @@ function HideOnScroll(props: Props) {
 
 const CourseContent = () => {
   const module_id = useSelector((state: RootState) => state.moduleIDFetch)
+  const topic_id = useSelector((state: RootState) => state.TopicIDFetch);
   const [moduleView, setModuleView] = useState<moduleViewer[]>([]);
+  const [topicView, setTopicView] = useState<topicViewer[]>([]);
+  const [singleTopicContent, setSingleTopicContent] = useState<singleTopicViewer[]>([]);
+  console.log(topic_id);
+  const dispatch = useDispatch();
+  const { fetchtopicID} = bindActionCreators(actionCreators, dispatch)
   
 console.log(moduleView)
+console.log(topicView);
+console.log(singleTopicContent);
 
   useEffect(() => {
 
@@ -60,7 +105,24 @@ console.log(moduleView)
       console.log(err)
     })
 
-  }, [])
+    API.get<topicViewer[]>('gettopicformodule/'+module_id)
+    .then((res)=>{
+      setTopicView(res.data)
+    }).catch((err) => {
+      console.log(err)
+    })
+
+    API.get<singleTopicViewer[]>('getTopicContent/'+topic_id)
+    .then((res)=>{
+      setSingleTopicContent(res.data)
+    }).catch((err) => {
+      console.log(err)
+    })
+
+  }, [topic_id])
+
+  const isMobile:any = useMediaQuery('(max-width:1199px)');
+  const drawerWidth:number = 340;
 
   return (
     <>
@@ -88,13 +150,95 @@ console.log(moduleView)
         </Toolbar>
         </AppBar>
         </HideOnScroll>
-        <CourseContentDrawer />
+        <Drawer
+        variant="permanent"
+        PaperProps={{
+            sx: {
+              backgroundColor: "#F9EDF5",
+            }
+          }}
+        sx={{
+            display: { xs:"none", sm:"nome",md: "none", lg: "block" },
+          width: drawerWidth,
+          backgroundColor: "pink",
+          flexShrink: 0,
+          [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+        }}
+      >
+        <Toolbar />
+        <Box sx={{ overflow: 'auto', mt: '70px'}}>
+            {topicView?.map((dataItem: any, topicId:number) =>{
+                // if (!topicView) return(<React.Fragment key={topicId}></React.Fragment>);
+                return (
+                    <Accordion key={topicId} onClick={() => {fetchtopicID(dataItem?.topic_id)}}>
+                        <AccordionSummary
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                        sx={{mt: '10px'}} className='activity-title' 
+                        >
+                            {dataItem.topic_type === 'Self paced' ? <ArticleRoundedIcon/> : dataItem.topic_type === 'Instructor Led' ? <GroupsIcon /> : dataItem.topic_type === 'Video' ? <PausePresentationIcon /> : dataItem.topic_type === 'Document'? <AttachFileIcon/> :dataItem.topic_type === 'Assignment' ? <AssignmentIndRoundedIcon/> : <ArticleRoundedIcon/>}
+                        <Typography sx={{ml: '5px'}}>{dataItem.topic_name}</Typography>
+                        </AccordionSummary>
+                    </Accordion>
+                )
+                })
+            }
+        </Box>
+        
+      </Drawer>
         <Box component="main" sx={{ flexGrow: 1 }}>
             <GradBlobCourseContent/>
             <MobileHeader />
             <Box  margin="auto">
                 <Typography sx={{mt: '60px', ml:5}}>Learning Video - 1</Typography>
-                <FrameDiv />
+                <Box sx={{}}>
+            {singleTopicContent?.map((dataItem:any, index: number) => 
+                <iframe src={dataItem?.topic_path}
+                  title="W3Schools Free Online Web Tutorials"     
+                  style={{justifyContent:'center', width:"70vw", height: "90vh"}}
+                  className="content-resize">
+              </iframe> 
+            )}
+            
+            {!isMobile ?(<>
+              <Box paddingLeft={"100px"} paddingRight={"100px"}>
+            <Link to='/courses' >
+                <Button 
+                    className='sm:mt-12 md:mt-12 lg:mt-5 xl:mt-0 rounded-md md:rounded-md shadow-xl font-bold py-3 px-5 md:w-auto md:px-10 lg:px-10 h-9 text-white bg-color-400 '>
+                        Previous
+                </Button>
+            </Link>
+            <Link to='/courses' >
+                <Button 
+                    className='sm:mt-12 md:mt-12 lg:mt-5 xl:mt-0 rounded-md md:rounded-md shadow-xl font-bold py-3 px-10 md:w-auto md:px-14 lg:px-14 h-9 text-white bg-color-400' style={{float:"right"}}>
+                    Next
+                </Button>
+            </Link>
+        </Box></>) :(
+                <>
+                <Box sx={{mt: '70px'}} className='module-overview' 
+                component={Stack} 
+                direction="column" 
+                justifyContent="center">
+                <Typography variant='h6'>Module Overview</Typography>
+                </Box>
+                <Typography paragraph sx={{pl: '10px', pr: '10px', mt: '10px', ml: "30px"}}>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. l aenean urna,
+                </Typography>
+                <Box width={"80%"} margin="auto"><Divider /></Box>
+                <Box sx={{ flexGrow: 1, mt:'10px', ml:'20px',mr:'20px' }}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                        <Typography variant='h6'>Activities</Typography>
+                        </Grid>
+                        <Grid item xs={6} textAlign="right">
+                            <Typography variant='h6'>1/5</Typography>
+                        </Grid>
+                    </Grid>
+                </Box>
+     
+            </> ) }
+        </Box>
                 </Box>
             </Box>
     </Box>

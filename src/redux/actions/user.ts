@@ -1,5 +1,5 @@
 import { UserType } from "../action-types/index"
-import { CourseType, ModuleType, InstructorType, EnrollmentType } from "../action-types/index"
+import { CourseType, ModuleType, InstructorType, EnrollmentType, TopicType } from "../action-types/index"
 
 interface FetchUsers {
     type: UserType.FETCH_USERS,
@@ -23,8 +23,14 @@ interface EnrollmentAction {
     payload: number
 }
 
+interface TopicAction {
+    type: TopicType.TOPIC_ID,
+    payload: number
+}
+
 export type UserAction = FetchUsers  ;
 export type CourseIDAction = CourseAction  ;
 export type ModuleIDAction = ModuleAction  ;
 export type InstructorIDAction = InstructorAction  ;
 export type EnrollmentIDAction = EnrollmentAction  ;
+export type TopicIDAction = TopicAction;

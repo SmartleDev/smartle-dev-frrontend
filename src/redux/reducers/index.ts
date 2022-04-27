@@ -5,6 +5,7 @@ import {
   moduleIDFetch,
   InstructorIDFetch,
   EnrollmentIDFetch,
+  TopicIDFetch
 } from "./fetchUsers";
 
 const reducers = combineReducers({
@@ -13,6 +14,7 @@ const reducers = combineReducers({
   moduleIDFetch,
   InstructorIDFetch,
   EnrollmentIDFetch,
+  TopicIDFetch
 });
 
 export default reducers;

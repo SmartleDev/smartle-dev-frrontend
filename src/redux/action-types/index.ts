@@ -14,3 +14,7 @@ export enum InstructorType {
 export enum EnrollmentType {
     ENROLLMENT_ID = "enrollment_id"
 }
+
+export enum TopicType {
+    TOPIC_ID = "topic_id"
+}
