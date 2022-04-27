@@ -40,7 +40,7 @@ function TrialView(props: PaidModuleView) {
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate()
-	const { fetchUsers, fetchModuleID, fetchEnrollmentID} = bindActionCreators(actionCreators, dispatch)
+	const { fetchtopicID, fetchModuleID, fetchEnrollmentID} = bindActionCreators(actionCreators, dispatch)
 	const enrollment_id = useSelector((state: RootState) => state.EnrollmentIDFetch);
 	console.log(enrollment_id)
 	const [topicId, setTopicId] = useState('');
@@ -49,6 +49,13 @@ function TrialView(props: PaidModuleView) {
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
 	console.log(topicId)
+
+	const [expanded, setExpanded] = React.useState<string | false>(false);
+
+	const handleChange =
+	  (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+		setExpanded(isExpanded ? panel : false);
+	  };
 
 	useEffect(() => {
 		API.get<topicViewer[]>('gettopicformodule/'+topicId)
@@ -104,7 +111,7 @@ function TrialView(props: PaidModuleView) {
 		{moduleViewTrial.slice(0,2)?.map((dataItem: any, topicId:number) =>{
 			if (!dataItem.module_id) return(<React.Fragment key={topicId}></React.Fragment>);
 			return (
-				<Accordion key={topicId} >
+				<Accordion key={topicId} expanded={expanded === `panel${topicId}`} onChange={handleChange(`panel${topicId}`)} >
 					<AccordionSummary
 					 onClick = {() => setTopicId(dataItem.module_id)}
 					expandIcon={<ExpandMoreIcon />}
@@ -125,8 +132,9 @@ function TrialView(props: PaidModuleView) {
 								style = {{cursor : 'pointer'}}
 								onClick = {() =>{
 									fetchModuleID(topicDataItem.module_id)
+									fetchtopicID(topicDataItem?.topic_id)
 									navigate('/course-content')
-									setOpen(true)
+									// setOpen(true)
 									}	
 								}
 									container rowSpacing={1} 

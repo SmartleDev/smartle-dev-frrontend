@@ -8,7 +8,8 @@ import { RootState } from '../redux/reducers';
 import { useDispatch, useSelector } from 'react-redux';
 import { actionCreators } from '../redux';
 import { bindActionCreators } from 'redux';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams} from 'react-router-dom';
+
 import API from "../redux/api/api";
 
 export interface PaidModuleView {
@@ -37,7 +38,15 @@ function PaidView(props: PaidModuleView) {
 	const { fetchUsers, fetchModuleID} = bindActionCreators(actionCreators, dispatch)
 	const [topicId, setTopicId] = useState('');
 	const [topicView, setTopiceView] = useState<topicViewer[]>([]);
+	const { fetchtopicID} = bindActionCreators(actionCreators, dispatch)
 	console.log(topicId)
+
+	const [expanded, setExpanded] = React.useState<string | false>(false);
+
+	const handleChange =
+	  (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+		setExpanded(isExpanded ? panel : false);
+	  };
 
 	useEffect(() => {
 		API.get<topicViewer[]>('gettopicformodule/'+topicId)
@@ -55,9 +64,11 @@ function PaidView(props: PaidModuleView) {
 		{moduleViewPaid?.map((dataItem: any, topicId:number) =>{
 			if (!dataItem.module_id) return(<React.Fragment key={topicId}></React.Fragment>);
 			return (
-				<Accordion key={topicId} >
+				<Accordion  key={topicId}  expanded={expanded === `panel${topicId}`} onChange={handleChange(`panel${topicId}`)}>
 					<AccordionSummary
-					 onClick = {() => setTopicId(dataItem.module_id)}
+					 onClick = {() => {
+						 setTopicId(dataItem.module_id)
+						}}
 					expandIcon={<ExpandMoreIcon />}
 					aria-controls="panel1a-content"
 					id="panel1a-header"
@@ -76,6 +87,7 @@ function PaidView(props: PaidModuleView) {
 								style = {{cursor : 'pointer'}}
 								onClick = {() =>{
 									fetchModuleID(topicDataItem.module_id)
+									fetchtopicID(topicDataItem?.topic_id)
 									navigate('/course-content')}
 								}
 									container rowSpacing={1} 

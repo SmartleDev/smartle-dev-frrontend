@@ -49,7 +49,7 @@ const FrameDiv = () => {
 
     return (
         <Box sx={{}}>
-            <iframe src="https://smartle-video-content.s3.amazonaws.com/Time+Machine+Concept/story.html" 
+            <iframe src="https://smartle-video-content.s3.amazonaws.com/E-commerce+Platform/story.html" 
                 title="W3Schools Free Online Web Tutorials"     
                 style={{justifyContent:'center', width:"70vw", height: "90vh"}}
                 className="content-resize">

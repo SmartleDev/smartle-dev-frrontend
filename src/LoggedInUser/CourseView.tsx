@@ -146,15 +146,21 @@ const CourseViewContent = () => {
               </Box>
               <Typography>{dataItem.course_description}</Typography>
               <Box sx={{ marginTop: "20px" }}>
-                <Typography>Begin you course</Typography>
+               {dataItem?.course_progress === 0 ?  <Typography>Begin you course</Typography> : <Typography>Continue you course from where you left off</Typography> }
               </Box>
               <ThemeProvider theme={redTheme}>
                 <Box>
-                  <Link to="course-content">
+               {dataItem?.course_progress === 0 ?  <Link to="/course-content">
                     <Button variant="contained" sx={{ marginTop: "10px" }}>
                       Begin now
                     </Button>
                   </Link>
+                  :
+                  <Link to="/course-content">
+                    <Button variant="contained" sx={{ marginTop: "10px" }}>
+                      Continue
+                    </Button>
+                  </Link>}
                 </Box>
               </ThemeProvider>
             </Box>

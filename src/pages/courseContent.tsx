@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Box, Slide, AppBar, CssBaseline, Toolbar, Typography, Grid,Stack, Divider,Button,Accordion, Drawer } from '@mui/material';
+import {Box, Slide, AppBar, CssBaseline, Toolbar, Typography, Grid,Stack, Divider,Button,Accordion, Drawer, AccordionDetails } from '@mui/material';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ArticleRoundedIcon from '@mui/icons-material/ArticleRounded';
 import GradBlobCourseContent from '../components/atom/GradBlobCourseContent';
@@ -16,15 +16,17 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import { actionCreators } from '../redux';
 import { RootState } from '../redux/reducers';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link , useNavigate} from 'react-router-dom';
 
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AssignmentIndRoundedIcon from '@mui/icons-material/AssignmentIndRounded';
 import VideogameAssetRoundedIcon from '@mui/icons-material/VideogameAssetRounded';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import GroupsIcon from '@mui/icons-material/Groups';
 import PausePresentationIcon from '@mui/icons-material/PausePresentation';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
+import PaidView from '../LoggedInUser/PaidView'
+import TrialView from '../LoggedInUser/TrialView'
 
 
 interface Props {
@@ -85,18 +87,48 @@ function HideOnScroll(props: Props) {
 const CourseContent = () => {
   const module_id = useSelector((state: RootState) => state.moduleIDFetch)
   const topic_id = useSelector((state: RootState) => state.TopicIDFetch);
+  const course_id = useSelector((state: RootState) => state.courseIDFetch);
   const [moduleView, setModuleView] = useState<moduleViewer[]>([]);
+  const [moduleContent, setModuleContent] = useState<moduleViewer[]>([]);
   const [topicView, setTopicView] = useState<topicViewer[]>([]);
   const [singleTopicContent, setSingleTopicContent] = useState<singleTopicViewer[]>([]);
-  console.log(topic_id);
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const { fetchtopicID} = bindActionCreators(actionCreators, dispatch)
   
+  
+  const [expanded, setExpanded] = React.useState<string | false>(false);
+  const [myCourses, setMyCourse] = useState<any>([]);
+  console.log(myCourses);
+  const [learner, setLearner] = useState<any>(JSON.parse(localStorage.getItem('learner-details') || 'null'))
+
+  const handleChange =
+    (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+      setExpanded(isExpanded ? panel : false);
+    };
+
 console.log(moduleView)
 console.log(topicView);
 console.log(singleTopicContent);
 
+
   useEffect(() => {
+
+    API.post("getEnrolledCourseView", { studentId: learner?.student_id,courseId: course_id,})
+    .then((res) => {
+      setMyCourse(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+    API.get("getmoduleforcourse/" + course_id)
+    .then((res) => {
+      setModuleContent(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 
     API.get<moduleViewer[]>('getModuleView/'+module_id)
     .then((res)=>{
@@ -119,7 +151,7 @@ console.log(singleTopicContent);
       console.log(err)
     })
 
-  }, [topic_id])
+  }, [topic_id, course_id])
 
   const isMobile:any = useMediaQuery('(max-width:1199px)');
   const drawerWidth:number = 340;
@@ -165,9 +197,35 @@ console.log(singleTopicContent);
           [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
         }}
       >
+        <ArrowBackIcon onClick={() => navigate(-1)}/>
         <Toolbar />
         <Box sx={{ overflow: 'auto', mt: '70px'}}>
-            {topicView?.map((dataItem: any, topicId:number) =>{
+        {myCourses[0]?.enrollment_type === "paid" ? (
+        <PaidView moduleViewPaid={moduleContent} />
+      ) : (
+        <TrialView moduleViewTrial={moduleContent} enrollmentID = {myCourses[0]?.enrollment_id} />
+      )}
+          {/* {moduleContent?.map((dataItem, index) => 
+        <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1bh-content"
+          id="panel1bh-header"
+          sx={{mt: '10px'}} className='activity-title' 
+        >
+          <Typography sx={{ flexShrink: 0 }}>
+            {dataItem?.module_name}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>
+            Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat.
+            Aliquam eget maximus est, id dignissim quam.
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
+          )} */}
+            {/* {topicView?.map((dataItem: any, topicId:number) =>{
                 // if (!topicView) return(<React.Fragment key={topicId}></React.Fragment>);
                 return (
                     <Accordion key={topicId} onClick={() => {fetchtopicID(dataItem?.topic_id)}}>
@@ -182,7 +240,7 @@ console.log(singleTopicContent);
                     </Accordion>
                 )
                 })
-            }
+            } */}
         </Box>
         
       </Drawer>
