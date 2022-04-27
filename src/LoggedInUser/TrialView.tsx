@@ -1,10 +1,16 @@
 import React, {useState, useEffect} from 'react';
 import { Box, Grid, Typography, Button, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import LockIcon from '@mui/icons-material/Lock';
 import Modal from '@mui/material/Modal';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import AssignmentIndRoundedIcon from '@mui/icons-material/AssignmentIndRounded';
+import VideogameAssetRoundedIcon from '@mui/icons-material/VideogameAssetRounded';
+import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
+import GroupsIcon from '@mui/icons-material/Groups';
+import PausePresentationIcon from '@mui/icons-material/PausePresentation';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import ArticleRoundedIcon from '@mui/icons-material/ArticleRounded';
 
 import { RootState } from '../redux/reducers';
 import { useDispatch, useSelector } from 'react-redux';
@@ -142,7 +148,9 @@ function TrialView(props: PaidModuleView) {
 									sx={{borderBottom:'1px dashed #917EBD', padding: '20px'}}
 								   >
 									<Grid item xs={1}>
-										<Box sx={{textAlign:'right'}}><PersonRoundedIcon/></Box>
+										<Box sx={{textAlign:'right'}}>
+										{topicDataItem.topic_type === 'Self paced' ? <ArticleRoundedIcon/> : topicDataItem.topic_type === 'Instructor Led' ? <GroupsIcon /> : topicDataItem.topic_type === 'Video' ? <PausePresentationIcon /> : topicDataItem.topic_type === 'Document'? <AttachFileIcon/> :topicDataItem.topic_type === 'Assignment' ? <AssignmentIndRoundedIcon/> : <ArticleRoundedIcon/>}
+											</Box>
 									</Grid>
 									<Grid item xs={10}>
 										<Typography>{topicDataItem.topic_name}</Typography>

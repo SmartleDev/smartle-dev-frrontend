@@ -168,7 +168,7 @@ console.log(singleTopicContent);
         <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-       <Typography sx={{mt: '5px'}}>Course title: Module 1/6</Typography>
+       <Typography sx={{mt: '5px'}}>Course title: {myCourses[0]?.course_name}</Typography>
      </Grid>
      <Grid item xs={4}>
        <Typography variant='h5' sx={{ fontWeight: '900' }}>{dataItem.module_name}</Typography>
