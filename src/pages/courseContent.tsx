@@ -10,6 +10,9 @@ import MobileFooter from '../components/organisms/MobileFooter';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import "../styles/coursecontent.scss";
 import API from "../redux/api/api";
+import SyncLoader from "react-spinners/SyncLoader";
+import LoadingButton from '@mui/lab/LoadingButton';
+import { css } from "@emotion/react";
 import {useParams} from 'react-router-dom'
 import { bindActionCreators } from 'redux';
 import useMediaQuery from '@mui/material/useMediaQuery'
@@ -92,6 +95,10 @@ const CourseContent = () => {
   const [moduleContent, setModuleContent] = useState<moduleViewer[]>([]);
   const [topicView, setTopicView] = useState<topicViewer[]>([]);
   const [singleTopicContent, setSingleTopicContent] = useState<singleTopicViewer[]>([]);
+  const [loading, setLoading] = useState(true);
+  console.log(loading);
+
+
   const dispatch = useDispatch();
   const navigate = useNavigate()
   const { fetchtopicID} = bindActionCreators(actionCreators, dispatch)
@@ -110,6 +117,12 @@ const CourseContent = () => {
 console.log(moduleView)
 console.log(topicView);
 console.log(singleTopicContent);
+
+const hideSpinner = () => {
+  setLoading(false);
+};
+
+const [message, setMessage] = useState("");
 
 
   useEffect(() => {
@@ -155,6 +168,16 @@ console.log(singleTopicContent);
 
   const isMobile:any = useMediaQuery('(max-width:1199px)');
   const drawerWidth:number = 340;
+  let [color, setColor] = useState("#917EBD");
+  const override = css`
+  display: block;
+  margin: 0 auto;
+  border-color: red;
+`;
+
+  const handlePrevious = () =>{
+    console.log(topicView.length)
+  }
 
   return (
     <>
@@ -250,22 +273,25 @@ console.log(singleTopicContent);
             <Box  margin="auto">
                 <Typography sx={{mt: '60px', ml:5}}>Learning Video - 1</Typography>
                 <Box sx={{}}>
+                <Box textAlign={"center"}><SyncLoader color={color} loading={loading} css={override} size={15} /></Box>
             {singleTopicContent?.map((dataItem:any, index: number) => 
                 <iframe src={dataItem?.topic_path}
+                  loading="lazy"
+                  onLoad={hideSpinner}
                   title="W3Schools Free Online Web Tutorials"     
                   style={{justifyContent:'center', width:"70vw", height: "90vh"}}
                   className="content-resize">
-              </iframe> 
+                </iframe> 
             )}
             
             {!isMobile ?(<>
               <Box paddingLeft={"100px"} paddingRight={"100px"}>
-            <Link to='/courses' >
                 <Button 
+                    onClick={handlePrevious}
                     className='sm:mt-12 md:mt-12 lg:mt-5 xl:mt-0 rounded-md md:rounded-md shadow-xl font-bold py-3 px-5 md:w-auto md:px-10 lg:px-10 h-9 text-white bg-color-400 '>
                         Previous
+                       
                 </Button>
-            </Link>
             <Link to='/courses' >
                 <Button 
                     className='sm:mt-12 md:mt-12 lg:mt-5 xl:mt-0 rounded-md md:rounded-md shadow-xl font-bold py-3 px-10 md:w-auto md:px-14 lg:px-14 h-9 text-white bg-color-400' style={{float:"right"}}>
