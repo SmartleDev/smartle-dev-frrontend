@@ -118,8 +118,11 @@ console.log(moduleView)
 console.log(topicView);
 console.log(singleTopicContent);
 
+const [marginLoader, setMarginLoader] = useState("200px");
+
 const hideSpinner = () => {
   setLoading(false);
+  setMarginLoader("0px");
 };
 
 const [message, setMessage] = useState("");
@@ -179,6 +182,10 @@ const [message, setMessage] = useState("");
     console.log(topicView.length)
   }
 
+  const handleNext = () => {
+
+  }
+
   return (
     <>
     <Box sx={{ display: 'flex' }} style={{padding: "0px"}}>
@@ -194,7 +201,7 @@ const [message, setMessage] = useState("");
        <Typography sx={{mt: '5px'}}>Course title: {myCourses[0]?.course_name}</Typography>
      </Grid>
      <Grid item xs={4}>
-       <Typography variant='h5' sx={{ fontWeight: '900' }}>{dataItem.module_name}</Typography>
+       <Typography variant='h6' sx={{ fontWeight: '900' }}>{dataItem.module_name}</Typography>
      </Grid>
      <Grid item xs={8} alignContent="end">
        <Typography variant='h6' align='right' sx={{ fontWeight: '900' }}>Week: 01</Typography>
@@ -273,7 +280,7 @@ const [message, setMessage] = useState("");
             <Box  margin="auto">
                 <Typography sx={{mt: '60px', ml:5}}>Learning Video - 1</Typography>
                 <Box sx={{}}>
-                <Box textAlign={"center"}><SyncLoader color={color} loading={loading} css={override} size={15} /></Box>
+                <Box textAlign={"center"} marginTop={marginLoader}><SyncLoader color={color} loading={loading} css={override} size={15} /></Box>
             {singleTopicContent?.map((dataItem:any, index: number) => 
                 <iframe src={dataItem?.topic_path}
                   loading="lazy"
@@ -292,12 +299,11 @@ const [message, setMessage] = useState("");
                         Previous
                        
                 </Button>
-            <Link to='/courses' >
                 <Button 
+                    onClick={handleNext}
                     className='sm:mt-12 md:mt-12 lg:mt-5 xl:mt-0 rounded-md md:rounded-md shadow-xl font-bold py-3 px-10 md:w-auto md:px-14 lg:px-14 h-9 text-white bg-color-400' style={{float:"right"}}>
                     Next
                 </Button>
-            </Link>
         </Box></>) :(
                 <>
                 <Box sx={{mt: '70px'}} className='module-overview' 
