@@ -69,6 +69,8 @@ interface singleTopicViewer {
   topic_path : string;
 }
 
+
+
 function HideOnScroll(props: Props) {
   const { children, window } = props;
   // Note that you normally won't need to set the window ref as useScrollTrigger
@@ -95,6 +97,8 @@ const CourseContent = () => {
   const [moduleContent, setModuleContent] = useState<moduleViewer[]>([]);
   const [topicView, setTopicView] = useState<topicViewer[]>([]);
   const [singleTopicContent, setSingleTopicContent] = useState<singleTopicViewer[]>([]);
+  const [modules, setModules] = useState<moduleViewer[]>([]);
+  const [topics, setTopics] = useState<singleTopicViewer[]>([]);
   const [loading, setLoading] = useState(true);
   console.log(loading);
 
@@ -114,9 +118,12 @@ const CourseContent = () => {
       setExpanded(isExpanded ? panel : false);
     };
 
-console.log(moduleView)
-console.log(topicView);
-console.log(singleTopicContent);
+    console.log(modules);
+    console.log(topics);
+
+// console.log(moduleView)
+// console.log(topicView);
+// console.log(singleTopicContent);
 
 const [marginLoader, setMarginLoader] = useState("200px");
 
@@ -167,7 +174,21 @@ const [message, setMessage] = useState("");
       console.log(err)
     })
 
-  }, [topic_id, course_id])
+    API.get<moduleViewer[]>('getProgressCourseModule/'+course_id)
+    .then((res)=>{
+      setModules(res.data)
+    }).catch((err) => {
+      console.log(err)
+    })
+
+    API.get<singleTopicViewer[]>('getProgressModuleTopic/'+module_id)
+    .then((res)=>{
+      setTopics(res.data)
+    }).catch((err) => {
+      console.log(err)
+    })
+
+  }, [topic_id, course_id, module_id])
 
   const isMobile:any = useMediaQuery('(max-width:1199px)');
   const drawerWidth:number = 340;
@@ -179,7 +200,7 @@ const [message, setMessage] = useState("");
 `;
 
   const handlePrevious = () =>{
-    console.log(topicView.length)
+    console.log(topics.length)
   }
 
   const handleNext = () => {

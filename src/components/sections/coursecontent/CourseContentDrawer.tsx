@@ -82,23 +82,6 @@ const CourseContentDrawer = ():JSX.Element => {
       >
         <Toolbar />
         <Box sx={{ overflow: 'auto', mt: '70px'}}>
-            {/* <Box sx={{mt: '70px'}} className='module-overview' component={Stack} direction="column" justifyContent="center">
-                <Typography variant='h6' >Module Overview</Typography>
-            </Box>
-            <Typography paragraph sx={{pl: '10px', pr: '10px', mt: '10px'}}>
-                {moduleView[0]?.module_description}
-            </Typography>
-            <Divider />
-            <Box sx={{ flexGrow: 1, mt:'10px', ml:'10px',mr:'10px' }}>
-                <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                     <Typography>Activities</Typography>
-                    </Grid>
-                    <Grid item xs={6} textAlign="right">
-                        <Typography>1/5</Typography>
-                    </Grid>
-                </Grid>
-            </Box> */}
             {topicView?.map((dataItem: any, topicId:number) =>{
                 // if (!topicView) return(<React.Fragment key={topicId}></React.Fragment>);
                 return (

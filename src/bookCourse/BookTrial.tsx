@@ -17,6 +17,7 @@ function BookTrial() {
   console.log(instructor)
   const [sessionId, setSessionId] = useState<any>(null);
   const [msgStatus,setMsgStatus] = useState<any>('error');
+  const [btnClicked, setBtnClicked] = useState(false);
   console.log(instructor, "INSTRUCTOR")
 	const dispatch = useDispatch();
 	const {fetchInstructorID} = bindActionCreators(actionCreators, dispatch)
