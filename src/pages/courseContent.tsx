@@ -97,15 +97,17 @@ const CourseContent = () => {
   const [moduleContent, setModuleContent] = useState<moduleViewer[]>([]);
   const [topicView, setTopicView] = useState<topicViewer[]>([]);
   const [singleTopicContent, setSingleTopicContent] = useState<singleTopicViewer[]>([]);
-  const [modules, setModules] = useState<moduleViewer[]>([]);
-  const [topics, setTopics] = useState<singleTopicViewer[]>([]);
+
+  console.log(singleTopicContent);
+  const [modules, setModules] = useState<number[]>([]);
+  const [topics, setTopics] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
   console.log(loading);
 
 
   const dispatch = useDispatch();
   const navigate = useNavigate()
-  const { fetchtopicID} = bindActionCreators(actionCreators, dispatch)
+  const { fetchtopicID, fetchModuleID} = bindActionCreators(actionCreators, dispatch)
   
   
   const [expanded, setExpanded] = React.useState<string | false>(false);
@@ -126,13 +128,19 @@ const CourseContent = () => {
 // console.log(singleTopicContent);
 
 const [marginLoader, setMarginLoader] = useState("200px");
+const [currTopic, setCurrTopic] = useState<number>(0);
+const [currModule, setCurrModule] = useState<number>(0);
+const [topicPath, setTopicPath] = useState("");
+
+console.log(topicPath);
 
 const hideSpinner = () => {
   setLoading(false);
   setMarginLoader("0px");
 };
 
-const [message, setMessage] = useState("");
+const [indexTopic, setIndexTopic] = useState(0);
+const [indexModule, setIndexModule] = useState(0);
 
 
   useEffect(() => {
@@ -170,29 +178,33 @@ const [message, setMessage] = useState("");
     API.get<singleTopicViewer[]>('getTopicContent/'+topic_id)
     .then((res)=>{
       setSingleTopicContent(res.data)
+      // setTopicPath(res.data[0].topic_path);
     }).catch((err) => {
       console.log(err)
     })
 
-    API.get<moduleViewer[]>('getProgressCourseModule/'+course_id)
+    API.get<number[]>('getProgressCourseModule/'+course_id)
     .then((res)=>{
       setModules(res.data)
     }).catch((err) => {
       console.log(err)
     })
 
-    API.get<singleTopicViewer[]>('getProgressModuleTopic/'+module_id)
+    API.get<number[]>('getProgressModuleTopic/'+module_id)
     .then((res)=>{
       setTopics(res.data)
     }).catch((err) => {
       console.log(err)
     })
 
-  }, [topic_id, course_id, module_id])
+  }, [topic_id, course_id, module_id, indexModule, indexTopic])
 
-  const isMobile:any = useMediaQuery('(max-width:1199px)');
+  const isMobile:any = useMediaQuery('(max-width:500px)');
   const drawerWidth:number = 340;
   let [color, setColor] = useState("#917EBD");
+
+  const [showNext, setShowNext] = useState(true);
+  const [showPrev, setShowPrev] = useState(true);
   const override = css`
   display: block;
   margin: 0 auto;
@@ -201,10 +213,31 @@ const [message, setMessage] = useState("");
 
   const handlePrevious = () =>{
     console.log(topics.length)
+    
+  
   }
 
-  const handleNext = () => {
+  console.log(module_id);
 
+  const handleNext = () => {
+    console.log(indexTopic);
+    console.log(indexModule);
+
+    if(indexModule === modules.length && indexTopic === topics.length){
+      setShowNext(false);
+    }
+   
+    if(indexTopic < topics.length-1){
+      setIndexTopic(indexTopic+1);
+      fetchtopicID(topics[indexTopic]);
+    }
+    else{
+      if(indexModule < modules.length){
+        setIndexTopic(0);
+        setIndexModule(indexModule+1);
+        fetchModuleID(modules[indexModule]);
+      }
+    }
   }
 
   return (
@@ -252,7 +285,7 @@ const [message, setMessage] = useState("");
         <Toolbar />
         <Box sx={{ overflow: 'auto', mt: '70px'}}>
         {myCourses[0]?.enrollment_type === "paid" ? (
-        <PaidView moduleViewPaid={moduleContent} />
+        <PaidView moduleViewPaid={moduleContent}/>
       ) : (
         <TrialView moduleViewTrial={moduleContent} enrollmentID = {myCourses[0]?.enrollment_id} />
       )}
@@ -320,11 +353,11 @@ const [message, setMessage] = useState("");
                         Previous
                        
                 </Button>
-                <Button 
+                {showNext && <Button 
                     onClick={handleNext}
                     className='sm:mt-12 md:mt-12 lg:mt-5 xl:mt-0 rounded-md md:rounded-md shadow-xl font-bold py-3 px-10 md:w-auto md:px-14 lg:px-14 h-9 text-white bg-color-400' style={{float:"right"}}>
                     Next
-                </Button>
+                </Button>}
         </Box></>) :(
                 <>
                 <Box sx={{mt: '70px'}} className='module-overview' 

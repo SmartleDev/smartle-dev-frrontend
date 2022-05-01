@@ -73,6 +73,7 @@ function PaidView(props: PaidModuleView) {
 				<Accordion  key={topicId}  expanded={expanded === `panel${topicId}`} onChange={handleChange(`panel${topicId}`)}>
 					<AccordionSummary
 					 onClick = {() => {
+
 						 setTopicId(dataItem.module_id)
 						}}
 					expandIcon={<ExpandMoreIcon />}
