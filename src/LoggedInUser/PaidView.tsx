@@ -93,7 +93,7 @@ function PaidView(props: PaidModuleView) {
 								<Grid 
 								style = {{cursor : 'pointer'}}
 								onClick = {() =>{
-									fetchModuleID(topicDataItem.module_id)
+									fetchModuleID(topicDataItem?.module_id)
 									fetchtopicID(topicDataItem?.topic_id)
 									navigate('/course-content')}
 								}

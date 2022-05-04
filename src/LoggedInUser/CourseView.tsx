@@ -80,14 +80,13 @@ const CourseViewContent = () => {
   }
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { fetchUsers, fetchEnrollmentID } = bindActionCreators(
+  const { fetchtopicID, fetchModuleID, fetchEnrollmentID } = bindActionCreators(
     actionCreators,
     dispatch
   );
 
   const course_id = useSelector((state: RootState) => state.courseIDFetch);
   const enrollment_id = useSelector((state: RootState) => state.EnrollmentIDFetch);
-  console.log(enrollment_id)
   const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getItem('learner-details') || 'null'))
   const [courseView, setCourseView] = useState<any>([]);
   const [sessionView, setSessionView] = useState<any>([]);
@@ -105,6 +104,7 @@ const CourseViewContent = () => {
     })
       .then((response) => {
         setCourseView(response.data);
+        fetchEnrollmentID(response.data[0]?.enrollment_id);
             if (response?.data?.session_id !== null) {
               API.post("getenrolledsessiondetails", { courseId: course_id, studentId: leanerUser?.student_id})
                 .then((res) => {
@@ -128,6 +128,19 @@ const CourseViewContent = () => {
       });
   }, [course_id, id]);
 
+  const handelBeginNow = () => {
+    API.get("getTrackedCourse/" + enrollment_id)
+    .then((res) => {
+      fetchtopicID(res.data[0]?.course_topic)
+      fetchModuleID(res.data[0]?.course_module)
+      navigate('/course-content')
+      console.log(enrollment_id)
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+
   const percentage =
     courseView.length === 0 ? 0 : courseView[0]?.course_progress;
 
@@ -150,17 +163,15 @@ const CourseViewContent = () => {
               </Box>
               <ThemeProvider theme={redTheme}>
                 <Box>
-               {dataItem?.course_progress === 0 ?  <Link to="/course-content">
-                    <Button variant="contained" sx={{ marginTop: "10px" }}>
+               {dataItem?.course_progress === 0 ?
+                    <Button variant="contained" sx={{ marginTop: "10px" }} onClick = {handelBeginNow}>
                       Begin now
                     </Button>
-                  </Link>
+                 
                   :
-                  <Link to="/course-content">
-                    <Button variant="contained" sx={{ marginTop: "10px" }}>
+                    <Button variant="contained" sx={{ marginTop: "10px" }} onClick = {handelBeginNow}>
                       Continue
-                    </Button>
-                  </Link>}
+                    </Button>}
                 </Box>
               </ThemeProvider>
             </Box>

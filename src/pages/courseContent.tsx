@@ -91,14 +91,15 @@ function HideOnScroll(props: Props) {
 
 const CourseContent = () => {
   const module_id = useSelector((state: RootState) => state.moduleIDFetch)
+  const enrollment_id = useSelector((state: RootState) => state.EnrollmentIDFetch)
   const topic_id = useSelector((state: RootState) => state.TopicIDFetch);
   const course_id = useSelector((state: RootState) => state.courseIDFetch);
   const [moduleView, setModuleView] = useState<moduleViewer[]>([]);
   const [moduleContent, setModuleContent] = useState<moduleViewer[]>([]);
   const [topicView, setTopicView] = useState<topicViewer[]>([]);
   const [singleTopicContent, setSingleTopicContent] = useState<singleTopicViewer[]>([]);
-
-  console.log(singleTopicContent);
+  console.log(singleTopicContent)
+  console.log(moduleView)
   const [modules, setModules] = useState<number[]>([]);
   const [topics, setTopics] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
@@ -131,6 +132,7 @@ const [marginLoader, setMarginLoader] = useState("200px");
 const [currTopic, setCurrTopic] = useState<number>(0);
 const [currModule, setCurrModule] = useState<number>(0);
 const [topicPath, setTopicPath] = useState("");
+const [buttonName, setButtonName] = useState("Next");
 
 console.log(topicPath);
 
@@ -141,7 +143,34 @@ const hideSpinner = () => {
 
 const [indexTopic, setIndexTopic] = useState(0);
 const [indexModule, setIndexModule] = useState(0);
+console.log(indexTopic);
+console.log(indexModule);
 
+useEffect(() => {
+
+  API.get<number[]>('getProgressCourseModule/'+course_id)
+  .then((res)=>{
+    setModules(res.data)
+  }).catch((err) => {
+    console.log(err)
+  })
+
+  API.get<number[]>('getProgressModuleTopic/'+module_id)
+  .then((res)=>{
+    setTopics(res.data)
+    if(topics){
+      API.get<singleTopicViewer[]>('getTopicContent/'+topic_id)
+      .then((response)=>{
+        setSingleTopicContent(response.data)
+        // setTopicPath(res.data[0].topic_path);
+      }).catch((err) => {
+        console.log(err)
+      })
+    }
+  }).catch((err) => {
+    console.log(err)
+  })
+},[topic_id, module_id, indexTopic, indexModule])
 
   useEffect(() => {
 
@@ -175,29 +204,7 @@ const [indexModule, setIndexModule] = useState(0);
       console.log(err)
     })
 
-    API.get<singleTopicViewer[]>('getTopicContent/'+topic_id)
-    .then((res)=>{
-      setSingleTopicContent(res.data)
-      // setTopicPath(res.data[0].topic_path);
-    }).catch((err) => {
-      console.log(err)
-    })
-
-    API.get<number[]>('getProgressCourseModule/'+course_id)
-    .then((res)=>{
-      setModules(res.data)
-    }).catch((err) => {
-      console.log(err)
-    })
-
-    API.get<number[]>('getProgressModuleTopic/'+module_id)
-    .then((res)=>{
-      setTopics(res.data)
-    }).catch((err) => {
-      console.log(err)
-    })
-
-  }, [topic_id, course_id, module_id, indexModule, indexTopic])
+  }, [topic_id, course_id, module_id])
 
   const isMobile:any = useMediaQuery('(max-width:500px)');
   const drawerWidth:number = 340;
@@ -213,32 +220,69 @@ const [indexModule, setIndexModule] = useState(0);
 
   const handlePrevious = () =>{
     console.log(topics.length)
-    
-  
   }
-
-  console.log(module_id);
 
   const handleNext = () => {
-    console.log(indexTopic);
-    console.log(indexModule);
+    let index = indexTopic+1  
+  setIndexModule(modules?.indexOf(module_id)); 
+  setIndexTopic(topics?.indexOf(topic_id))
+  console.log(module_id)
+  console.log(topic_id)
+    if(index < topics.length){
+      // setIndexTopic(indexTopic+1);
+      fetchtopicID(topics[index]);
+      setButtonName("Next")
+      console.log(topics[indexTopic])
+      API.post('updateTopicStatus', {courseTopic : topics[index], enrollmentId : enrollment_id})
+      .then((res)=>{
+          console.log(res.data)
+      }).catch((err) => {
+        console.log(err)
+      })
 
-    if(indexModule === modules.length && indexTopic === topics.length){
-      setShowNext(false);
-    }
-   
-    if(indexTopic < topics.length-1){
-      setIndexTopic(indexTopic+1);
-      fetchtopicID(topics[indexTopic]);
-    }
-    else{
-      if(indexModule < modules.length){
+    }else{
+      let indexM = indexModule+1
+      if(indexM < modules.length){
+        setButtonName("NextModule")
         setIndexTopic(0);
-        setIndexModule(indexModule+1);
-        fetchModuleID(modules[indexModule]);
+        setIndexModule(indexM);
+        fetchModuleID(modules[indexM]);
+        console.log(modules[indexModule])
+
+        API.post('updateModuleStatus', {courseModule : modules[indexM], enrollmentId : enrollment_id})
+        .then((res)=>{
+            console.log(res.data)
+        }).catch((err) => {
+          console.log(err)
+        })
+
+        API.post('updateTopicStatus', {courseTopic : topics[0], enrollmentId : enrollment_id})
+        .then((res)=>{
+            console.log(res.data)
+        }).catch((err) => {
+          console.log(err)
+        })
+        
+        API.post('updateModuleCompeletedStatus', {enrollmentId : enrollment_id})
+        .then((res)=>{
+            console.log(res.data)
+        }).catch((err) => {
+          console.log(err)
+        })
+
+      }else{
+        setShowNext(false);
       }
     }
+    // console.log(indexTopic);
+    // console.log(indexModule);
+  
+    // if(indexModule === modules.length && indexTopic === topics.length){
+    //   setShowNext(false);
+    // }
+   
   }
+
 
   return (
     <>
@@ -356,7 +400,7 @@ const [indexModule, setIndexModule] = useState(0);
                 {showNext && <Button 
                     onClick={handleNext}
                     className='sm:mt-12 md:mt-12 lg:mt-5 xl:mt-0 rounded-md md:rounded-md shadow-xl font-bold py-3 px-10 md:w-auto md:px-14 lg:px-14 h-9 text-white bg-color-400' style={{float:"right"}}>
-                    Next
+                    {buttonName}
                 </Button>}
         </Box></>) :(
                 <>
