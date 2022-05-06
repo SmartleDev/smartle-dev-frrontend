@@ -128,6 +128,15 @@ function BookCourse() {
 		  .then((res) => {
 			console.log(res.data)
 			fetchInstructorID(0)
+
+			API.post("enrolledUserProgressDefault", {enrollmentId : enrollment_id, courseId : course_id})
+			.then((res) => {
+				console.log(res.data)
+			})
+			.catch((err) => {
+			  console.log(err);
+			});
+
 			navigate('/loggedcourseview')
 			window.addEventListener("popstate", () => {
 				navigate(1);
@@ -153,6 +162,15 @@ function BookCourse() {
 				API.post('enrollLearner', {courseId : course_id, studentId : leanerUser?.student_id, studentFeeStatus : true, sessionId : sessionID, enrollmentType : 'paid'})
 				.then((res) => {
 					console.log(res.data)
+
+					API.post("enrolledUserProgressDefault", {enrollmentId : res.data?.enrolmentId, courseId : course_id})
+					.then((res) => {
+						console.log(res.data)
+					})
+					.catch((err) => {
+					  console.log(err);
+					});
+
 					navigate('/loggedcourseview')
 					window.addEventListener("popstate", () => {
 						navigate(1);

@@ -223,7 +223,8 @@ useEffect(() => {
   }
 
   const handleNext = () => {
-    let index = indexTopic+1  
+
+  let index = indexTopic+1  
   setIndexModule(modules?.indexOf(module_id)); 
   setIndexTopic(topics?.indexOf(topic_id))
   console.log(module_id)
@@ -233,6 +234,7 @@ useEffect(() => {
       fetchtopicID(topics[index]);
       setButtonName("Next")
       console.log(topics[indexTopic])
+
       API.post('updateTopicStatus', {courseTopic : topics[index], enrollmentId : enrollment_id})
       .then((res)=>{
           console.log(res.data)
@@ -247,7 +249,17 @@ useEffect(() => {
         setIndexTopic(0);
         setIndexModule(indexM);
         fetchModuleID(modules[indexM]);
-        console.log(modules[indexModule])
+
+        let index = indexTopic 
+        fetchtopicID(topics[index]);
+        console.log(topics[indexTopic])
+  
+        API.post('updateTopicStatus', {courseTopic : topics[index], enrollmentId : enrollment_id})
+        .then((res)=>{
+            console.log(res.data)
+        }).catch((err) => {
+          console.log(err)
+        })
 
         API.post('updateModuleStatus', {courseModule : modules[indexM], enrollmentId : enrollment_id})
         .then((res)=>{
