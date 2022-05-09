@@ -6,7 +6,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import UpdateIcon from "@mui/icons-material/Update";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import API from "../redux/api/api";
-import { Button, Card, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, TextField, Typography } from "@mui/material";
 
 function LearnerProfile() {
   const [learner, setLearner] = useState<any>(
@@ -14,6 +14,26 @@ function LearnerProfile() {
   );
 
   const [myCourses, setMyCourse] = useState([]);
+
+  const [updateDetails, setUpdateDetails] : any = useState(
+    {
+      name: '',
+      email: '',
+      about: ''
+    }
+  );
+
+  const handelChange = (event: any) => {
+
+    const {name , value } : any = event.target
+    setUpdateDetails({...updateDetails, [name]:value})
+ 
+  }
+
+  const  handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log(updateDetails);
+  }
 
   useEffect(() => {
     API.post("enrolledcourses", { studentId: learner.student_id })
@@ -24,6 +44,7 @@ function LearnerProfile() {
         console.log(err);
       });
   }, []);
+
   return (
     <div>
       <Header />
@@ -44,7 +65,7 @@ function LearnerProfile() {
               color: "#917EBD",
               backgroundColor: "#F9EDF5",
               padding: "20px",
-              fontSize: "150px",
+              fontSize: "130px",
               borderRadius: "50%",
               // border: '3px dotted #606060',
               // borderSpacing: '10',
@@ -59,60 +80,72 @@ function LearnerProfile() {
         >
           {learner.student_name}
         </Typography>
-        <div
-          style={{ display: "flex", flexDirection: "column", width: "724px" }}
+        <form onSubmit={(e) => handleSubmit(e)} >
+        <Box
+          style={{ display: "flex", flexDirection: "column", width: "724px", margin:'auto' }}
+
         >
           <Typography fontSize={24}> Name </Typography>
-          <TextField
-            id="filled-basic"
-            variant="filled"
+          <input
+            type={"text"} 
             placeholder="Name"
-            inputProps={{ style: { background: "#F9EDF5", height: 12 } }}
+            style={ {background: "#F9EDF5", height: '40px',borderRadius: "3px", padding: "8px" } }
+            name = 'name'
+            value={updateDetails.name} 
+            onChange={handelChange} 
           />
           <Typography fontSize={24}>Mail ID</Typography>
-          <TextField
-            id="filled-basic"
-            variant="filled"
+          <input
+            type={"email"} 
             placeholder="abcd123@gmail.com"
-            inputProps={{ style: { background: "#F9EDF5", height: 12 } }}
+            style={ {background: "#F9EDF5", height: '40px',borderRadius: "3px", padding: "8px" } }
+            name = 'email'
+            value={updateDetails.email} 
+            onChange={handelChange} 
           />
           <Typography fontSize={24}>About</Typography>
-          <TextField
-            id="filled-basic"
-            variant="filled"
+          <input
+            type={"text"} 
             placeholder="Enter a short bio"
-            inputProps={{ style: { background: "#F9EDF5", height: 12 } }}
+            style={ {background: "#F9EDF5", height: '40px',borderRadius: "3px", padding: "8px" } }
+            name = 'about'
+            value={updateDetails.about} 
+            onChange={handelChange} 
           />
-        </div>
+        </Box>
+        </form>
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
             width: "600px",
             padding: "40px",
+            margin: 'auto'
           }}
         >
           <div>
-            <UpdateIcon />
+            
             <Button
               variant="contained"
               style={{ width: 100, background: "#917EBD" }}
             >
+              <UpdateIcon/>
               Update
             </Button>
           </div>
           <div>
-            <DeleteForeverIcon />
+            
             <Button
               variant="contained"
               style={{ width: 100, background: "#917EBD" }}
             >
+              <DeleteForeverIcon />
               Delete
             </Button>
           </div>
         </div>
       </div>
-      <div>
+      <div style={{marginLeft: '60px', marginTop: '60px'}}>
         <Typography fontSize={"32px"} fontWeight={"700"}>
           Certificates And Achievements
         </Typography>
