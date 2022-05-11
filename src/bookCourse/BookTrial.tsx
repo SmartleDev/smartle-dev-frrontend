@@ -51,6 +51,7 @@ interface sessionViewer{
   session_avalibility : number;
   instructor_id : number;
   session_seats : number;
+  selected : boolean;
 
 }
 const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getItem('learner-details') || 'null'))
@@ -123,7 +124,8 @@ const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getIt
 
     API.post('getsessionview', {courseId : course_id})
     .then((res)=>{
-      setSessionDetails(res.data)
+      const val = res.data?.map((dataItem:any) => ({ ...dataItem, selected: false }))
+      setSessionDetails(val)
     }).catch((err) => {
       console.log(err)
     })
@@ -206,7 +208,7 @@ const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getIt
                     </CardContent>
                     <CardActions style={{textAlign: 'center'}}>
                       <Box style={{margin: 'auto'}}>
-                        <Button onClick = {() => {
+                        {session.selected === false ?<Button onClick = {() => {
                               API.get('getInstructorDetails/'+session?.instructor_id)
                               .then((res)=>{
                                 setInstructor(res.data)
@@ -216,6 +218,7 @@ const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getIt
                               })
                                       
                           fetchInstructorID(session?.instructor_id)
+                          session.selected = !session.selected
                           // setInstructor(session?.instructor_id)
                           setSessionId(session?.session_id)
                           setSelectedDate(moment(session?.session_datetime).format("MMM Do"))
@@ -225,6 +228,15 @@ const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getIt
                           }))
                           }} 
                           size='small' style={{background: '#917EBD', color: 'white',paddingLeft: '20px', paddingRight: '20px', fontSize:'10px'}}>Enroll Now</Button>
+                          :
+                          <Button onClick = {() => {
+                            session.selected = !session.selected
+                            setSessionId(null)
+                            fetchInstructorID(0)
+                            setSelectedDate('Not Selected')
+                            setSelectedTime('Not Selected')
+                            }} size='small' style={{background: 'white', color: '#917EBD',paddingLeft: '20px', paddingRight: '20px', fontSize:'10px'}}> Selected</Button>
+                          }
                       </Box>
                     </CardActions>
                   </Box>
