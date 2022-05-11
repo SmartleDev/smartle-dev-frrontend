@@ -133,6 +133,7 @@ const [currTopic, setCurrTopic] = useState<number>(0);
 const [currModule, setCurrModule] = useState<number>(0);
 const [topicPath, setTopicPath] = useState("");
 const [buttonName, setButtonName] = useState("Next");
+const [PreviousButton, setPreviousButton] = useState("Previous");
 
 console.log(topicPath);
 
@@ -204,7 +205,7 @@ useEffect(() => {
       console.log(err)
     })
 
-  }, [topic_id, course_id, module_id])
+  }, [topic_id, course_id, module_id, indexModule])
 
   const isMobile:any = useMediaQuery('(max-width:500px)');
   const drawerWidth:number = 340;
@@ -219,10 +220,52 @@ useEffect(() => {
 `;
 
   const handlePrevious = () =>{
-    console.log(topics.length)
+    setIndexModule(modules?.indexOf(module_id)); 
+    setIndexTopic(topics?.indexOf(topic_id))
+
+    let index = indexTopic
+
+    if(indexTopic > 0 ){
+      index = indexTopic-1
+    }else if (indexTopic == -1){
+      index = indexTopic+1
+    }else{
+      index = 0
+    }
+
+    if(index < topics.length){
+      // setIndexTopic(indexTopic+1);
+      fetchtopicID(topics[index]);
+
+    }else{
+      let indexM = indexModule
+
+      if(indexModule > 0){
+        indexM = indexModule-1
+        console.log('firstsssssss')
+      }else{
+        indexM = -1
+        console.log('first')
+      }
+
+      if(indexM > modules.length){
+        setIndexTopic(-1);
+        index = -1
+        setIndexModule(indexM);
+        fetchModuleID(modules[indexM]);
+
+        fetchtopicID(topics[index]);
+        console.log(topics[indexTopic]) 
+
+      }else{
+        setShowNext(false);
+      }
+    }
   }
 
   const handleNext = () => {
+
+    
 
   let index = indexTopic+1  
   setIndexModule(modules?.indexOf(module_id)); 
@@ -245,12 +288,11 @@ useEffect(() => {
     }else{
       let indexM = indexModule+1
       if(indexM < modules.length){
-        setButtonName("NextModule")
         setIndexTopic(0);
         setIndexModule(indexM);
         fetchModuleID(modules[indexM]);
 
-        let index = indexTopic 
+        let index = 0 
         fetchtopicID(topics[index]);
         console.log(topics[indexTopic])
   
@@ -288,10 +330,6 @@ useEffect(() => {
     }
     // console.log(indexTopic);
     // console.log(indexModule);
-  
-    // if(indexModule === modules.length && indexTopic === topics.length){
-    //   setShowNext(false);
-    // }
    
   }
 
@@ -406,7 +444,7 @@ useEffect(() => {
                 <Button 
                     onClick={handlePrevious}
                     className='sm:mt-12 md:mt-12 lg:mt-5 xl:mt-0 rounded-md md:rounded-md shadow-xl font-bold py-3 px-5 md:w-auto md:px-10 lg:px-10 h-9 text-white bg-color-400 '>
-                        Previous
+                        {PreviousButton}
                        
                 </Button>
                 {showNext && <Button 

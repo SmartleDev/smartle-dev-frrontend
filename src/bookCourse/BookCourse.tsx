@@ -10,16 +10,6 @@ import moment from "moment";
 import API from "../redux/api/api";
 
 function BookCourse() {
-	const sessions = [
-		{day: 'Monday',
-		date: '17 Jan',
-		spots: '2/10'
-		},
-		{day: 'Wednesday',
-		date: '24 Jan',
-		spots: '2/10'
-		}
-	  ]
 	
 	const timings = ["11:00 AM", "6:00 PM"];
 	interface courseViewer {
@@ -45,6 +35,7 @@ function BookCourse() {
 		session_avalibility : number;
 		instructor_id : number;
 		session_seats : number;
+		selected:boolean;
 	  
 	  }
 
@@ -81,7 +72,7 @@ function BookCourse() {
 	const [sessionDetails, setSessionDetails] = useState<sessionViewer[]>();
 	console.log(sessionDetails)
 	const [courseView, setCourseView] = useState<courseViewer[]>();
-	const [confrim, setConfrim] = useState<any>('');
+	const [confrim, setConfrim] = useState<any>(false);
 	const [instructorCourseView, setInstructorCourseView] = useState<courseInstructorViewer[]>([]);
 	console.log(instructorCourseView)
 	const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getItem('learner-details') || 'null'))
@@ -92,7 +83,8 @@ function BookCourse() {
 	useEffect(() => {
 		API.post('getsessionview', {courseId : course_id})
 		.then((res)=>{
-		  setSessionDetails(res.data)
+			const val = res.data?.map((dataItem:any) => ({ ...dataItem, selected: false }))
+		  setSessionDetails(val)
 		  console.log("Session Details", sessionDetails);
 		  
 		}).catch((err) => {
@@ -182,16 +174,6 @@ function BookCourse() {
 			}
 		}	
 	}
-	
-	useEffect(() => {
-		// API.post("getinstructorlist", {courseId : course_id})
-		//   .then((res) => {
-		// 	setInstructors(res.data);
-		//   })
-		//   .catch((err) => {
-		// 	console.log(err);
-		//   });
-	  }, []);	
 
 	  console.log(instructors);
 
@@ -277,9 +259,9 @@ function BookCourse() {
 							</CardContent>
 							<CardActions style={{textAlign: 'center'}}>
 							<Box style={{margin: 'auto'}}>
-								<Button 
+								{session.selected === false ? <Button 
 									onClick = {() => {
-										setChecked(true)
+											session.selected = !session.selected				
 										API.get('getInstructorDetails/'+session?.instructor_id)
 										.then((res)=>{
 										  setInstructor(res.data)
@@ -287,7 +269,7 @@ function BookCourse() {
 										}).catch((err) => {
 										  console.log(err)
 										})
-												
+										console.log(session)
 									fetchInstructorID(session?.instructor_id)
 									// setInstructor(session?.instructor_id)
 									setSessionID(session?.session_id)
@@ -298,6 +280,14 @@ function BookCourse() {
 									}))
 									}} 
 								size='small' style={{background: '#917EBD', color: 'white',paddingLeft: '20px', paddingRight: '20px', fontSize:'10px'}}> Enroll Now</Button>
+								:
+								<Button onClick = {() => {
+									session.selected = !session.selected
+									setSessionID(null)
+									fetchInstructorID(0)
+									setSelectedDate('Not Selected')
+									setSelectedTime('Not Selected')
+									}} size='small' style={{background: 'white', color: '#917EBD',paddingLeft: '20px', paddingRight: '20px', fontSize:'10px'}}> Selected</Button>}
 							</Box>
 							</CardActions>
 						</Box>
