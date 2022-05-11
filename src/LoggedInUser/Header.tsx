@@ -107,14 +107,9 @@ function Header() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-         <Link to="/profile">
         <MenuItem>
          <Avatar /> Profile
         </MenuItem>
-        </Link>
-        {/* <MenuItem>
-          <Avatar /> My account
-        </MenuItem> */}
         <Divider />
         <MenuItem>
           <Link to="/learner">
@@ -124,12 +119,6 @@ function Header() {
             Switch Learner
           </Link>
         </MenuItem>
-        {/* <MenuItem>
-          <ListItemIcon>
-            <Settings fontSize="small" />
-          </ListItemIcon>
-          Settings
-        </MenuItem> */}
         <MenuItem onClick={handelLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />

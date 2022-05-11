@@ -113,7 +113,6 @@ function LearnerProfile() {
             onChange={handelChange} 
           />
         </Box>
-        </form>
         <div
           style={{
             display: "flex",
@@ -128,6 +127,7 @@ function LearnerProfile() {
             <Button
               variant="contained"
               style={{ width: 100, background: "#917EBD" }}
+              type="submit"
             >
               <UpdateIcon/>
               Update
@@ -144,6 +144,7 @@ function LearnerProfile() {
             </Button>
           </div>
         </div>
+        </form>
       </div>
       <div style={{marginLeft: '60px', marginTop: '60px'}}>
         <Typography fontSize={"32px"} fontWeight={"700"}>

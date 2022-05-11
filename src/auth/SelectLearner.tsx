@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import "./auth.css";
 import jwt_decode from "jwt-decode";
 import API from '../redux/api/api';
+import SelectLearnerHeader from "../LoggedInUser/SelectLearnerHeader";
 
 function SelectLearner() {
 
@@ -36,7 +37,7 @@ function SelectLearner() {
   }else{
   return (
     <>
-      {/* <Header /> */}
+      <SelectLearnerHeader />
 
       <div className="select-learner">
         <div>

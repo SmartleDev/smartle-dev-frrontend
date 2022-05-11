@@ -36,8 +36,6 @@ function SwitchUser() {
   }else{
   return (
     <>
-      {/* <Header /> */}
-
       <div className="select-learner">
         <div>
           <h1 className="font-black text-4xl">Please Select Learner!!</h1>
@@ -61,7 +59,6 @@ function SwitchUser() {
                 color: "#917EBD",
                 backgroundColor: "#F9EDF5",
                 padding: "20px",
-                fontSize: "150px",
                 borderRadius: "50%",
               }}
             />
