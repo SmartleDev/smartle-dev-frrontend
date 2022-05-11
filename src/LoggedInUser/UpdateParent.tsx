@@ -5,7 +5,8 @@ import API from "../redux/api/api";
 
 const UpdateParent = () => {
 
-    const [parent, setParent] = useState(JSON.parse(localStorage.getItem('user-details') || 'null'))
+    const [parent, setParent] = useState<any>(JSON.parse(localStorage.getItem('user-details') || 'null'))
+    
     console.log(parent?.username);
 
     const [updateDetails, setUpdateDetails] : any = useState(
@@ -37,13 +38,13 @@ const UpdateParent = () => {
       console.log(parentInfo);
     useEffect(() => {
 
-        // API.get<parentInfo[]>('setparentinfo', {parent_id: parent?.username})
-        //   .then((res) => {
-        //     setParentInfo(res.data);
-        //   })
-        //   .catch((err) => {
-        //     console.log(err);
-        //   });
+        API.post('setparentinfo', {parent_id: parent?.username})
+          .then((res) => {
+            setParentInfo(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }, []);
 
     return (

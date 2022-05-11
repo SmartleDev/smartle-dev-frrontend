@@ -1,7 +1,9 @@
 import React, {useState, useEffect} from "react";
 import PersonIcon from "@mui/icons-material/Person";
+import UpdateIcon from "@mui/icons-material/Update";
 import AddIcon from "@mui/icons-material/Add";
 import Header from "../components/organisms/Header";
+import { Button } from '@mui/material';
 import Footer from "../components/organisms/Footer";
 import { HashLink as Link} from "react-router-hash-link";
 import { useNavigate } from 'react-router-dom';
@@ -37,8 +39,12 @@ function SelectLearner() {
   }else{
   return (
     <>
-      <SelectLearnerHeader />
-
+      {/* <SelectLearnerHeader /> */}
+      <Link to="/updateparentprofile">
+        <Button size='small' style={{background: '#917EBD', color: 'white',paddingLeft: '20px', paddingRight: '20px', fontSize:'15px', float: 'right', marginRight: '50px'}}>
+          <UpdateIcon/> <span style={{marginLeft: '10px'}}>Update Profile</span>
+        </Button>
+      </Link>
       <div className="select-learner">
         <div>
           <h1 className="font-black text-4xl">Please Select Learner!!</h1>
