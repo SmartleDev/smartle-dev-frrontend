@@ -42,6 +42,8 @@ const VerifyingUser = () => {
         }
       );
 
+      console.log(parentTable.parentEmail)
+
     const navigate = useNavigate();
 
     const handleChange = (element:any, index: any) => {
@@ -67,6 +69,14 @@ const VerifyingUser = () => {
             }else{
             setCodeResult(res.data);
 
+            API.post('accountCreationEmailService', {emailTo: localStorage.getItem('username')} )
+            .then(res => {
+                console.log(localStorage.getItem('username'));
+                console.log(parentTable.parentEmail);
+                console.log(res.data)
+            }).catch(err => {
+                console.log(err)
+            })
             API.post('login', loginCreds)
             .then( async (res)=>{
                     console.log(res.data.username);

@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import moment from "moment";
 import API from "../redux/api/api";
+import jwt_decode from "jwt-decode";
 
 function BookCourse() {
 	
@@ -76,6 +77,10 @@ function BookCourse() {
 	const [instructorCourseView, setInstructorCourseView] = useState<courseInstructorViewer[]>([]);
 	console.log(instructorCourseView)
 	const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getItem('learner-details') || 'null'))
+	const token = JSON.parse(localStorage.getItem('user-details') || '{}');
+	const details:any = jwt_decode(token.token);
+	//console.log(token.token);
+	 console.log(details.email);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -103,27 +108,28 @@ function BookCourse() {
 	const {fetchInstructorID} = bindActionCreators(actionCreators, dispatch)
 
 
-	// const handelConfirmCourse = () => {
-	// 	API.post('enrollLearner', {courseId : course_id, studentId : leanerUser?.student_id, studentFeeStatus : true, sessionId : sessionId, enrollmentType : 'paid'})
-	// 	  .then((res)=>{
-	// 		setConfrim(res.data)
-	// 	}).catch((err) => {
-	// 	  console.log(err)
-	// 	})
-	//   }
-
-
 	const handelBuyCourse = () => {
+
+
 
 		if(enrollment_id !== 0){
 			API.post("convertTrialToBuyCourse", {enrollmentId : enrollment_id})
 		  .then((res) => {
 			console.log(res.data)
+
+			API.post('enrollCourseEmailService', {emailTo: details?.email,studentName: leanerUser?.student_name , courseId: course_id} )
+			.then(res => {
+			  console.log(res.data)
+			}).catch(err => {
+			  console.log(err)
+			})
+
 			fetchInstructorID(0)
 
 			API.post("enrolledUserProgressDefault", {enrollmentId : enrollment_id, courseId : course_id})
 			.then((res) => {
 				console.log(res.data)
+
 			})
 			.catch((err) => {
 			  console.log(err);
@@ -142,6 +148,12 @@ function BookCourse() {
 				API.post('enrollLearner', {courseId : course_id, studentId : leanerUser?.student_id, studentFeeStatus : true, sessionId : null, enrollmentType : 'paid'})
 				.then((res) => {
 					console.log(res.data)
+					API.post('enrollCourseEmailService', {emailTo: details?.email,studentName: leanerUser?.student_name , courseId: course_id} )
+					.then(res => {
+					console.log(res.data)
+					}).catch(err => {
+					console.log(err)
+					})
 					navigate('/loggedcourseview')
 					window.addEventListener("popstate", () => {
 						navigate(1);
@@ -154,7 +166,12 @@ function BookCourse() {
 				API.post('enrollLearner', {courseId : course_id, studentId : leanerUser?.student_id, studentFeeStatus : true, sessionId : sessionID, enrollmentType : 'paid'})
 				.then((res) => {
 					console.log(res.data)
-
+					API.post('enrollCourseEmailService', {emailTo: details?.email,studentName: leanerUser?.student_name , courseId: course_id} )
+					.then(res => {
+					console.log(res.data)
+					}).catch(err => {
+					console.log(err)
+					})
 					API.post("enrolledUserProgressDefault", {enrollmentId : res.data?.enrolmentId, courseId : course_id})
 					.then((res) => {
 						console.log(res.data)

@@ -8,6 +8,8 @@ import { purple } from "@mui/material/colors";
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import API from '../redux/api/api';
+import jwt_decode from "jwt-decode";
+
 import { useNavigate } from 'react-router-dom';
 import "./auth.css";
 
@@ -33,6 +35,10 @@ function RegisterChild() {
       parentId: userId
     }
   );
+  
+  const details:any = jwt_decode(token.token);
+  //console.log(token.token);
+   console.log(details.email);
   const [learnerList, setLearnerList] = useState<any>([])
   const [err, setErr] = useState<any>('')
 
@@ -70,7 +76,14 @@ function RegisterChild() {
     await API.post('createchild', childCreds)
     .then(res => {
       console.log(res.data)
-      navigate('/learner')
+      API.post('addLearnerEmailService', {emailTo: details.email,parentId: childCreds.parentId} )
+      .then(res => {
+        console.log(res.data)
+        navigate('/learner')
+      }).catch(err => {
+        console.log(err)
+      })
+      //navigate('/learner')
     }).catch(err => {
       console.log(err)
     })

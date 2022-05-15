@@ -8,6 +8,7 @@ import { bindActionCreators } from 'redux';
 import API from "../redux/api/api";
 import moment from "moment";
 import { useNavigate } from 'react-router-dom';
+import jwt_decode from "jwt-decode";
 
 function BookTrial() {
 
@@ -74,7 +75,10 @@ const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getIt
   const [instructorCourseView, setInstructorCourseView] = useState<courseInstructorViewer[]>([]);
   console.log(instructorCourseView)
 
-
+	const token = JSON.parse(localStorage.getItem('user-details') || '{}');
+	const details:any = jwt_decode(token.token);
+	//console.log(token.token);
+	 console.log(details.email);
 
 
   // const dateToTime = (date : any) => date.toLocaleString('en-US', {
@@ -94,6 +98,14 @@ const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getIt
   const handleProperConfirmTrial = () => {
       API.post('enrollLearner', {courseId : course_id, studentId : leanerUser?.student_id, studentFeeStatus : null, sessionId : sessionId, enrollmentType : 'trial'})
       .then((res)=>{
+
+        API.post('enrollTrialCourseEmailService', {emailTo: details?.email,studentName: leanerUser?.student_name , courseId: course_id} )
+        .then(res => {
+          console.log(res.data)
+        }).catch(err => {
+          console.log(err)
+        })
+
         setMsgStatus('success');
         setMsg(confrim.message);
         setOpen(true);
