@@ -107,9 +107,14 @@ function Header() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
+         <Link to="/profile">
         <MenuItem>
-         <Avatar /> Profile
+              <ListItemIcon>
+                <Avatar/>
+              </ListItemIcon>
+              Profile
         </MenuItem>
+        </Link>
         <Divider />
         <MenuItem>
           <Link to="/learner">
