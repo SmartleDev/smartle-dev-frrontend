@@ -86,10 +86,12 @@ const CourseViewContent = () => {
   );
 
   const course_id = useSelector((state: RootState) => state.courseIDFetch);
+  const module_id = useSelector((state: RootState) => state.moduleIDFetch);
   const enrollment_id = useSelector((state: RootState) => state.EnrollmentIDFetch);
   const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getItem('learner-details') || 'null'))
   const [courseView, setCourseView] = useState<any>([]);
   const [sessionView, setSessionView] = useState<any>([]);
+  const [topics, setTopics] = useState<number[]>([]);
   console.log(sessionView);
   const [moduleView, setModuleView] = useState<moduleViewer[]>([]);
   console.log(moduleView);
@@ -118,6 +120,13 @@ const CourseViewContent = () => {
       .catch((err) => {
         console.log(err);
       });
+
+      API.get<number[]>('getProgressModuleTopic/'+module_id)
+  .then((res)=>{
+    setTopics(res.data)
+  }).catch((err) => {
+    console.log(err)
+  })
 
     API.get("getmoduleforcourse/" + course_id)
       .then((res) => {
@@ -284,7 +293,7 @@ const CourseViewContent = () => {
         </Grid>}
       </Grid>
       {courseView[0]?.enrollment_type === "paid" ? (
-        <PaidView moduleViewPaid={moduleView} />
+        <PaidView moduleViewPaid={moduleView} topicArray = {topics}/>
       ) : (
         <TrialView moduleViewTrial={moduleView} enrollmentID = {courseView[0]?.enrollment_id} />
       )}

@@ -20,12 +20,13 @@ import API from "../redux/api/api";
 
 export interface PaidModuleView {
 	moduleViewPaid : {}[];
+	topicArray : {}[]
   }
 
 
 function PaidView(props: PaidModuleView) {
 
-	const { moduleViewPaid } = props;
+	const { moduleViewPaid, topicArray } = props;
 
 	interface topicViewer {
         module_id: number;
@@ -39,13 +40,20 @@ function PaidView(props: PaidModuleView) {
         topiccol:string
     }
 
+
+
+
 	const dispatch = useDispatch();
 	const navigate = useNavigate()
 	const { fetchUsers, fetchModuleID} = bindActionCreators(actionCreators, dispatch)
 	const [topicId, setTopicId] = useState('');
 	const [topicView, setTopiceView] = useState<topicViewer[]>([]);
 	const { fetchtopicID} = bindActionCreators(actionCreators, dispatch)
-	console.log(topicId)
+	const enrollment_id = useSelector((state: RootState) => state.EnrollmentIDFetch)
+	console.log(enrollment_id)
+	const [topicsCompleted, setTopicsCompleted] = useState<any[]>();
+	console.log(topicsCompleted)
+	console.log(topicArray?.map((dataItem : any) => dataItem))
 
 	const [expanded, setExpanded] = React.useState<string | false>(false);
 
@@ -55,13 +63,21 @@ function PaidView(props: PaidModuleView) {
 	  };
 
 	useEffect(() => {
+
+		API.get('getAllTopicsCompleted/'+enrollment_id)
+		.then((res)=>{
+		  setTopicsCompleted(res.data)
+		}).catch((err) => {
+		  console.log(err)
+		})
+
 		API.get<topicViewer[]>('gettopicformodule/'+topicId)
         .then((res)=>{
          setTopiceView(res.data)
         }).catch((err) => {
           console.log(err)
         })
-	},[topicId])
+	},[topicId, enrollment_id])
 
   return (
 	<Box width={"90%"} margin="auto" borderTop={'1px dashed #917EBD'} sx={{marginTop:'20px'}}>
@@ -110,7 +126,10 @@ function PaidView(props: PaidModuleView) {
 										<Typography>{topicDataItem.topic_name}</Typography>
 									</Grid>
 									<Grid item xs={1} >
-										<Box><CheckCircleIcon style={{color: 'green', opacity: '0.2'}}/></Box>
+										<Box>{topicsCompleted?.some((dataItem) => topicDataItem?.topic_id === dataItem) ?
+										<CheckCircleIcon style={{color: 'green', opacity: '1'}}/>
+										:<CheckCircleIcon style={{color: 'green', opacity: '0.2'}}/>
+									} </Box>
 									</Grid>
 								</Grid>
 							 )

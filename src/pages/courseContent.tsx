@@ -284,6 +284,13 @@ useEffect(() => {
       }).catch((err) => {
         console.log(err)
       })
+      
+      API.post('updateTopicsCompleted', {courseTopic : topics[index], enrollmentId : enrollment_id})
+      .then((res)=>{
+          console.log(res.data)
+      }).catch((err) => {
+        console.log(err)
+      })
 
     }else{
       let indexM = indexModule+1
@@ -379,7 +386,7 @@ useEffect(() => {
         <Toolbar />
         <Box sx={{ overflow: 'auto', mt: '70px'}}>
         {myCourses[0]?.enrollment_type === "paid" ? (
-        <PaidView moduleViewPaid={moduleContent}/>
+        <PaidView moduleViewPaid={moduleContent} topicArray = {topics}/>
       ) : (
         <TrialView moduleViewTrial={moduleContent} enrollmentID = {myCourses[0]?.enrollment_id} />
       )}
