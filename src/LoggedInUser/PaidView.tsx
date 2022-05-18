@@ -50,6 +50,8 @@ function PaidView(props: PaidModuleView) {
 	const [topicView, setTopiceView] = useState<topicViewer[]>([]);
 	const { fetchtopicID} = bindActionCreators(actionCreators, dispatch)
 	const enrollment_id = useSelector((state: RootState) => state.EnrollmentIDFetch)
+	const topic_id = useSelector((state: RootState) => state.TopicIDFetch)
+	const module_id = useSelector((state: RootState) => state.moduleIDFetch);
 	console.log(enrollment_id)
 	const [topicsCompleted, setTopicsCompleted] = useState<any[]>();
 	console.log(topicsCompleted)
@@ -77,7 +79,7 @@ function PaidView(props: PaidModuleView) {
         }).catch((err) => {
           console.log(err)
         })
-	},[topicId, enrollment_id])
+	},[topicId, module_id, topic_id])
 
   return (
 	<Box width={"90%"} margin="auto" borderTop={'1px dashed #917EBD'} sx={{marginTop:'20px'}}>

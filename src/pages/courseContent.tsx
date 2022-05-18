@@ -285,7 +285,7 @@ useEffect(() => {
         console.log(err)
       })
       
-      API.post('updateTopicsCompleted', {courseTopic : topics[index], enrollmentId : enrollment_id})
+      API.post('updateTopicsCompleted', {courseTopic : topics[indexTopic], enrollmentId : enrollment_id})
       .then((res)=>{
           console.log(res.data)
       }).catch((err) => {
@@ -295,6 +295,12 @@ useEffect(() => {
     }else{
       let indexM = indexModule+1
       if(indexM < modules.length){
+        API.post('updateTopicsCompleted', {courseTopic : topics[indexTopic], enrollmentId : enrollment_id})
+        .then((res)=>{
+            console.log(res.data)
+        }).catch((err) => {
+          console.log(err)
+        })
         setIndexTopic(0);
         setIndexModule(indexM);
         fetchModuleID(modules[indexM]);

@@ -156,7 +156,6 @@ function TrialView(props: PaidModuleView) {
 										<Typography>{topicDataItem.topic_name}</Typography>
 									</Grid>
 									<Grid item xs={1} >
-										<Box><CheckCircleIcon style={{color: 'green', opacity: '0.2'}}/></Box>
 									</Grid>
 								</Grid>
 							 )
