@@ -27,14 +27,14 @@ const Courses = () => {
   const [learner, setLearner] = useState<any>(JSON.parse(localStorage.getItem('learner-details') || 'null'))
   
   const dispatch = useDispatch();
-  const { fetchUsers, fetchCourseID} = bindActionCreators(actionCreators, dispatch)
+  const { fetchUsers, fetchCourseID, fetchEnrollmentID} = bindActionCreators(actionCreators, dispatch)
 
   const course_id = useSelector((state: RootState) => state.courseIDFetch)
   console.log(course_id)
 
   useEffect(() => {
-    
-  });
+    fetchEnrollmentID(0)
+  }, []);
   useEffect(() => {
     ( async () => {
 			try {

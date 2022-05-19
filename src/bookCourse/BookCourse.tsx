@@ -80,11 +80,15 @@ function BookCourse() {
 	const token = JSON.parse(localStorage.getItem('user-details') || '{}');
 	const details:any = jwt_decode(token.token);
 	//console.log(token.token);
-	 console.log(details.email);
-
+	console.log(details.email);
+	
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-
+	
+	const {fetchEnrollmentID } = bindActionCreators(
+		actionCreators,
+		dispatch
+	  );
 	useEffect(() => {
 		API.post('getsessionview', {courseId : course_id})
 		.then((res)=>{
@@ -158,6 +162,7 @@ function BookCourse() {
 					window.addEventListener("popstate", () => {
 						navigate(1);
 					});
+					fetchEnrollmentID(0)
 				  })
 				  .catch((err) => {
 					console.log(err);
@@ -166,15 +171,27 @@ function BookCourse() {
 				API.post('enrollLearner', {courseId : course_id, studentId : leanerUser?.student_id, studentFeeStatus : true, sessionId : sessionID, enrollmentType : 'paid'})
 				.then((res) => {
 					console.log(res.data)
+					
 					API.post('enrollCourseEmailService', {emailTo: details?.email,studentName: leanerUser?.student_name , courseId: course_id} )
 					.then(res => {
 					console.log(res.data)
 					}).catch(err => {
 					console.log(err)
 					})
+					
+					
 					API.post("enrolledUserProgressDefault", {enrollmentId : res.data?.enrolmentId, courseId : course_id})
 					.then((res) => {
 						console.log(res.data)
+					})
+					.catch((err) => {
+					  console.log(err);
+					});
+
+
+					API.post("updateSessionAvaliablity", {sessionId : sessionID})
+					.then((res) => {
+					  console.log(res.data)
 					})
 					.catch((err) => {
 					  console.log(err);
@@ -184,6 +201,7 @@ function BookCourse() {
 					window.addEventListener("popstate", () => {
 						navigate(1);
 					});
+					fetchEnrollmentID(0)
 				  })
 				  .catch((err) => {
 					console.log(err);
@@ -278,7 +296,8 @@ function BookCourse() {
 							<Box style={{margin: 'auto'}}>
 								{session.selected === false ? <Button 
 									onClick = {() => {
-											session.selected = !session.selected				
+										sessionDetails?.map((dataItem:any) => ({ ...dataItem, selected: false }))
+											session.selected = !session.selected	
 										API.get('getInstructorDetails/'+session?.instructor_id)
 										.then((res)=>{
 										  setInstructor(res.data)

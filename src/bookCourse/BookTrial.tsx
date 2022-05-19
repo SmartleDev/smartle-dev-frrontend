@@ -64,13 +64,13 @@ const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getIt
   const [open, setOpen] = React.useState(false);
 
   const [msg, setMsg] = useState("");
-  const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
 
-    setOpen(false);
-  };
+  // const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+  //   if (reason === 'clickaway') {
+  //     return;
+  //   }
+  //   setOpen(false);
+  // };
   console.log(confrim.message)
   const [instructorCourseView, setInstructorCourseView] = useState<courseInstructorViewer[]>([]);
   console.log(instructorCourseView)
@@ -105,6 +105,14 @@ const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getIt
         }).catch(err => {
           console.log(err)
         })
+
+        API.post("updateSessionAvaliablity", {sessionId : sessionId})
+        .then((res) => {
+          console.log(res.data)
+        })
+        .catch((err) => {
+          console.log(err);
+        });
 
         setMsgStatus('success');
         setMsg(confrim.message);
@@ -282,11 +290,11 @@ const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getIt
           </Box>
         </Grid>
       </Grid>
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+      {/* <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert variant='filled' onClose={handleClose} severity={msgStatus} sx={{ width: '100%' }}>
           {msg}
         </Alert>
-      </Snackbar>
+      </Snackbar> */}
     </Box>
   )
 }
