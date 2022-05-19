@@ -46,7 +46,7 @@ function PaidView(props: PaidModuleView) {
 	const dispatch = useDispatch();
 	const navigate = useNavigate()
 	const { fetchUsers, fetchModuleID} = bindActionCreators(actionCreators, dispatch)
-	const [topicId, setTopicId] = useState('');
+	const [topicId, setTopicId] = useState<any>('');
 	const [topicView, setTopiceView] = useState<topicViewer[]>([]);
 	const { fetchtopicID} = bindActionCreators(actionCreators, dispatch)
 	const enrollment_id = useSelector((state: RootState) => state.EnrollmentIDFetch)
@@ -57,15 +57,21 @@ function PaidView(props: PaidModuleView) {
 	console.log(topicsCompleted)
 	console.log(topicArray?.map((dataItem : any) => dataItem))
 
-	const [expanded, setExpanded] = React.useState<string | false>(false);
+	const [expanded, setExpanded] = React.useState<number | false>(false);
 
 	const handleChange =
-	  (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+	  (panel: number) => (event: React.SyntheticEvent, isExpanded: boolean) => {
 		setExpanded(isExpanded ? panel : false);
 	  };
 
-	useEffect(() => {
+	  useEffect(() => {
+		let isExpanded = true
+		setExpanded(isExpanded ? module_id : false);
+		
+		setTopicId(module_id)
+	  }, [module_id])
 
+	useEffect(() => {
 		API.get('getAllTopicsCompleted/'+enrollment_id)
 		.then((res)=>{
 		  setTopicsCompleted(res.data)
@@ -88,7 +94,7 @@ function PaidView(props: PaidModuleView) {
 		{moduleViewPaid?.map((dataItem: any, topicId:number) =>{
 			if (!dataItem.module_id) return(<React.Fragment key={topicId}></React.Fragment>);
 			return (
-				<Accordion  key={topicId}  expanded={expanded === `panel${topicId}`} onChange={handleChange(`panel${topicId}`)}>
+				<Accordion  key={topicId}  expanded={expanded === dataItem.module_id} onChange={handleChange(dataItem.module_id)}>
 					<AccordionSummary
 					 onClick = {() => {
 

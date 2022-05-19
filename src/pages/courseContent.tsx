@@ -338,6 +338,28 @@ useEffect(() => {
         })
 
       }else{
+
+        API.post('updateTopicStatus', {courseTopic : topics[indexTopic], enrollmentId : enrollment_id})
+        .then((res)=>{
+            console.log(res.data)
+        }).catch((err) => {
+          console.log(err)
+        })
+
+        API.post('updateModuleCompeletedStatus', {enrollmentId : enrollment_id})
+        .then((res)=>{
+            console.log(res.data)
+        }).catch((err) => {
+          console.log(err)
+        })
+
+        API.post('updateTopicsCompleted', {courseTopic : topics[indexTopic], enrollmentId : enrollment_id})
+        .then((res)=>{
+            console.log(res.data)
+        }).catch((err) => {
+          console.log(err)
+        })
+
         setShowNext(false);
       }
     }
@@ -365,7 +387,7 @@ useEffect(() => {
        <Typography variant='h6' sx={{ fontWeight: '900' }}>{dataItem.module_name}</Typography>
      </Grid>
      <Grid item xs={8} alignContent="end">
-       <Typography variant='h6' align='right' sx={{ fontWeight: '900' }}>Week: 01</Typography>
+       {/* <Typography variant='h6' align='right' sx={{ fontWeight: '900' }}>{dataItem?.module}</Typography> */}
      </Grid>
        </Grid>
     </Box>
@@ -439,10 +461,12 @@ useEffect(() => {
             <GradBlobCourseContent/>
             <MobileHeader />
             <Box  margin="auto">
-                <Typography sx={{mt: '60px', ml:5}}>Learning Video - 1</Typography>
                 <Box sx={{}}>
                 <Box textAlign={"center"} marginTop={marginLoader}><SyncLoader color={color} loading={loading} css={override} size={15} /></Box>
             {singleTopicContent?.map((dataItem:any, index: number) => 
+            <>
+                <Typography sx={{mt: '60px', ml:5}}>{dataItem?.topic_name} :</Typography>
+                <br/>
                 <iframe src={dataItem?.topic_path}
                   loading="lazy"
                   onLoad={hideSpinner}
@@ -450,6 +474,7 @@ useEffect(() => {
                   style={{justifyContent:'center', width:"70vw", height: "90vh"}}
                   className="content-resize">
                 </iframe> 
+                </>
             )}
             
             {!isMobile ?(<>

@@ -100,6 +100,16 @@ const CourseViewContent = () => {
   );
 
   useEffect(() => {
+
+    API.get("getTrackedCourse/" + enrollment_id)
+    .then((res) => {
+      fetchtopicID(res.data[0]?.course_topic)
+      fetchModuleID(res.data[0]?.course_module)
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+    
     API.post("getEnrolledCourseView", {
       studentId: learner?.student_id,
       courseId: course_id,
@@ -135,7 +145,7 @@ const CourseViewContent = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, [course_id, id]);
+  }, [course_id, id, module_id]);
 
   const handelBeginNow = () => {
     API.get("getTrackedCourse/" + enrollment_id)
@@ -168,7 +178,7 @@ const CourseViewContent = () => {
               </Box>
               <Typography>{dataItem.course_description}</Typography>
               <Box sx={{ marginTop: "20px" }}>
-               {dataItem?.course_progress === 0 ?  <Typography>Begin you course</Typography> : <Typography>Continue you course from where you left off</Typography> }
+               {dataItem?.course_progress === 0 ?  <Typography>Begin you course</Typography> : dataItem?.course_progress === 100 ? <Typography>Course is Completed, You can still rewatch the Content</Typography> : <Typography>Continue you course from where you left off</Typography> }
               </Box>
               <ThemeProvider theme={redTheme}>
                 <Box>
@@ -178,6 +188,12 @@ const CourseViewContent = () => {
                     </Button>
                  
                   :
+                  dataItem?.course_progress === 100 ?
+                  <Button variant="contained" sx={{ marginTop: "10px" }} onClick = {handelBeginNow}>
+                  Complete
+                </Button>
+
+                :
                     <Button variant="contained" sx={{ marginTop: "10px" }} onClick = {handelBeginNow}>
                       Continue
                     </Button>}
@@ -239,7 +255,7 @@ const CourseViewContent = () => {
                   <Grid item xs={10}>
                     <Typography>{moduleView.length} Modules</Typography>
                   </Grid>
-                  <Grid item xs={2}>
+                  {/* <Grid item xs={2}>
                     <ScheduleIcon
                       style={{
                         color: "#917EBD",
@@ -258,7 +274,7 @@ const CourseViewContent = () => {
                   </Grid>
                   <Grid item xs={10}>
                     <Typography>06 Classes</Typography>
-                  </Grid>
+                  </Grid> */}
                 </Grid>
               </Box>
             </Grid>
