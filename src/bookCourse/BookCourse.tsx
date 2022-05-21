@@ -296,7 +296,13 @@ function BookCourse() {
 							<Box style={{margin: 'auto'}}>
 								{session.selected === false ? <Button 
 									onClick = {() => {
-										sessionDetails?.map((dataItem:any) => ({ ...dataItem, selected: false }))
+									sessionDetails?.filter((dataItem, index) =>{
+										 if(dataItem?.selected === true){
+											dataItem.selected = false
+										 }else{
+											 console.log("hello")
+										 }
+										})
 											session.selected = !session.selected	
 										API.get('getInstructorDetails/'+session?.instructor_id)
 										.then((res)=>{
