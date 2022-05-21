@@ -30,6 +30,7 @@ import PausePresentationIcon from '@mui/icons-material/PausePresentation';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import PaidView from '../LoggedInUser/PaidView'
 import TrialView from '../LoggedInUser/TrialView'
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 
 
 interface Props {
@@ -374,7 +375,7 @@ useEffect(() => {
     <Box sx={{ display: 'flex' }} style={{padding: "0px"}}>
       <CssBaseline />
       <HideOnScroll >
-      <AppBar sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, 
+      <AppBar sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, marginTop: '30px', 
         display: { xs:"none", sm:"nome", md: "none", lg: "block" },}} className="title-div">
         <Toolbar>
        {moduleView?.map((dataItem : any, index : any) => 
@@ -389,7 +390,7 @@ useEffect(() => {
      <Grid item xs={8} alignContent="end">
        {/* <Typography variant='h6' align='right' sx={{ fontWeight: '900' }}>{dataItem?.module}</Typography> */}
      </Grid>
-       </Grid>
+       </Grid> 
     </Box>
        )}
         </Toolbar>
@@ -410,7 +411,7 @@ useEffect(() => {
           [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
         }}
       >
-        <ArrowBackIcon onClick={() => navigate(-1)}/>
+        <Box ml={"20px"} mt="10px" sx={{background: "#917ebd", width: "40px", padding:"5px", borderRadius: "3px"}}><KeyboardBackspaceIcon sx={{color: 'white'}} fontSize='medium' onClick={() => navigate(-1)}/></Box>
         <Toolbar />
         <Box sx={{ overflow: 'auto', mt: '70px'}}>
         {myCourses[0]?.enrollment_type === "paid" ? (
