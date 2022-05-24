@@ -152,7 +152,7 @@ console.log(learner)
                {dataItem?.enrollment_type === 'paid' &&<div style = {{position: 'absolute', top : '0px', width: "370px"}}>
                 <BorderLinearProgress variant="determinate" value={dataItem.course_progress} />
                 <p style={{ textAlign: "end", fontSize: "12px" }}>
-                  In Progress
+                  {dataItem?.course_progress === 100 ? `Completed` : `In Progress`}
                 </p>
                 </div>}
               </div>

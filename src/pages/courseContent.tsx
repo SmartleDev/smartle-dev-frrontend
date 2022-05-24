@@ -31,6 +31,7 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import PaidView from '../LoggedInUser/PaidView'
 import TrialView from '../LoggedInUser/TrialView'
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import CompleteCourse from './Complete/CompleteCourse';
 
 
 interface Props {
@@ -148,6 +149,8 @@ const [indexModule, setIndexModule] = useState(0);
 console.log(indexTopic);
 console.log(indexModule);
 
+const [showNext, setShowNext] = useState(true);
+
 useEffect(() => {
 
   API.get<number[]>('getProgressCourseModule/'+course_id)
@@ -172,7 +175,7 @@ useEffect(() => {
   }).catch((err) => {
     console.log(err)
   })
-},[topic_id, module_id, indexTopic, indexModule])
+},[topic_id, module_id, indexTopic, indexModule, showNext])
 
   useEffect(() => {
 
@@ -206,13 +209,11 @@ useEffect(() => {
       console.log(err)
     })
 
-  }, [topic_id, course_id, module_id, indexModule])
+  }, [topic_id, course_id, module_id, indexModule, showNext])
 
   const isMobile:any = useMediaQuery('(max-width:500px)');
   const drawerWidth:number = 340;
   let [color, setColor] = useState("#917EBD");
-
-  const [showNext, setShowNext] = useState(true);
   const [showPrev, setShowPrev] = useState(true);
   const override = css`
   display: block;
@@ -479,6 +480,15 @@ useEffect(() => {
             )}
             
             {!isMobile ?(<>
+
+              {myCourses[0]?.course_progress === 100 ? 
+              <Button 
+              onClick={() => navigate('/loggedcourseview')}
+              className='rounded-md md:rounded-md shadow-xl font-bold py-3 px-10 md:w-auto md:px-14 lg:px-14 h-9 text-white bg-color-400' style = {{marginLeft : '50px', marginTop : "20px"}}>
+              Course Completed
+          </Button>
+              :
+              <>
               <Box paddingLeft={"100px"} paddingRight={"100px"}>
                 <Button 
                     onClick={handlePrevious}
@@ -491,7 +501,11 @@ useEffect(() => {
                     className='sm:mt-12 md:mt-12 lg:mt-5 xl:mt-0 rounded-md md:rounded-md shadow-xl font-bold py-3 px-10 md:w-auto md:px-14 lg:px-14 h-9 text-white bg-color-400' style={{float:"right"}}>
                     {buttonName}
                 </Button>}
-        </Box></>) :(
+        </Box>
+        </>
+        }
+        
+        </>) :(
                 <>
                 <Box sx={{mt: '70px'}} className='module-overview' 
                 component={Stack} 

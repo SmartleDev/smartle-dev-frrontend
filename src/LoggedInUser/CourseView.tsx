@@ -190,7 +190,7 @@ const CourseViewContent = () => {
                   :
                   dataItem?.course_progress === 100 ?
                   <Button variant="contained" sx={{ marginTop: "10px" }} onClick = {handelBeginNow}>
-                  Complete
+                  Rewatch
                 </Button>
 
                 :
