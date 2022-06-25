@@ -241,7 +241,7 @@ function BookCourse() {
 		event.preventDefault();
 		console.log(couponCode)
 
-		API.post('checkvoucher', {code: couponCode, course_id: "0", parent_id: leanerUser.parent_id} )
+		API.post('checkvoucher', {code: couponCode, course_id: course_id.toString(), parent_id: leanerUser.parent_id} )
 		.then(res => {
 			if(Array.isArray(res.data)){
 				if(discount !== null){
