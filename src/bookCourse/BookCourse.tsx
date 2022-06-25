@@ -80,8 +80,17 @@ function BookCourse() {
 	const token = JSON.parse(localStorage.getItem('user-details') || '{}');
 	const details:any = jwt_decode(token.token);
 	//console.log(token.token);
-	console.log(details.email);
-	
+	console.log(leanerUser.parent_id);
+
+	const [couponCode, setCouponCode] = useState("");
+	const [discount, setDiscount] = useState<any>(instructorCourseView[0]?.course_cost);
+	const [finalCost, setFinalCost] = useState<any>(instructorCourseView[0]?.course_cost||1);
+
+	const [couponData, setCouponData] = useState<any>("");
+
+	console.log(typeof(instructorCourseView[0]?.course_cost));
+	const [couponMsg, setCouponMsg] = useState("");
+	console.log(couponCode);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	
@@ -89,32 +98,14 @@ function BookCourse() {
 		actionCreators,
 		dispatch
 	  );
-	useEffect(() => {
-		API.post('getsessionview', {courseId : course_id})
-		.then((res)=>{
-			const val = res.data?.map((dataItem:any) => ({ ...dataItem, selected: false }))
-		  setSessionDetails(val)
-		  console.log("Session Details", sessionDetails);
-		  
-		}).catch((err) => {
-		  console.log(err)
-		})
 
-		API.get<courseInstructorViewer[]>('getcourseview/'+course_id)
-      .then((res)=>{
-        setInstructorCourseView(res.data)
-      }).catch((err) => {
-        console.log(err)
-      })
-		
-	}, [])
 
-	const {fetchInstructorID} = bindActionCreators(actionCreators, dispatch)
+	const handleChange = (event: any) =>{
+		setCouponCode(event.target.value);
+	}
 
 
 	const handelBuyCourse = () => {
-
-
 
 		if(enrollment_id !== 0){
 			API.post("convertTrialToBuyCourse", {enrollmentId : enrollment_id})
@@ -138,6 +129,16 @@ function BookCourse() {
 			.catch((err) => {
 			  console.log(err);
 			});
+			if(Array.isArray(couponData)){
+				API.post("voucherCount", {voucherId : couponData[0]?.voucher_id})
+				.then((res) => {
+					console.log(res.data)
+				})
+				.catch((err) => {
+				  console.log(err);
+				});
+			}
+			
 
 			navigate('/loggedcourseview')
 			window.addEventListener("popstate", () => {
@@ -158,6 +159,17 @@ function BookCourse() {
 					}).catch(err => {
 					console.log(err)
 					})
+
+					if(Array.isArray(couponData)){
+						API.post("voucherCount", {voucherId : couponData[0]?.voucher_id})
+						.then((res) => {
+							console.log(res.data)
+						})
+						.catch((err) => {
+						  console.log(err);
+						});
+					}	
+
 					navigate('/loggedcourseview')
 					window.addEventListener("popstate", () => {
 						navigate(1);
@@ -166,7 +178,9 @@ function BookCourse() {
 				  })
 				  .catch((err) => {
 					console.log(err);
-				  });	
+				  });
+
+				  
 			}else{
 				API.post('enrollLearner', {courseId : course_id, studentId : leanerUser?.student_id, studentFeeStatus : true, sessionId : sessionID, enrollmentType : 'paid'})
 				.then((res) => {
@@ -197,6 +211,16 @@ function BookCourse() {
 					  console.log(err);
 					});
 
+					if(Array.isArray(couponData)){
+						API.post("voucherCount", {voucherId : couponData[0]?.voucher_id})
+						.then((res) => {
+							console.log(res.data)
+						})
+						.catch((err) => {
+						console.log(err);
+						});
+					}	
+
 					navigate('/loggedcourseview')
 					window.addEventListener("popstate", () => {
 						navigate(1);
@@ -209,6 +233,59 @@ function BookCourse() {
 			}
 		}	
 	}
+	console.log(instructorCourseView[0]?.course_numberofclasses);
+	console.log(finalCost)
+	console.log(instructorCourseView[0]?.course_numberofclasses * (finalCost));
+
+	const handleCouponSubmit = (event: any) =>{
+		event.preventDefault();
+		console.log(couponCode)
+
+		API.post('checkvoucher', {code: couponCode, course_id: "0", parent_id: leanerUser.parent_id} )
+		.then(res => {
+			if(Array.isArray(res.data)){
+				if(discount !== null){
+					console.log("discount" , discount)
+					console.log("res.data.resul" ,instructorCourseView[0]?.course_cost)
+
+					let k = instructorCourseView[0]?.course_cost - (res.data[0]?.voucher_discount*instructorCourseView[0]?.course_cost)/100;
+					setFinalCost(k);
+					setCouponMsg("Coupon Applied!")
+				}
+			}else{
+				setCouponMsg("Coupon Invalid!");
+				setFinalCost(instructorCourseView[0]?.course_cost);
+			}
+			setCouponData(res.data);
+		  console.log(res.data)
+		}).catch(err => {
+		  console.log(err)
+		})
+	}
+
+
+	useEffect(() => {
+		API.post('getsessionview', {courseId : course_id})
+		.then((res)=>{
+			const val = res.data?.map((dataItem:any) => ({ ...dataItem, selected: false }))
+		  setSessionDetails(val)
+		  console.log("Session Details", sessionDetails);
+		  
+		}).catch((err) => {
+		  console.log(err)
+		})
+
+		API.get<courseInstructorViewer[]>('getcourseview/'+course_id)
+      .then((res)=>{
+        setInstructorCourseView(res.data)
+      }).catch((err) => {
+        console.log(err)
+      })
+
+	}, [])
+
+	const {fetchInstructorID} = bindActionCreators(actionCreators, dispatch)
+
 
 	  console.log(instructors);
 
@@ -382,13 +459,37 @@ function BookCourse() {
 							</Grid>
 						</Grid>
 					</Box>
-					{instructorCourseView[0]?.course_type !== 'Self-Paced' ? 
-					<Typography style={{textAlign: 'right', marginRight: '10px', marginTop: '10px'}} variant='h5' fontWeight={800}>Total Cost : ${instructorCourseView !== undefined && instructorCourseView[0]?.course_numberofclasses * instructorCourseView[0]?.course_cost}</Typography>
-				:
-				<Typography style={{textAlign: 'right', marginRight: '10px', marginTop: '10px'}} variant='h5' fontWeight={800}>Total Cost : ${instructorCourseView !== undefined && instructorCourseView[0]?.course_cost}</Typography>
-				}
-					{sessionID !== null &&<Button style={{background: '#917EBD', color: 'white', marginTop: '10px', paddingLeft: '70px', paddingRight: '70px', float: 'right'}} onClick = {handelBuyCourse}>Pay Now</Button>}
-					{instructorCourseView[0]?.course_type === 'Self-Paced' &&<Button style={{background: '#917EBD', color: 'white', marginTop: '10px', paddingLeft: '70px', paddingRight: '70px', float: 'right'}} onClick = {handelBuyCourse}>Pay Now</Button>}
+					<Grid container spacing={2} style={{margin:'10px 0px 10px 0px'}}>
+						<Grid item sm={12} md={6}>
+							{sessionID !== null &&<Box>
+								<Typography fontWeight={900}>Apply Coupon</Typography>
+								<Box>
+									<form onSubmit={(e) => handleCouponSubmit(e)}>
+										<input style={{height: '32px'}} name="coupon" onChange={handleChange}/>
+										<Button type="submit" style={{background: '#917EBD', color: 'white',paddingLeft: '20px', paddingRight: '20px', fontSize:'12px', fontWeight:'900', borderRadius:'0px'}}>Apply</Button>
+									</form>
+								</Box>
+								<Typography fontWeight={900}>{couponMsg}</Typography>
+								</Box>
+							}
+						</Grid>
+						<Grid item sm={12} md={6}>
+						{instructorCourseView[0]?.course_type !== 'Self-Paced' ? 
+							finalCost === 1 ? 
+							<Typography style={{textAlign: 'right', marginRight: '10px', marginTop: '10px'}} variant='h5' fontWeight={800}>Total Cost : ${instructorCourseView !== undefined && instructorCourseView[0]?.course_numberofclasses * instructorCourseView[0]?.course_cost}</Typography> : 
+							<Typography style={{textAlign: 'right', marginRight: '10px', marginTop: '10px'}} variant='h5' fontWeight={800}>Total Cost : ${instructorCourseView !== undefined && instructorCourseView[0]?.course_numberofclasses * finalCost}</Typography>
+						
+							
+						:
+						finalCost === 1 ? 
+						<Typography style={{textAlign: 'right', marginRight: '10px', marginTop: '10px'}} variant='h5' fontWeight={800}>Total Cost : ${instructorCourseView !== undefined && instructorCourseView[0]?.course_cost}</Typography> :
+						<Typography style={{textAlign: 'right', marginRight: '10px', marginTop: '10px'}} variant='h5' fontWeight={800}>Total Cost : ${instructorCourseView !== undefined && finalCost}</Typography>
+						}
+							{sessionID !== null &&<Button style={{background: '#917EBD', color: 'white', marginTop: '10px', paddingLeft: '70px', paddingRight: '70px', float: 'right', fontWeight:'900'}} onClick = {handelBuyCourse}>Pay Now</Button>}
+							{instructorCourseView[0]?.course_type === 'Self-Paced' &&<Button style={{background: '#917EBD', color: 'white', marginTop: '10px', paddingLeft: '70px', paddingRight: '70px', float: 'right', fontWeight:'900'}} onClick = {handelBuyCourse}>Pay Now</Button>}
+						</Grid>
+					</Grid>
+					
 				</Box>
 				</Box>
 				</Grid>
