@@ -162,6 +162,15 @@ const CourseViewContent = () => {
 
   const percentage =
     courseView.length === 0 ? 0 : courseView[0]?.course_progress;
+    
+    console.log(sessionView[0]?.session_zoomurl);
+
+  const joinEventClicked = () =>{
+    window.open(
+      sessionView[0]?.session_zoomurl,
+      '_blank' // <- This is what makes it open in a new window.
+    );
+  }
 
   return (
     <>
@@ -384,7 +393,7 @@ const CourseViewContent = () => {
                   marginLeft: "-80px",
                 }}
               >
-                <Button variant="contained">Join Event</Button>
+                <Button variant="contained" onClick={joinEventClicked}>Join Event</Button>
               </Box>
             </ThemeProvider>
 

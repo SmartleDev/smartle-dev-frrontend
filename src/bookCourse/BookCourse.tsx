@@ -106,7 +106,6 @@ function BookCourse() {
 
 
 	const handelBuyCourse = () => {
-
 		if(enrollment_id !== 0){
 			API.post("convertTrialToBuyCourse", {enrollmentId : enrollment_id})
 		  .then((res) => {
