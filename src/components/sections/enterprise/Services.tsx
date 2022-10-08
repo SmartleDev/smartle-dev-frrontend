@@ -50,8 +50,8 @@ const Services = () => {
     return (<div className='mb-20 mt-15'>
       <h1 id="services" className="pt-10 text-3xl font-extrabold text-center my-10">Services Offered</h1>
       <div className="flex flex-wrap">
-        <div className="w-11/12 md:w-1/2 mx-auto bg-slate-100 py-3 md:py-5 px-3 md:px-5 shadow-xl rounded-3xl">
-          <div className="bg-contrastAccent-200 flex justify-center items-center pt-10 pb-6 md:pt-0 md:pb-0 p-2 md:p-0 h-full rounded-3xl">
+        <div  className="w-11/12 md:w-1/2 mx-auto bg-slate-100 py-5 md:py-5 px-3 md:px-5 shadow-xl  -3xl">
+          <div className=" flex justify-center items-center pt-10 pb-6 md:pt-0 md:pb-0 p-2 md:p-0 h-full rounded-3xl">
             <div className="w-4/5 rounded-3xl">
               <div className="">
                 <Swiper

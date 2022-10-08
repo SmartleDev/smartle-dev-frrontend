@@ -1,0 +1,63 @@
+.smartleFeature{
+background: #DFD1E7;
+height: 353px;
+width: 220px;
+left: 0px;
+top: 0px;
+border-radius: 0px;
+padding: 15px;
+transition: width 1s, height 1s, transform 1s;
+
+}
+.smartleFeature p{
+
+font-family: Poppins;
+font-size: 16px;
+font-weight: 300;
+line-height: 18px;
+letter-spacing: 0em;
+text-align: left;
+color : #735AAC;
+}
+
+.smartleFeature h3{
+    font-family: Poppins;
+    font-size: 18px;
+    font-style: italic;
+    font-weight: 500;
+    line-height: 18px;
+    color: #917EBD;
+    letter-spacing: 0em;
+    text-align: left;
+    margin-bottom: 10px;
+}
+.featureHeading{
+    margin-left: 100px;
+    padding-bottom: 140px;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 21px;
+    letter-spacing: 0em;
+    text-align: left;
+    line-height: 85.5%;
+    color: #735AAC;
+}
+
+.smartleFeature:hover{
+    transform: scale(1.1);
+}
+
+.smartleFeature p:hover{
+    color: black;
+}
+
+
+@media screen and (max-width: 450px) {
+    .radio_style {
+      font-size: 12px;
+      }
+      .radio_style span{
+        display: block;
+      }
+  }
+  

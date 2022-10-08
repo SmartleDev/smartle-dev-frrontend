@@ -17,7 +17,7 @@ export const fetchUsers = () => async(dispatch: Dispatch<UserAction>) => {
     }
   }
 
-  export const fetchCourseID = (course_id: number) => {
+  export const fetchCourseID = (course_id: any) => {
     return (dispatch: Dispatch<CourseIDAction>) => {
         dispatch({
             type: CourseType.COURSE_ID,

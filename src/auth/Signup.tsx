@@ -9,6 +9,10 @@ import Alert from '@mui/material/Alert';
 import { useNavigate } from 'react-router-dom';
 import PasswordStrengthBar from 'react-password-strength-bar';
 import './auth.css'
+import '../styles/general.css'
+import PhoneInput, {formatPhoneNumberIntl } from 'react-phone-number-input'
+import 'react-phone-number-input/style.css'
+import Footer from '../components/organisms/Footer';
 
 const Signup = () => {
 
@@ -26,7 +30,7 @@ const Signup = () => {
     setOpen(false);
   };
 
-
+  const [value, setValue] = useState<any>(0)
   const redTheme = createTheme({ palette: { primary:{
     main:  purple[900]}
   } });
@@ -52,6 +56,7 @@ const Signup = () => {
   const [signupCreds, setSignupCreds] = useState(
     {
       name: '',
+      phoneNumber : value,
       email: '',
       password: '',
       confirmPassword : ''
@@ -81,6 +86,7 @@ const Signup = () => {
         setLoginToken(res.data)
         localStorage.setItem('username', res?.data?.username)
         localStorage.setItem('username-p', signupCreds.password)
+        localStorage.setItem('name', signupCreds.name)
         navigate('/otp')
       }else{
         if(signupCreds.name === ''){
@@ -102,93 +108,98 @@ const Signup = () => {
 }
 
   return (
-    <>
-    <Box style={{textAlign:"center"}}>
+    <div className='dark:bg-slate-900'>
+    <Box style={{textAlign:"center"}} className=" ">
     <AuthHeader />
-    <h1 className='font-black text-2xl mt-2'>Get started with smartle</h1>
-    <p className='text-xl md:text-2xl mt-3 md:mt-5 text-stone-600'>
-            Create Your Account
-          </p>
-      <Typography fontSize={"14px"}>Explore the joy of learning</Typography>
+    <h1 className='font-black text-2xl mt-2 dark:text-white'>Get started with smartle</h1>
     </Box>
       <Box width={"40%"} className = 'form-class' style={{
-        backgroundColor: "#F9EDF5",
         borderRadius: "5px",
         marginTop: "10px", 
         color: "#917EBD", 
         margin: "auto"}}>
         <form onSubmit={(e) => handleSubmit(e)}>
         <Box style={{width: "80%", margin: "auto", paddingTop: "10px"}}>
-            <Box style={{marginTop: "20px"}}>
-              <label style={{marginTop: "100px"}}>Name</label>
+            <Box style={{marginTop: "10px"}}>
             </Box>
             <input type={"text"} 
-             className = 'form-input'
-             placeholder="Enter your Name"
+             className = 'form-input inputGeneralStyle'
+             placeholder="Parent’s Full Name"
              name='name'
               value={signupCreds.name} 
               onChange={handelChange} 
-              style={{padding: "8px", width: "100%", borderRadius: "3px"}}></input>
+              style={{width: "100%"}}></input>
+          </Box>
+        <Box style={{width: "80%", margin: "auto", paddingTop: "10px"}}>
+            <Box >
+            </Box>
+            <section>
+            <PhoneInput
+  international
+  defaultCountry="IN"
+  countryCallingCodeEditable={false}
+  name = 'phoneNumber'
+  placeholder = 'Phone Number'
+  value={value}
+  onChange={setValue}/>
+  </section>
           </Box>
           <Box style={{width: "80%", margin: "auto"}}>
-            <Box style={{marginTop: "20px"}}>
-              <label style={{marginTop: "100px"}}>Email</label>
+            <Box style={{marginTop: "10px"}}>
             </Box>
             <input type={"text"} 
-             className = 'form-input'
+             className = 'form-input inputGeneralStyle'
              name='email'
-             placeholder="Enter your Email"
+             placeholder="Email"
               value={signupCreds.email} 
               onChange={handelChange} 
-              style={{padding: "6px", width: "100%", borderRadius: "3px", marginBottom: "10px"}}></input>
+              style={{width: "100%", marginBottom: "10px"}}></input>
           </Box>
          <Box style={{width: "80%", margin: "auto"}}>
            <div>
-            <label>Create Password</label>
            </div>
           <input 
             type={"password"}
-            className = 'form-input'
+            className = 'form-input inputGeneralStyle'
             name = 'password'
-            placeholder="Enter Password"
+            placeholder="Password"
             value={signupCreds.password} 
             onChange={handelChange}
-            style={{padding: "8px", width: "100%", borderRadius: "3px"}}></input>
+            style={{ width: "100%"}}></input>
          </Box>
          <Box style={{width: "80%", margin: "auto", marginTop:"10px"}}>
            <div>
-            <label>Confirm Password</label>
            </div>
           <input 
           placeholder="Confirm Password"
             type={"password"}
             name = 'confirmPassword'
-            className = 'form-input'
+            className = 'form-input inputGeneralStyle'
             value={signupCreds.confirmPassword} 
             onChange={handelChange}
-            style={{padding: "6px", width: "100%", borderRadius: "3px", marginBottom: '10px'}}></input>
+            style={{width: "100%"}}></input>
 
          {showPassStrength ? <PasswordStrengthBar password={signupCreds.password}/> : null}
          </Box>
 
-         <Box style={{width: "80%", margin: "auto", textAlign:"center", marginTop: "20px"}}>
+         <Box style={{width: "80%", margin: "auto", textAlign:"center", marginTop: "0px"}}>
                 <ThemeProvider theme={redTheme}>
-              <Button type='submit' className = 'auth-button' style={{width:"100%", backgroundColor : '#917EBD'}} variant="contained">
-                  Signup
+              <Button type='submit' className = 'auth-button buttonGeneralFirst' style={{borderRadius : '13px',width:"65%", height: "20%", padding: '0px',marginTop: "10px", color : 'white',backgroundColor : '#917EBD', maxHeight: '40px', fontWeight:'700'}} variant="contained">
+                  Sign up
               </Button>
               </ThemeProvider>
         </Box>
           <Box style={{width: "80%", margin: "auto", textAlign:"center", paddingBottom: "20px"}}>
-            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-          <Alert variant='filled' onClose={handleClose} severity="error" sx={{ width: '100%' }}>
-            {errorMsg}
-          </Alert>
-        </Snackbar>
+          {errorMsg !== '' && 
+        <div className ='error_style' style ={{marginTop: '4rem'}}>
+          {errorMsg}
+        </div>}
           </Box>
 
         </form>
       </Box>
-    </>
+      <Footer/>
+    </div>
   );
 };
 

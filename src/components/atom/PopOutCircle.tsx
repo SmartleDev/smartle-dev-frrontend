@@ -14,7 +14,7 @@ interface Props{
     extraClasses?: any;
 
 }
-const PopOutCircle = ({ image, imageTop='3rem', imageLeft='0rem', imagePos='left top', circleBg='bg-accent-200', imageOverflow='hidden', borderColor='purple', imageSize='4', circleShadow='16px 16px 16px #00000033', extraClasses="", imageWidth="100%"}:Props) => {      
+const PopOutCircle = ({ image, imageTop='3rem', imageLeft='0rem', imagePos='left top', circleBg='bg-accent-200', imageOverflow='hidden', borderColor='purple', imageSize='3.5', circleShadow='16px 16px 16px #00000033', extraClasses="", imageWidth="100%"}:Props) => {      
     
     let style = {
         "--image-url": `url("${image}")`,

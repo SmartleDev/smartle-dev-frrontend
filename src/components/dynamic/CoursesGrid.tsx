@@ -6,6 +6,7 @@ import { Navigation, Autoplay } from 'swiper';
 import API from '../../redux/api/api';
 import 'swiper/css';
 import 'swiper/css/navigation';
+import './courseOnHome.css'
 
 interface Props{
     courses: any;
@@ -19,6 +20,7 @@ interface Props{
 const CoursesGrid = ({ courses, color = 'accent-200', elementWidth='sm:w-1/2 md:w-1/3 lg:w-3/12' }: Props) => {
 
   const [subjects, setSubjects] = useState([]);
+  const isMobile = useMediaQuery('(max-width:1400px)');
 
   useEffect(() => {
     requestSubjects();
@@ -34,7 +36,6 @@ const CoursesGrid = ({ courses, color = 'accent-200', elementWidth='sm:w-1/2 md:
     });
 }
 
-    const isMobile = useMediaQuery('(max-width:1000px)');
     return (
         <div className="mx-auto">
             <div className='md:w-10/12 my-10 mx-auto flex flex-wrap items-stretch justify-center'>
@@ -58,8 +59,8 @@ const CoursesGrid = ({ courses, color = 'accent-200', elementWidth='sm:w-1/2 md:
                   768: {
                     slidesPerView: 2,
                   },
-                  900: {
-                    slidesPerView: 3,
+                  1150: {
+                    slidesPerView: 2,
                   },
                 }}
                 className="py-10"
@@ -68,7 +69,7 @@ const CoursesGrid = ({ courses, color = 'accent-200', elementWidth='sm:w-1/2 md:
                   subjects ? subjects.map((course:any, key:any) => {
                     return (
                       <SwiperSlide>
-                        <div className="flex justify-center">
+                        <div className="flex justify-center" id = "mobile_view_cards">
                             <CourseGridElement width="w-52" course={course} key={key} color={color} />
                         </div>
                       </SwiperSlide>

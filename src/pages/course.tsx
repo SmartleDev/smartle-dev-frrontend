@@ -27,6 +27,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const Course = () => {
   const { id } = useParams<{ id: string }>();
+  console.log(id)
 
   const redTheme = createTheme({ palette: { primary:{
     main:  '#917EBD'}
@@ -96,7 +97,7 @@ interface instrcutorViewer {
 
   useEffect(() => {
 
-    API.get<courseViewer[]>('getcourseview/'+course_id)
+    API.get<courseViewer[]>('getcourseview/'+id)
     .then((res)=>{
       setCourseView(res.data)
     }).catch((err) => {
@@ -212,15 +213,15 @@ interface instrcutorViewer {
                     </ThemeProvider>
                   </Box>
                   }
-                <RegisterInterestModal isEnterprise={false} courseId={id} openInterest={openInterest} handleCloseInterest={handleCloseInterest} />
+                <RegisterInterestModal isEnterprise={false} courseId={courseView[0]?.course_id} openInterest={openInterest} handleCloseInterest={handleCloseInterest} />
                 {/* <div className="flex gap-4">
                     <Button
                         onClick={handleOpenInterest}
                         className={`mt-12 px-7 md:px-14 py-2 text-white ${isEnterprise ? 'bg-contrast-400' : 'bg-color-400'} font-bold rounded-md`}>Register Your Interest</Button>
                 </div> */}
             </div>
-            <div className="md:w-1/2 flex items-center justify-center">
-                <div className={`${isEnterprise ? 'bg-contrastAccent-200' : 'bg-accent-200'} rounded-md shadow-xl p-3 w-10/12 relative`}>
+            <div className="md:w-1/2 flex items-center justify-center" >
+                <div className={`${isEnterprise ? 'bg-contrastAccent-200' : 'bg-accent-200'} rounded-md shadow-xl w-10/12 relative`}>
                     <img src={courseView[0]?.course_image} className="rounded-md w-full" alt="" />
                 </div>
             </div>        

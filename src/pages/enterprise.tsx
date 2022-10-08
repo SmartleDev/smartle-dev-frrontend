@@ -6,8 +6,7 @@ import { Banner, Solutions, Services, Approach, SampleWorks, Contact } from '../
 const Enterprise = () => {  
   return (<div className='selection:bg-contrast-400 selection:text-white'>
     {/* <div>ENTERPRISE</div> */}
-    <div className="md:hidden block"><GradBlobRespBlue /></div>
-    <div className="hidden md:block"><GradBlobBlueTR /></div>
+
     <Banner />
     <Solutions />
     <Services />

@@ -27,6 +27,7 @@ function BookCourse() {
 		course_status: string | null;
 		course_progress: number;
 		course_type: string;
+		course_indiancost : string | null;
 	  }
 
 	  interface sessionViewer{
@@ -58,6 +59,7 @@ function BookCourse() {
 		instructor_email:string;
 		instructor_timing : string | null;
 		instructor_description : string | null;
+		course_indiancost : string | any;
 	}
 
 	const [instructors, setInstructors] = useState();
@@ -68,7 +70,6 @@ function BookCourse() {
 	const [selectedTime, setSelectedTime] = useState('Not Selected');
 	console.log(sessionID)
 	const course_id = useSelector((state: RootState) => state.courseIDFetch)
-	console.log(course_id)
 	const enrollment_id = useSelector((state: RootState) => state.EnrollmentIDFetch)
 	const [sessionDetails, setSessionDetails] = useState<sessionViewer[]>();
 	console.log(sessionDetails)
@@ -83,8 +84,9 @@ function BookCourse() {
 	console.log(leanerUser.parent_id);
 
 	const [couponCode, setCouponCode] = useState("");
+	const [region, setRegion] = useState("");
 	const [discount, setDiscount] = useState<any>(instructorCourseView[0]?.course_cost);
-	const [finalCost, setFinalCost] = useState<any>(instructorCourseView[0]?.course_cost||1);
+	const [finalCost, setFinalCost] = useState<any>(''||1);
 
 	const [couponData, setCouponData] = useState<any>("");
 
@@ -264,6 +266,7 @@ function BookCourse() {
 
 
 	useEffect(() => {
+		
 		API.post('getsessionview', {courseId : course_id})
 		.then((res)=>{
 			const val = res.data?.map((dataItem:any) => ({ ...dataItem, selected: false }))
@@ -277,6 +280,20 @@ function BookCourse() {
 		API.get<courseInstructorViewer[]>('getcourseview/'+course_id)
       .then((res)=>{
         setInstructorCourseView(res.data)
+		fetch('https://api.ipregistry.co/?key=tryout')
+		.then(function (response) {
+			return response.json();
+		})
+		.then(function (payload) {
+			console.log(payload.location.country.name);
+			setRegion(payload.location.country.name)
+			//setFinalCost(instructorCourseView[0]?.course_indiancost)
+		});
+		if(region === 'india'){
+			setFinalCost(res.data[0]?.course_indiancost)
+		}else{
+			setFinalCost(res.data[0]?.course_cost)
+		}
       }).catch((err) => {
         console.log(err)
       })
@@ -498,4 +515,4 @@ function BookCourse() {
   )
 }
 
-export default BookCourse
+export default BookCourse;

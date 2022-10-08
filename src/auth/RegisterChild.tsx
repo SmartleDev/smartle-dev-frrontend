@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Box, Button} from "@mui/material";
+import { Typography, Box, Button, Grid} from "@mui/material";
 import { HashLink as Link } from "react-router-hash-link";
 import Header from "../components/organisms/Header";
 import Footer from "../components/organisms/Footer";
@@ -9,7 +9,9 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import API from '../redux/api/api';
 import jwt_decode from "jwt-decode";
-
+import '../styles/general.css'
+import { BoyDab as BImg, TopRightGradPng } from '../util/resources';
+import PopOutCircle from '../components/atom/PopOutCircle';
 import { useNavigate } from 'react-router-dom';
 import "./auth.css";
 
@@ -31,7 +33,7 @@ function RegisterChild() {
     {
       studentName: '',
       studentGender: '',
-      studentAge: '',
+      studentAge: 'Age',
       parentId: userId
     }
   );
@@ -91,147 +93,109 @@ function RegisterChild() {
   }
 
   return (
-    <>
-      <Header />
-      <div className="select-learner" style={{ fontFamily: "Nunito Sans" }}>
+    <div className="dark:bg-slate-900 " style={{marginTop:'-10px'}}>
+      <Header/>
+      <div className="select-learner text-center md:text-left " style={{ fontFamily: "Poppins" }}>
         <div>
-          <h1 className="font-black text-4xl">
+          <h1 className="font-black text-lg lg:text-3xl dark:text-white" >
             Please Setup Your Child's Account{" "}
           </h1>
-          {/* <p className="text-stone-600">
-            Already Have an Account, Login in now!
-          </p> */}
         </div>
-        <p className="text-center md:text-left text-xl md:text-4xl mt-4 md:mt-8 text-stone-600">
-          Child Account Details
-        </p>
-        <Typography fontSize={"14px"}>Exlore the joy of journey!</Typography>
-        <Box
-          className="form-class"
-          width={"40%"}
-          style={{
-            backgroundColor: "#F9EDF5",
-            borderRadius: "5px",
-            marginTop: "10px",
-            color: "#917EBD",
-          }}
-        >
-          <form onSubmit={(e) => handleSubmit(e)}>
-            <Box style={{ width: "80%", margin: "auto", paddingTop: "10px" }}>
-              <Box style={{ marginTop: "20px" }}>
-                <label style={{ marginTop: "100px" }}>Child Name</label>
-              </Box>
-              <input
-                type={"text"}
-                placeholder="Enter your Child Name"
-                className="form-input"
-                name='studentName'
-                value={childCreds.studentName}
-                onChange={handelChange} 
-                style={{
-                  padding: "8px",
-                  width: "100%",
-                  borderRadius: "3px",
-                  marginBottom: "20px",
-                }}
-              ></input>
-            </Box>
-            <Box style={{ width: "80%", margin: "auto" }}>
-              <div>
-                <label>Gender</label>
-              </div>
-        <Select
-		      className="form-input"
-          name='studentGender'
-          value={childCreds.studentGender}
-          onChange={handelChange} 
-          displayEmpty
-          inputProps={{ 'aria-label': 'Without label' }}
-		      style={{ width: "100%", borderRadius: "3px", backgroundColor:'white' }}
-        >
-         <MenuItem value="">
-            <em>Male/Female</em>
-          </MenuItem>
-          <MenuItem value='male'>Male</MenuItem>
-          <MenuItem value='female'>Female</MenuItem>
-        </Select>
-            </Box>
-            <Box
-              className="childacc-inline"
-              style={{ width: "80%", margin: "auto", paddingTop: "10px" }}
-            >
-                <label htmlFor="age" style={{marginTop:"20px", marginBottom:"20px"}}>
-                    Age: 
-                    <select 
-                    id="age" 
-                    name='studentAge'
-                    value={childCreds.studentAge} 
-                    onChange={handelChange} 
-                    style={{padding: "10px", marginLeft:"10px", fontSize:"20px", borderRadius: "5px"}}
-                    >
-                        <option />
-                        {
-                            AGE.map(age => (
-                                <option value={age} key={age}>
-                                    {age}
-                                </option>
-                            ))
-                        }
-                    </select>
-                </label>
+        
 
-             
-            </Box>
-            <Box style={{ width: "80%", margin: "auto", textAlign: "center",paddingBottom: "20px" }}>
-              {/* <Link to={"/"}> */}
-                <ThemeProvider theme={redTheme}>
-                  <Button
-                    type="submit"
-                    className="auth-button"
-                    variant="contained"
-                    style={{
-                      width: "100%",
-                      marginTop: "20px",
-                      backgroundColor: "#917EBD",
-                    }}
-                  >
-                    Add Child
-                  </Button>
-                </ThemeProvider>
-              {/* </Link> */}
-    
-              <h1 style = {{paddingTop : '10px', color : 'red'}}>{err}</h1>
-            </Box>
-            {/* <Box
+        <Grid container  spacing={2} p={2}>
+        <Grid item xs={12} md={9}>
+              <Box
+              className="md:w-96"
               style={{
-                width: "80%",
-                margin: "auto",
-                textAlign: "center",
-                marginTop: "20px",
-                paddingBottom: "20px",
+                borderRadius: "5px",
+                marginTop: "10px",
+                color: "#917EBD",
               }}
             >
-              <Link to={"/signup"}>
-                <ThemeProvider theme={redTheme}>
-                  <Button
-                    className="auth-button"
+              <form onSubmit={(e) => handleSubmit(e)}>
+                <Box>
+                  <Box style={{ marginTop: "20px" }}>
+                  </Box>
+                  <input
+                    type={"text"}
+                    placeholder="Child Name"
+                    className="form-input inputGeneralStyle text-sm md:text-lg"
+                    name='studentName'
+                    value={childCreds.studentName}
+                    onChange={handelChange} 
                     style={{
+                      height : '50px',
                       width: "100%",
-                      color: "#917EBD",
-                      borderColor: "#917EBD",
+                      marginBottom: "20px",
                     }}
-                    variant="outlined"
-                  >
-                    Setup Account
-                  </Button>
-                </ThemeProvider>
-              </Link>
-            </Box> */}
-          </form>
-        </Box>
+                  ></input>
+                </Box>
+                <div className = 'flex justify-bewteen '>
+                <Box style={{ width: "80%", margin: "auto" }}>
+            <Select
+              className="form-input inputGeneralStyle w-11/12 text-sm md:text-lg"
+              name='studentGender'
+              value={childCreds.studentGender}
+              onChange={handelChange} 
+              displayEmpty
+              inputProps={{ 'aria-label': 'Without label' }}
+              style ={{height : '50px', borderRadius:'15px', color : '#917EBD'}}
+            >
+            <MenuItem value="" className = 'inputGeneralStyle'>
+                <em>Gender</em>
+              </MenuItem>
+              <MenuItem value='male'>Male</MenuItem>
+              <MenuItem value='female'>Female</MenuItem>
+            </Select>
+                </Box>
+                <Box
+                  className="childacc-inline flex flex-col w-11/12 text-sm md:text-lg"
+                >      
+                        <select 
+                        id="age" 
+                        className = 'inputGeneralStyle'
+                        name='studentAge'
+                        value={childCreds.studentAge} 
+                        onChange={handelChange} 
+                        style ={{height : '50px', borderRadius:'15px', color : '#917EBD',border: '1px solid #917EBD'}}
+                        >
+                            <option disabled>Age</option>
+                            {
+                                AGE.map(age => (
+                                    <option value={age} key={age} className = 'inputGeneralStyle'>
+                                        {age}
+                                    </option>
+                                ))
+                            }
+                        </select>
+                </Box>
+                </div>
+                <Box style={{ width: "80%", margin: "auto", textAlign: "center",paddingBottom: "20px" }}>
+                    <ThemeProvider theme={redTheme}>
+                      <Button
+                        type="submit"
+                        className="buttonGeneralFirst text-sm md:text-lg  "
+                        variant="contained"
+                        style={{marginTop: "50px", backgroundColor : '#917EBD', borderRadius:'20px',fontWeight:'700', padding: '5px 30px 5px 30px'}}
+                      >
+                        Add Child
+                      </Button>
+                    </ThemeProvider>
+                  {err ? <h1 style = {{marginTop : '30px', color : '#917EBD', border: '1px solid #917EBD', borderRadius: '20px', padding: '8px', fontSize: '15px', fontWeight:'300'}}>{err}</h1> : null}
+                </Box>
+              </form>
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={3} className="hidden xl:block">
+            <Box sx={{ml: '-500px', mt: '-50px'}}>
+              <PopOutCircle image={BImg} imageTop="4.7rem" imageLeft="0.2rem" />
+            </Box>
+          </Grid>
+        </Grid>
       </div>
       <Footer />
-    </>
+    </div>
   );
 }
 

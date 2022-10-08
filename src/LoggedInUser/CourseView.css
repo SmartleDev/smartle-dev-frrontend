@@ -1,0 +1,57 @@
+#outer-circle {
+    background: linear-gradient(90deg, #A18CD1 0%, #FBC2EB 100%);
+    border-radius: 50%;
+    height: 100px;
+    width: 100px;
+    position: relative;
+    /* 
+     Child elements with absolute positioning will be 
+     positioned relative to this div 
+    */
+  }
+  #inner-circle {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    height: 90px;
+    width: 90px;
+    /*
+     Put top edge and left edge in the center
+    */
+    top: 50%;
+    left: 50%;
+    margin: -45px 0px 0px -45px;
+    /* 
+     Offset the position correctly with
+     minus half of the width and minus half of the height 
+    */
+  }
+
+  #outer-circle1 {
+    background: linear-gradient(90deg, #A18CD1 0%, #FBC2EB 100%);
+    border-radius: 50%;
+    height: 90px;
+    width: 90px;
+    position: relative;
+    /* 
+     Child elements with absolute positioning will be 
+     positioned relative to this div 
+    */
+  }
+  #inner-circle1 {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    height: 80px;
+    width: 80px;
+    /*
+     Put top edge and left edge in the center
+    */
+    top: 50%;
+    left: 50%;
+    margin: -40px 0px 0px -40px;
+    /* 
+     Offset the position correctly with
+     minus half of the width and minus half of the height 
+    */
+  }

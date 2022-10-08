@@ -1,0 +1,74 @@
+.smartleEnterpriseFeature{
+    background: #C2DAFF;
+    height: 353px;
+    width: 220px;
+    left: 0px;
+    top: 0px;
+    border-radius: 0px;
+    padding: 15px;
+    transition: width 1s, height 1s, transform 1s;
+    
+    }
+    .smartleEnterpriseFeature p{
+    
+    font-family: Poppins;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 18px;
+    letter-spacing: 0em;
+    text-align: left;
+    color : #23376C;
+    }
+    
+    .smartleEnterpriseFeature h3{
+        font-family: Poppins;
+        font-size: 18px;
+        font-style: italic;
+        font-weight: 500;
+        line-height: 18px;
+        color: #23376C;
+        letter-spacing: 0em;
+        text-align: left;
+        margin-bottom: 10px;
+    }
+    .featureEnterpriseHeading{
+        margin-left: 100px;
+        padding-bottom: 140px;
+        font-size: 22px;
+        font-weight: 600;
+        line-height: 21px;
+        letter-spacing: 0em;
+        text-align: left;
+        line-height: 85.5%;
+        color: #23376C;
+    }
+    
+    .smartleEnterpriseFeature:hover{
+        transform: scale(1.1);
+    }
+    
+    .smartleEnterpriseFeature p:hover{
+        color: black;
+    }
+    .PhoneInputInput{
+        border: 1.5px  solid #5290F2;
+    }
+    
+    
+    @media screen and (max-width: 450px) {
+        .contactUs{
+            display: block !important;
+            
+        }
+        .contactUs form{
+            width: 90% !important;
+            margin: 20px;
+        }
+        .radio_style {
+          font-size: 12px;
+          }
+          .radio_style span{
+            display: block;
+          }
+      }
+      

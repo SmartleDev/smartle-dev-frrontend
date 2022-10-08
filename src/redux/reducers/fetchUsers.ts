@@ -14,7 +14,7 @@ export const fetchUsers = (users: null | {}[] = null, action: UserAction): {}[] 
         return users 
     }
 }
-export const courseIDFetch = (course_id: number = 0, action: CourseIDAction): number => {
+export const courseIDFetch = (course_id: any = 0, action: CourseIDAction): any => {
     switch (action.type){
         case CourseType.COURSE_ID:
             return action.payload;

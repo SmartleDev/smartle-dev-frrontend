@@ -27,7 +27,8 @@ import VerifyingUser from '../auth/VerifyingUser';
 import ExploreIcon from '@mui/icons-material/Explore';
 import HomeIcon from '@mui/icons-material/Home';
 import SchoolIcon from '@mui/icons-material/School';
-import { logoText, logoNoText } from "../util/resources"
+import { smartlelogo1, Smartle_Logo } from "../util/resources"
+import CoursesAfterLoggedIn from './Courses';
 
 //redux copy
 import { actionCreators } from '../redux';
@@ -49,8 +50,13 @@ import RegisterChild from '../auth/RegisterChild';
 import SelectLearner from '../auth/SelectLearner';
 import ShortTextIcon from '@mui/icons-material/ShortText';
 import CourseView from '../LoggedInUser/CourseView';
-import BookTrial from '../bookCourse/BookTrial';
+import BookingTrial from '../bookCourse/BookingTrial';
+import BookingCourse from '../bookCourse/BookingCourse';
+import AfterBook from '../bookCourse/AfterBook';
 import UpdateParent from './UpdateParent';
+import EmailTemplate from './EmailTemplate';
+import MobileLoggedHeader from './MobileLoggedHeader';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const drawerWidth = 240;
 
@@ -123,9 +129,9 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 const Home = lazy(() => import('../pages/home'));
-const LoggedUserHome = lazy(() => import('./HomePage'));
+const LoggedUserHome = lazy(() => import('./Home'));
 const Courses = lazy(() => import('../pages/courses'));
-const Course = lazy(() => import('../pages/course'));
+const Course = lazy(() => import('../pages/courseViewHome'));
 // const About = lazy(() => import('../../pages/about'));
 const Enterprise = lazy(() => import('../pages/enterprise'));
 const Legal = lazy(() => import('../pages/legal'));
@@ -176,9 +182,12 @@ export default function MiniDrawer() {
     setOpen(false);
   };
 
+  const isMobile = useMediaQuery('(max-width:900px)');
+
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Drawer variant="permanent" open={open}
+    <>
+    <Box sx={{ display: 'flex' }} className="">
+      {!isMobile && <Drawer variant="permanent" open={open}
       PaperProps={{
         style: {
           background: 'linear-gradient(to right bottom, #A18CD1, #FBC2EB)',
@@ -216,16 +225,16 @@ export default function MiniDrawer() {
             >
 				<ListItemIcon
                 sx={{
-                  my : '20px',
+                  my : '0px',
                   minWidth: 0,
                   mr: open ? 3 : 'auto',
                   justifyContent: 'center',
                 }}
               >
-                  <img className='w-12' src={logoNoText} alt="" />
+                  <img className='w-12' src={Smartle_Logo} alt="" />
               </ListItemIcon>
               <ListItemText>
-              <img className='w-40' src={logoText} alt="" />
+              <img style={{width:'200px'}} src={smartlelogo1} alt="" />
               </ListItemText>
             </ListItemButton>
 			</Link>
@@ -302,8 +311,8 @@ export default function MiniDrawer() {
               
         </List>
         <Divider />
-      </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      </Drawer>}
+      <Box component="main" sx={{ flexGrow: 1 }}>
         {/* <DrawerHeader /> */}
 		<ThemeProvider theme={theme}>
           <Suspense
@@ -316,7 +325,7 @@ export default function MiniDrawer() {
             <div className="">
             <Routes>
                 <Route path="/" element={<LoggedUserHome />} />
-                <Route path="/courses" element={<CompleteCourses />} />
+                <Route path="/courses" element={<CoursesAfterLoggedIn />} />
                 <Route path="/course/:id" element={<CompleteCourse />} />
                 <Route path="/enterprise" element={<CompleteEnterprise />} />
                 <Route path="/terms-of-service" element={<CompleteLegal />} />
@@ -327,8 +336,10 @@ export default function MiniDrawer() {
                 <Route path="/registerchild" element={<RegisterChild/>} />
                 <Route path="/learner" element={<SelectLearner/>} />
                 <Route path="/otp" element={<VerifyingUser/>} />
-                <Route path="/bookcourse" element={<BookCourse/>} />
-                <Route path="/booktrial" element={<BookTrial/>} />
+                {/* <Route path="/bookcourse" element={<BookCourse/>} /> */}
+                <Route path="/bookingcourse" element={<BookingCourse/>} />
+                <Route path="/booktrial" element={<BookingTrial/>} />
+                {/* <Route path="/booktrial" element={<BookTrial/>} /> */}
                 {/* <Route path="/" element={<LoggedSideDrawer />} /> */}
                 <Route path="/loggedcourseview" element={<CourseView />} />
                 <Route path="/mycourses" element={<MyCourses />} />
@@ -337,6 +348,9 @@ export default function MiniDrawer() {
                 <Route path='/course-content' element={<CourseContent/>} />
                 <Route path='/profile' element={<LearnerProfile/>} />
                 <Route path="/updateparentprofile" element={<UpdateParent/>} />
+                <Route path="/email" element={<EmailTemplate/>} />
+                <Route path="/testheader" element={<MobileLoggedHeader/>} />
+                <Route path="/afterbook" element={<AfterBook/>} />
                 {/* <Route path='/drawer' element={<Drawer/>} /> */}
 
                
@@ -346,5 +360,6 @@ export default function MiniDrawer() {
     </ThemeProvider>
       </Box>
     </Box>
+    </>
   );
 }

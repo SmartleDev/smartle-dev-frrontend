@@ -10,6 +10,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import Ripples from 'react-ripples';
 import routes from '../../util/routes';
 import { NewLogo } from "../../util/resources";
+import { smartlelogo1,smartlewhite1 } from "../../util/resources";
 
 const Header = () => {
     const [anchor, setAnchor] = useState<boolean>(false);
@@ -42,14 +43,14 @@ const Header = () => {
                 <div className={`${isMobile ? 'flex-grow' : 'mr-5'}`}>
                     <Link to="/" 
                     className={`block dark:hidden ${isMobile ? 'text-xl pt-3 pl-1' : 'text-2xl shadow-none rounded-sm'}`} >
-                            <img className='w-40' src={NewLogo} alt="" />
+                            <img className='w-40' src={smartlelogo1} alt="" />
                     </Link>
                     <Link to="/" className={`hidden dark:block  ${isMobile ? 'text-xl pt-3 pl-1' : 'text-2xl px-80 py-1 shadow-none rounded-sm'}`}>
                          {
                             location.pathname !== '/courses' ? (
-                                <img className='w-32' src={NewLogo.default} alt="" />
+                                <img className='w-32' src={smartlewhite1} alt="" />
                             ) : (
-                                <img className='w-32' src={NewLogo.default} alt="" />
+                                <img className='w-32' src={smartlewhite1} alt="" />
                             )
                         }
                     </Link>

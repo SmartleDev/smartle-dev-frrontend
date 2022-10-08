@@ -111,7 +111,6 @@ const CourseContent = () => {
   const navigate = useNavigate()
   const { fetchtopicID, fetchModuleID} = bindActionCreators(actionCreators, dispatch)
   
-  
   const [expanded, setExpanded] = React.useState<string | false>(false);
   const [myCourses, setMyCourse] = useState<any>([]);
   console.log(myCourses);

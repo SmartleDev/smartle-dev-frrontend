@@ -39,11 +39,11 @@ const Solution = () => {
                 solns.map((soln, solnIdx) => {
                     return (
                         <div className="w-3/12" key={solnIdx}>
-                            <div className="bg-contrastAccent-200 w-3/4 mx-auto h-28 rounded-xl shadow-md flex justify-center items-center">
+                            <div style = {{border : 'solid 1px #5290F2'}} className="w-3/4 mx-auto h-28 rounded-xl shadow-md flex justify-center items-center">
                                 <img src={soln.icon} alt="" className='w-20' />
                             </div>
-                            <div className="text-center text-2xl mt-5">{soln.title}</div>
-                            <div className="text-center mx-auto w-9/12 text-lg mt-5">{soln.desc}</div>
+                            <div className="text-center text-xl mt-5" style ={{color : '#5290F2'}}>{soln.title}</div>
+                            <div className="text-center mx-auto w-9/12 text-m mt-5">{soln.desc}</div>
                         </div>
                     )
                 })

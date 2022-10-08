@@ -45,3 +45,60 @@
 	text-align: center;
 	margin-top: 100px;
 }
+
+.loggedhome_heading{
+	color: black;
+	font-weight: bold;
+	font-size: 32px;
+	margin-left: 30px;
+}
+
+.loggedhome_subheading{
+	font-size: 18px;
+	color: #917EBD;
+	text-align: center;
+	margin-top: 50px;
+}
+@media screen and (max-width: 1000px) {
+	.sub_div{
+		text-align: center;
+		margin: 20px 10px 100px 10px !important;
+	}
+}
+
+@media screen and (max-width: 767px) {
+	.loggedhome_heading{
+		margin: 10% auto 10% auto;
+		font-size: 25px;
+		text-align: center;
+
+	}
+	.loggedhome_subheading{
+		font-size: 15px;
+		margin: 0 20px 50px 20px;
+	}
+	.section_heading{
+		text-align: center;
+		margin: 10% auto 10% auto !important;
+		font-weight: bolder;
+		font-size: 30px !important;
+	}
+	.enrolled_course{
+		margin: 0 auto 0 auto !important;
+
+		width: 80vw !important;
+		height: 190px !important;
+	}
+	.my-courses{
+		margin: 0px !important;
+	}
+	.progress_bar{
+		width: 80vw !important;
+		left: 35px;
+	}
+	.enrolled_course_name{
+		margin-top: 30px !important;
+		text-align: center !important;
+		font-size: 20px !important;
+	}
+}

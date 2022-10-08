@@ -1,25 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200&family=Saira:wght@500&display=swap');
 
 .select-learner{
-	margin : 3% 3% 1% 8%;
+	margin : 3% 3% 10% 8%;
 	font-family: 'Nunito Sans', sans-serif !important;
 }
 .learner-overview{
 	display: flex;
 	flex-wrap: wrap;
-	max-width: 40%;
-	justify-content: space-between;
+
 }
 .learner-choose{
-	margin: 5% 5% 3% 0;
-	display: flex;
+	/* margin: 5% 5% 3% 0; */
 }
 .learner-icon{
 	background-color :  '#F9EDF5';
-	box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+	box-shadow: 8.58875px 8.58875px 13.4199px rgba(0, 0, 0, 0.15);
 	cursor: pointer;
-	/* border: 1px dashed #917EBD;
-	border-width: thin; */
 }
 .home-icon{
 	display : flex;
@@ -46,7 +42,6 @@
 }
 .form-class{
 	width: 500px !important;
-	box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 .childacc-inline{
 	display: flex ;
@@ -60,12 +55,97 @@ hr {
   }
 
 .otp-field {
-    width: 50px;
+    width: 60px;
     margin-right: 10px;
     padding-left: 15px;
     height: 60px;
 	font-size: 25px;
 	font-weight: 700;
-	border: 3px solid #917EBD;
-	border-radius: 3px;
+	border: 2px solid #917EBD;
+	border-radius: 20px;
+	background-color: #F9EDF5;
+	color: #917EBD;
+}
+.error_style{
+	border: 1px solid #917EBD;
+	border-radius: 20px;
+	margin-top: 5rem;
+	padding: 10px;
+	font-size: 15px;
+	color: #917EBD;
+}
+.code_style{
+	border: 1px solid #917EBD;
+	border-radius: 13px;
+	margin-top: 5rem;
+	padding: 10px;
+	color: #917EBD;
+}
+.success_style{
+	border: 1px solid #0AB624;
+	border-radius: 13px;
+	margin-top: 5rem;
+	padding: 10px;
+	color: #0AB624;
+}
+.resendCode{
+	color: #917EBD;
+	text-decoration: underline;
+	cursor: pointer;
+}
+.resendCode:hover{
+	color: black;
+}
+
+.forgot_heading{
+	color: black;
+	font-weight: bold;
+	text-align: center;
+	margin-top: 60px;
+	font-size: 32px;
+	width: 600px;
+}
+
+.forgot_subheading{
+	font-size: 50px;
+	font-weight: 500;
+}
+
+@media screen and (max-width: 700px) {
+	.form_field{
+		margin-left: auto !important;
+    	margin-right: auto !important; 
+	}
+	.form-class{
+		width: 100vw !important;
+	}
+	.select-learner{
+		margin-right: 0;
+		margin-left: 0;
+	}
+	.forget_password_main{
+		width: 100% !important;
+		margin-left: 0 !important;
+		margin-right: 0 !important;
+	}
+	.forgot_password_input{
+		width: 90% !important;
+	}
+	.forget_password_main h1{
+		font-size: 20px;
+		width: 100%;
+	}
+	.forget_password_main h6{
+		font-size: 15px;
+		width: 100%;
+	}
+	.otp-field{
+		width: 52px;
+	}
+	.buttonGeneralFirst{
+		width: 150px !important;
+	}
+	.verify_text{
+		font-size: 10px !important;
+	}
 }

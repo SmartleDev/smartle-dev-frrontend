@@ -13,6 +13,7 @@ import API from '../redux/api/api';
 import './auth.css';
 import Alert from '@mui/material/Alert';
 import { useNavigate } from 'react-router-dom';
+import '../styles/general.css'
 
 const Login = () => {
 
@@ -96,189 +97,91 @@ const Login = () => {
     })
   }
 
-  const isMobile = useMediaQuery('(max-width:1200px)');
+  const isMobile = useMediaQuery('(max-width:700px)');
 if(user === undefined || null){
   return (<h1>Alreayd Logged in</h1>)
 }else{
   return (
     <>
     <AuthHeader />
-
-     {!isMobile ? <><div className="hidden md:block"><GradBlobTRsm /></div>
+   
+    <div className="flex flex-wrap justify-center relative mb-20">  
     
-    <div className="flex flex-wrap flex-col-reverse md:flex-row  md:px-32 relative mb-32">  
-    
-      <div className="md:w-1/2 h-full flex justify-end">
+      <div className="h-full flex justify-end">
      
     <div className='select-learner'>
     <div>
-		<h1 className='font-black text-4xl'>Get started with smartle</h1>
+		<h1 className='font-black text-2xl text-center' style={{margin:'30px 0 30px 0'}}>Get started with smartle</h1>
 		</div>
       {/* <Typography variant='h4' fontWeight={"700"}>Get started with smartle</Typography> */}
-      <p style={{fontSize:"25px"}}>  
-            Login to your Account
-          </p>
-      <Typography fontSize={"14px"}>Complete your learning journey!</Typography>
+
       <Box className =  'form-class' 
-        width={"40%"} 
-        style={{backgroundColor: "#F9EDF5", borderRadius: "5px", marginTop: "10px", color: "#917EBD", marginBottom: "55px"}}>
-        <form onSubmit={(e) => handleSubmit(e)} >
-          <Box style={{width: "80%", margin: "auto", paddingTop: "10px"}}>
-            <Box style={{marginTop: "20px"}}>
-              <label style={{marginTop: "100px"}}>Email</label>
+        width={"50%"} 
+        style={{borderRadius: "5px", marginTop: "px", color: "#917EBD", marginBottom: "55px"}}>
+        <form onSubmit={(e) => handleSubmit(e)} className = 'login_form'>
+          <Box style={{width: "80%", margin: "auto", paddingTop: "10px"}} className = 'form_field'>
+            <Box style={{marginTop: "0px"}}>
+  
             </Box>
             <input type={"text"} 
-             placeholder="Enter your email"
-             className = 'form-input'
+             placeholder="Email"
+             className = 'form-input inputGeneralStyle'
              name = 'email'
               value={loginCreds.email} 
               onChange={handelChange} 
-              style={{padding: "8px", width: "100%", borderRadius: "3px", marginBottom: "20px"}}></input>
+              style={{width: "100%", marginBottom: "20px"}}></input>
           </Box>
-         <Box style={{width: "80%", margin: "auto"}}>
+         <Box style={{width: "80%", margin: "auto"}} className = 'form_field'>
            <div>
-            <label>Password</label>
            </div>
           <input 
-          className = 'form-input'
+          className = 'form-input inputGeneralStyle'
             type={"password"}
-            placeholder="Enter your password"
+            placeholder="Password"
             name = 'password'
             value={loginCreds.password} 
             onChange={handelChange}
-            style={{padding: "8px", width: "100%", borderRadius: "3px"}}></input>
+            style={{ width: "100%"}}></input>
          </Box>
          <Box style={{width: "80%", margin: "auto", marginTop: "10px", marginBottom: "10px"}}>
          <Grid container spacing={2}>
             <Grid item xs={6}>
-              <Box>
-                <input type={"checkbox"} onChange={() => setRemberme(!rememberme)} />
-                <label style={{marginLeft: "5px"}}>Remember Me</label>
-              </Box>
+     
             </Grid>
             <Grid item xs={6}>
-              <Box textAlign={"right"}><Typography >Forgot Password?</Typography></Box>
+              <Box textAlign={"right"}><Link to ='/forgotpassword'><Typography sx={{textDecoration: 'underline'}}>Forgot Password?</Typography></Link></Box>
             </Grid>
           </Grid>
          </Box>
           <Box style={{width: "80%", margin: "auto", textAlign:"center"}}>
             {/* <Link to={"/"} > */}
               <ThemeProvider theme={redTheme}>
-                <Button type = 'submit' className = 'auth-button' variant="contained" style={{width:"100%", marginTop: "20px", backgroundColor : '#917EBD'}}>
+                <Button type = 'submit' className = 'auth-button buttonGeneralFirst' variant="contained" style={{borderRadius : '13px',width:"65%", height: "20%", padding: '0px',marginTop: "20px", color : 'white',backgroundColor : '#917EBD', maxHeight: '40px', fontWeight:'700'}}>
                     Login
                 </Button>
               </ThemeProvider>
             {/* </Link> */}
           </Box>
-          <Box style={{width: "80%", margin: "auto", textAlign:"center", marginTop: "20px", paddingBottom: "20px"}}>
-          <p className = 'text-stone-600'>Don't have an account Signup now !!</p>
+          <Box style={{width: "80%", margin: "auto", textAlign:"center", marginTop: "10px"}}>
           <Link to={"/signup"}                            
               >
                 <ThemeProvider theme={redTheme}>
-              <Button className = 'auth-button' style={{width:"100%", color : '#917EBD', borderColor : '#917EBD'}} variant="outlined">
+              <Button className = 'auth-button buttonGeneralSecond' variant="contained" style={{borderRadius : '13px',color : '#735AAC',width:"65%", height: "20%", padding: '0px',marginTop: "20px", backgroundColor : '#DFD1E7', maxHeight: '40px', fontWeight:'700'}}>
                   Signup
               </Button>
               </ThemeProvider>
         </Link>
         <br/>
-         {errorMsg !== '' && <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert variant='filled' onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+         {errorMsg !== '' && 
+        <div className ='error_style'>
           {errorMsg}
-        </Alert>
-      </Snackbar>}
+        </div>}
         </Box>
         </form>
       </Box>
     </div>
       </div>  
-      <div className="select-none md:w-1/2 h-full relative flex md:block justify-center" style={{marginTop: "70px"}}>
-        <div className="hidden md:block">
-          <PopOutCircle image={BImg}
-            circleBg='bg-contrastAccent-200' imageTop='14px' imageLeft='10px' borderColor='blue' imageSize="3" />
-        </div>
-        <div className="block md:hidden ">
-          <PopOutCircle image={BImg} circleBg='bg-contrastAccent-200' imagePos='top' imageTop='-18px' imageLeft='0px' imageOverflow='hiden' borderColor='blue' imageSize="2.5" />
-        </div>
-      </div>
-    </div></> : 
-    <>
-          <div className='select-learner'>
-    <div>
-		<h1 className='font-black text-2xl mt-5'>Get started with smartle</h1>
-		</div>
-      {/* <Typography variant='h4' fontWeight={"700"}>Get started with smartle</Typography> */}
-      <p style={{fontSize:"25px"}}>  
-            Login to your Account
-          </p>
-      <Typography fontSize={"14px"}>Complete your learning journey!</Typography>
-      <Box className =  'form-class' 
-        width={"40%"} 
-        style={{backgroundColor: "#F9EDF5", borderRadius: "5px", marginTop: "10px", color: "#917EBD", marginBottom: "55px"}}>
-        <form onSubmit={(e) => handleSubmit(e)} >
-          <Box style={{width: "80%", margin: "auto", paddingTop: "10px"}}>
-            <Box style={{marginTop: "20px"}}>
-              <label style={{marginTop: "100px"}}>Email</label>
-            </Box>
-            <input type={"email"} 
-            placeholder="Enter your email"
-            className = 'form-input'
-            name = 'email'
-             value={loginCreds.email} 
-             onChange={handelChange} 
-              style={{padding: "8px", width: "100%", borderRadius: "3px", marginBottom: "20px"}}></input>
-          </Box>
-         <Box style={{width: "80%", margin: "auto"}}>
-           <div>
-            <label>Password</label>
-           </div>
-          <input 
-          className = 'form-input'
-            type={"password"}
-            placeholder="Enter your password"
-            name = 'password'
-            value={loginCreds.password} 
-            onChange={handelChange}
-            style={{padding: "8px", width: "100%", borderRadius: "3px"}}></input>
-         </Box>
-         <Box style={{width: "80%", margin: "auto", marginTop: "10px", marginBottom: "10px"}}>
-         <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
-              <Box>
-                <input type={"checkbox"} onChange={() => setRemberme(!rememberme)} />
-                <label style={{marginLeft: "5px"}}>Remember Me</label>
-              </Box>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Box ><Typography >Forgot Password?</Typography></Box>
-            </Grid>
-          </Grid>
-         </Box>
-          <Box style={{width: "80%", margin: "auto", textAlign:"center"}}>
-            <Link to={"/"} >
-              <ThemeProvider theme={redTheme}>
-                <Button type = 'submit' className = 'auth-button' variant="contained" style={{width:"100%", marginTop: "20px", backgroundColor : '#917EBD'}}>
-                    Login
-                </Button>
-              </ThemeProvider>
-            </Link>
-          </Box>
-          <Box style={{width: "80%", margin: "auto", textAlign:"center", marginTop: "20px", paddingBottom: "20px"}}>
-          <p className = 'text-stone-600'>Don't have an account Signup now !!</p>
-          <Link to={"/signup"}                            
-              >
-                <ThemeProvider theme={redTheme}>
-              <Button className = 'auth-button' style={{width:"100%", color : '#917EBD', borderColor : '#917EBD'}} variant="outlined">
-                  Signup
-              </Button>
-              </ThemeProvider>
-        </Link>
-        </Box>
-        </form>
-      </Box>
     </div>
-    </>}
-    <Footer />
-
     </>
   );
 };

@@ -3,6 +3,7 @@ import { getCourses } from '../../../util/api';
 import { isNull } from '../../../util/helpers';
 import CoursesGrid from '../../molecules/CoursesGrid';
 import CoursesStack from '../../molecules/CoursesStack';
+import API from '../../../redux/api/api'
 
 const SampleWorks = () => {
     const [courses, setCourses] = useState<any>(undefined);
@@ -11,8 +12,13 @@ const SampleWorks = () => {
     useEffect(() => {
     ( () => {
 			try {
-                var data = getCourses('enterprise', true, '=', true);
-				setCourses(data);
+                API.get("/getHomeEnterpriseCourses")
+                .then((res: any)=>{
+                 console.log(res.data)
+                 setCourses(res.data);
+                }).catch((err: any) => {
+                  console.log(err)
+                })
 			} catch (e: any) {
 				setFail(e.message);
 			}

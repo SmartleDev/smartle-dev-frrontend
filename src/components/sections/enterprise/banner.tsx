@@ -27,7 +27,7 @@ const Banner = () => {
             circleBg='bg-contrastAccent-200' imageTop='14px' imageLeft='10px' borderColor='blue' imageSize="4" />
         </div>
         <div className="block md:hidden ">
-          <PopOutCircle image={BImg} circleBg='bg-contrastAccent-200' imagePos='top' imageTop='-18px' imageLeft='0px' imageOverflow='hiden' borderColor='blue' imageSize="2.5" />
+          <PopOutCircle image={BImg} circleBg='bg-contrastAccent-200' imagePos='top' imageTop='-18px' imageLeft='0px' imageOverflow='hiden' imageSize="2.5" />
         </div>
       </div>
     </div>

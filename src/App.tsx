@@ -24,26 +24,12 @@ import Login from './auth/Login';
 import Signup from './auth/Signup';
 import RegisterChild from './auth/RegisterChild';
 import SelectLearner from './auth/SelectLearner';
-import LoggedSideDrawer from './components/organisms/LoggedSideDrawer';
-import CourseView from './LoggedInUser/CourseView';
-import BookTrial from './bookCourse/BookTrial';
-import UpdateParent from './LoggedInUser/UpdateParent';
 
-// Lazy loaded components to improve base performance.
-const Home = lazy(() => import('./pages/home'));
-const LoggedUserHome = lazy(() => import('./LoggedInUser/HomePage'));
-const Courses = lazy(() => import('./pages/courses'));
-const Course = lazy(() => import('./pages/course'));
-// const About = lazy(() => import('../../pages/about'));
-const Enterprise = lazy(() => import('./pages/enterprise'));
-const Legal = lazy(() => import('./pages/legal'));
-const PrivacyPolicy = lazy(() => import('./pages/privacyPolicy'));
-const Error = lazy(() => import('./pages/error'));
+const Course = lazy(() => import('./pages/courseViewHome'));
 const CourseContent = lazy(() => import('./pages/courseContent'));
-const BookCourse = lazy(() => import('./bookCourse/BookCourse'));
-const MyCourses = lazy(() => import('./LoggedInUser/MyCourses'));
-const SwitchUser = lazy(() => import('./LoggedInUser/SwitchUser'));
-const Drawer = lazy(() => import('./LoggedInUser/Drawer'));
+const ForgotPassword = lazy(() => import('./auth/forgotPassword/ForgotPassword'));
+const VerifyForgotPass = lazy(() => import('./auth/forgotPassword/VerifyForgotPass'));
+const NewPassword = lazy(() => import('./auth/forgotPassword/NewPassword'));
 
 const theme = createTheme();
 
@@ -86,6 +72,7 @@ function App() {
                   <Route path="/" element={<CompleteHome />} />
                 <Route path="/courses" element={<CompleteCourses />} />
                 <Route path="/course/:id" element={<CompleteCourse />} />
+                <Route path="/course/:id" element={<Course />} />
                 <Route path="/enterprise" element={<CompleteEnterprise />} />
                 <Route path="/terms-of-service" element={<CompleteLegal />} />
                 <Route path="/privacy-policy" element={<CompletePrivacyPolicy />} />
@@ -95,6 +82,9 @@ function App() {
                 <Route path="/registerchild" element={<RegisterChild/>} />
                 <Route path="/learner" element={<SelectLearner/>} />
                 <Route path="/otp" element={<VerifyingUser/>} />
+                <Route path="/forgotpassword" element={<ForgotPassword/>} />
+                <Route path="/verfiyforgotpassword" element={<VerifyForgotPass/>} />
+                <Route path="/newpassword" element={<NewPassword/>} />
                
                 {/* <Route path="/" element={<LoggedSideDrawer />} /> */}
                 <Route path="*" element={<CompleteError />} />

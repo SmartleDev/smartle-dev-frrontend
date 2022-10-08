@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import "../auth/auth.css";
 import jwt_decode from "jwt-decode";
 import API from '../redux/api/api';
-
+import { Grid } from '@mui/material';
 function SwitchUser() {
 
   const [user, setUser] = useState<any>(JSON.parse(localStorage.getItem('user-details') || 'null'))
@@ -43,10 +43,10 @@ function SwitchUser() {
             Add a New Learner, if Profile not Found
           </p>
         </div>
-        <div className="learner-overview">
+
+        <div className="learner-overview " style={{boxShadow: '5px 10px #888888'}}>
           {learnerList?.map((dataItem : any, index : any) => 
-          
-          <div className="learner-choose">
+          <div className="learner-choose" >
             <PersonIcon
               onClick = {() => {
               localStorage.setItem('learner-details', JSON.stringify(dataItem))
@@ -54,12 +54,13 @@ function SwitchUser() {
                window.location.reload();
                 }
               }
-              className="learner-icon"
+              className="learner-icon text-sm md:text-lg"
               style={{
                 color: "#917EBD",
                 backgroundColor: "#F9EDF5",
                 padding: "20px",
                 borderRadius: "50%",
+                
               }}
             />
             <p className="learner-name md:text-left text-xl md:text-2xl mt-4 md:mt-8 font-bold text-stone-700">

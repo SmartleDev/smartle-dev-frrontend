@@ -2,6 +2,7 @@
 import { isNull } from '../helpers';
 import { courseList, instructorList } from './data';
 import API from '../../redux/api/api'
+import axios from 'axios'
 
 
 export const videoBase = "https://www.youtube.com/embed/";
@@ -11,14 +12,16 @@ export async function getCourses(param?: any, value?: any, compare: any = "=", e
 
     let cl : any = [];
     let json : any = [];
- await API.get('coursesonhome')
+ await  API.get("/getHomeEnterpriseCourses")
   .then((res)=>{
    json = res.data;
+   console.log(res.data)
   cl = json;
   }).catch((err) => {
     console.log(err)
   })
 
+  
   
 
   if (param && value) {

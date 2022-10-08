@@ -19,3 +19,6 @@ export const NewLogo = require('./NewLogo.png');
 export const WhiteLogo = require('./whitelogo.png');
 export const logoText = require('./logoText.png');
 export const logoNoText = require('./logoNoText.png');
+export const smartlelogo1 = require('./smartlelogo1.png');
+export const smartlewhite1 = require('./smartlewhite1.png');
+export const Smartle_Logo = require('./Smartle_Logo.png');

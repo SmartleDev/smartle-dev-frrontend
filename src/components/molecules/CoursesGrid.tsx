@@ -12,7 +12,7 @@ interface Props{
     elementWidth?: any;
 }
 
-const CoursesGrid = ({ courses, color = 'accent-200', elementWidth='sm:w-1/2 md:w-1/3 lg:w-3/12' }: Props) => {
+const CoursesGrid = ({ courses, color = '#D8F2FF', elementWidth='sm:w-1/2 md:w-1/3 lg:w-3/12' }: Props) => {
 
     const isMobile = useMediaQuery('(max-width:1000px)');
     return (
@@ -21,7 +21,7 @@ const CoursesGrid = ({ courses, color = 'accent-200', elementWidth='sm:w-1/2 md:
                 {
                     !isMobile ? (<>
                         {
-                    courses.map((course:any, key:any) => {
+                    courses?.map((course:any, key:any) => {
                         return (                        
                             <CourseGridElement width={elementWidth} color={color} course={course} key={key} />   
                         );

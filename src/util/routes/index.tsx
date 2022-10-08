@@ -3,7 +3,7 @@ import { lazy } from 'react';
 // Lazy loaded components to improve base performance.
 const Home = lazy(() => import('../../pages/home'));
 const Courses = lazy(() => import('../../pages/courses'));
-const Course = lazy(() => import('../../pages/course'));
+const CourseHome = lazy(() => import('../../pages/courseViewHome'));
 // const About = lazy(() => import('../../pages/about'));
 const Enterprise = lazy(() => import('../../pages/enterprise'));
 const Legal = lazy(() => import('../../pages/legal'));
@@ -33,17 +33,17 @@ const routes: Array<RouteType> = [
 		element: <Courses />,
 		key: 'courses',
 		path: '/courses',
-		title: ' courses',
+		title: 'Courses',
 		show:true
 	},
 	{
-		element: <Course />,
+		element: <CourseHome />,
 		key: 'course',
 		path: '/course/:id',
 		title: '{--Course--}',
 		show:false
 	},
-	{
+	{ 
 		element: <Enterprise />,
 		key: 'enterprise',
 		path: '/enterprise',

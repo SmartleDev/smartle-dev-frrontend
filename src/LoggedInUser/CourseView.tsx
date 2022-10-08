@@ -13,6 +13,8 @@ import BookIcon from "@mui/icons-material/Book";
 import CoPresentIcon from "@mui/icons-material/CoPresent";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Header from './Header'
+import useMediaQuery from '@mui/material/useMediaQuery';
+import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
 
 import { RootState } from "../redux/reducers";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,6 +34,9 @@ import {
   CircularProgressbarWithChildren,
   buildStyles,
 } from "react-circular-progressbar";
+
+import './CourseView.css';
+import MobileLoggedHeader from "./MobileLoggedHeader";
 
 const CourseViewContent = () => {
   const redTheme = createTheme({
@@ -95,6 +100,7 @@ const CourseViewContent = () => {
   console.log(sessionView);
   const [moduleView, setModuleView] = useState<moduleViewer[]>([]);
   console.log(moduleView);
+  const [isEnterprise, setIsEnterprise] = useState<boolean>(false);
   const [learner, setLearner] = useState<any>(
     JSON.parse(localStorage.getItem("learner-details") || "null")
   );
@@ -152,7 +158,7 @@ const CourseViewContent = () => {
     .then((res) => {
       fetchtopicID(res.data[0]?.course_topic)
       fetchModuleID(res.data[0]?.course_module)
-      navigate('/course-content')
+      //navigate('/course-content')
       console.log(enrollment_id)
     })
     .catch((err) => {
@@ -172,27 +178,49 @@ const CourseViewContent = () => {
     );
   }
 
+  const isMobile = useMediaQuery('(max-width:900px)');
+
   return (
-    <>
-    <Header/>
+    <Box className="dark:bg-slate-900">
+    {isMobile && <MobileLoggedHeader/>}
+    {!isMobile && <Header/>}
     <Box>
-      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-        <Grid item xs={6} borderRight="1px dashed #917EBD">
-          {courseView?.map((dataItem: any, index: any) => (
-            <Box m={"60px"}>
+      <Box className="m-5 md:m-20">
+      {isMobile && 
+      <div>
+                  {courseView?.map((dataItem: any, index: any) => (
+            <Box >
               <Box mb={"10px"}>
-                <Typography variant="h4" fontWeight={600}>
+                <Typography variant="h4" fontWeight={600} className='text-xl text-center dark:text-white'>
                   {dataItem.course_name}
                 </Typography>
               </Box>
-              <Typography>{dataItem.course_description}</Typography>
-              <Box sx={{ marginTop: "20px" }}>
-               {dataItem?.course_progress === 0 ?  <Typography>Begin you course</Typography> : dataItem?.course_progress === 100 ? <Typography>Course is Completed, You can still rewatch the Content</Typography> : <Typography>Continue you course from where you left off</Typography> }
+            </Box>
+          ))}
+      </div>
+      }
+      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+        <Grid item xs={12} sm={12} md={3}>
+            <div className={`${isEnterprise ? 'bg-contrastAccent-200' : 'bg-accent-200'} rounded-md shadow-xl p-3 `}>
+                <img src={courseView[0]?.course_image} className="rounded-md w-full" alt="" />
+            </div>  
+        </Grid>
+        <Grid item xs={8} md={6} borderRight="1px dashed #917EBD" className="border-0 lg:border-r md:border-fuchsia-500 md:pr-20" >
+          {courseView?.map((dataItem: any, index: any) => (
+            <Box >
+              {!isMobile && <Box mb={"10px"}>
+                <Typography variant="h4" fontWeight={600} className='dark:text-white'>
+                  {dataItem.course_name}
+                </Typography>
+              </Box>}
+              <Typography className='dark:text-white ml-2 mt-6 md:mt-2 text-sm md:text-lg'>{dataItem.course_description}</Typography>
+              {!isMobile && <><Box sx={{ marginTop: "100px", textAlign: 'center', color: '#917EBD',  }}>
+               {dataItem?.course_progress === 0 ?  <Typography className="text-sm">Begin your course</Typography> : dataItem?.course_progress === 100 ? <Typography>Course is Completed, You can still rewatch the Content</Typography> : <Typography>Continue you course from where you left off</Typography> }
               </Box>
-              <ThemeProvider theme={redTheme}>
-                <Box>
+            <ThemeProvider theme={redTheme}>
+                <Box sx={{textAlign: 'center' }}> 
                {dataItem?.course_progress === 0 ?
-                    <Button variant="contained" sx={{ marginTop: "10px" }} onClick = {handelBeginNow}>
+                    <Button variant="contained" sx={{ marginTop: "10px", borderRadius: '15px' }} onClick = {handelBeginNow}>
                       Begin now
                     </Button>
                  
@@ -203,48 +231,32 @@ const CourseViewContent = () => {
                 </Button>
 
                 :
-                    <Button variant="contained" sx={{ marginTop: "10px" }} onClick = {handelBeginNow}>
+                    <Button variant="contained" sx={{ mt:"10px" }} onClick = {handelBeginNow}>
                       Continue
                     </Button>}
                 </Box>
-              </ThemeProvider>
+              </ThemeProvider></>}
             </Box>
           ))}
         </Grid>
-        {courseView[0]?.enrollment_type === 'paid' && <Grid item xs={6}>
-        <Grid
-            container
-            rowSpacing={1}
-            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-          >
-            <Grid item xs={6}>
-              <Box m={"30px"}>
-                <Typography fontWeight={700}>Course Progress</Typography>
-                <Grid
-                  container
-                  rowSpacing={1}
-                  columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-                >
-                  <Grid item xs={6}>
-                    <Box marginTop="20px" marginBottom={"20px"}>
-                      <CircularProgressbar
-                        value={percentage}
-                        text={`${percentage}%`}
-                        background
-                        backgroundPadding={4}
-                        styles={buildStyles({
-                          backgroundColor: "#fff",
-                          textColor: "#917EBD",
-                          pathColor: "#917EBD",
-                          trailColor: "transparent",
-                        })}
-                      />
-                    </Box>
-                  </Grid>
-                  <Grid item xs={6}></Grid>
-                </Grid>
-              </Box>
-            </Grid>
+        {courseView[0]?.enrollment_type === 'paid' && <Grid item xs={3} md={3} className='justify-center scale-75 md:scale-100 mr-2 md:mr-0' mt="">
+        <Grid >
+            <Box className='text-center mb-2'><Typography  fontWeight={700} fontSize="14px" style={{color: '#917EBD'}}>Progress</Typography></Box>
+            <Box style={{justifyContent: 'center'}}>
+              <div id="outer-circle" style={{marginTop: '20px', textAlign:'center', margin:'auto'}}>
+                <div id="inner-circle">
+                  <Typography sx={{mt:'20px', fontSize:'35px',color: '#917EBD'}}>{percentage}<span style={{fontSize:'30px'}}>%</span></Typography>
+                </div>
+              </div>
+            </Box>
+            <Box style={{justifyContent: 'center', marginTop: '30px'}}>
+              <div id="outer-circle1" style={{marginTop: '20px', textAlign:'center', margin:'auto'}}>
+                <div id="inner-circle1">
+                  <CalendarTodayOutlinedIcon sx={{mt:'15px', mb:'10px', fontSize:'45px',color: '#917EBD'}}/>
+                </div>
+              </div>
+              <Typography style={{textAlign:'center', color:'#917EBD', marginTop:'10px'}}>Key Events</Typography>
+            </Box>
             <Grid item xs={6}>
               <Box marginTop={"30px"}>
                 <Grid
@@ -252,18 +264,6 @@ const CourseViewContent = () => {
                   rowSpacing={1}
                   columnSpacing={{ xs: 1, sm: 2, md: 3 }}
                 >
-                  <Grid item xs={2}>
-                    <BookIcon
-                      style={{
-                        color: "#917EBD",
-                        backgroundColor: "#F9EDF5",
-                        marginBottom: "10px",
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={10}>
-                    <Typography>{moduleView.length} Modules</Typography>
-                  </Grid>
                   {/* <Grid item xs={2}>
                     <ScheduleIcon
                       style={{
@@ -317,6 +317,33 @@ const CourseViewContent = () => {
           </Box> */}
         </Grid>}
       </Grid>
+      </Box>
+      {courseView?.map((dataItem:any) =>{
+        return <div>
+          {isMobile && <><Box sx={{ textAlign: 'center', color: '#917EBD',  }}>
+               {dataItem?.course_progress === 0 ?  <Typography className="text-sm">Begin your course</Typography> : dataItem?.course_progress === 100 ? <Typography>Course is Completed, You can still rewatch the Content</Typography> : <Typography>Continue you course from where you left off</Typography> }
+              </Box>
+            <ThemeProvider theme={redTheme}>
+                <Box sx={{textAlign: 'center' }}> 
+               {dataItem?.course_progress === 0 ?
+                    <Button variant="contained" sx={{ marginTop: "10px", borderRadius: '15px', fontSize:'12px' }} onClick = {handelBeginNow}>
+                      Begin now
+                    </Button>
+                 
+                  :
+                  dataItem?.course_progress === 100 ?
+                  <Button variant="contained" sx={{ marginTop: "10px", fontSize:'12px' }} onClick = {handelBeginNow}>
+                  Rewatch
+                </Button>
+
+                :
+                    <Button variant="contained" sx={{ mt:"10px", fontSize:'12px' }} onClick = {handelBeginNow}>
+                      Continue
+                    </Button>}
+                </Box>
+              </ThemeProvider></>}
+        </div>
+      })}
       {courseView[0]?.enrollment_type === "paid" ? (
         <PaidView moduleViewPaid={moduleView} topicArray = {topics}/>
       ) : (
@@ -324,7 +351,7 @@ const CourseViewContent = () => {
       )}
        {sessionView?.map((dataItem : any, index : any) =>
     <>
-      <Box width={"95%"} margin="auto">
+      {/* <Box width={"95%"} margin="auto">
         <Grid
           container
           rowSpacing={1}
@@ -408,12 +435,11 @@ const CourseViewContent = () => {
               />
             </Box>
           </Grid> */}
-        </Grid>
-      </Box>
+        
       </>
             )}
     </Box>
-    </>
+    </Box>
   );
 };
 

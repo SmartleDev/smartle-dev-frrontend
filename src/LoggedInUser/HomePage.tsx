@@ -163,7 +163,7 @@ console.log(learner)
 
       <div className="recommendation">
         <hr style={{ width: "100%", margin: "30px 0 30px 0" }} />
-        <h2 className="text-4xl pb-10 font-black">Top Courses We Recommend</h2>
+        <h2 className="text-4xl pb-10 font-black section_heading">Top Courses We Recommend</h2>
 
                   <div style = {{display: "flex", flexWrap: "wrap" }}>
 

@@ -18,6 +18,7 @@ const VerifyingUser = () => {
     console.log(user);
     const[optResult, setOtpResult] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
+    const [codeMsg, setCodeMsg] = useState("");
     
     const [codeCreds, setCodeCreds] = useState({
         email : localStorage.getItem('username'),
@@ -27,9 +28,20 @@ const VerifyingUser = () => {
     const [loginCreds, setLoginCreds] : any = useState(
         {
           email: localStorage.getItem('username'),
-          password: localStorage.getItem('username-p')
+          password: localStorage.getItem('username-p'),
+          name: localStorage.getItem('name')
         }
       );
+
+      const resendCode =() => {
+        API.post('resendcode', {email: localStorage.getItem('username')} )
+        .then(res => {
+            console.log(res.data)
+            setCodeMsg("Code has been sent again to your Email")
+        }).catch(err => {
+            console.log(err)
+        })
+      }
 
       console.log(loginCreds);
 
@@ -69,7 +81,7 @@ const VerifyingUser = () => {
             }else{
             setCodeResult(res.data);
 
-            API.post('accountCreationEmailService', {emailTo: localStorage.getItem('username')} )
+            API.post('accountCreationEmailService', {emailTo: localStorage.getItem('username'), parentname: loginCreds?.name})
             .then(res => {
                 console.log(localStorage.getItem('username'));
                 console.log(parentTable.parentEmail);
@@ -144,7 +156,7 @@ const VerifyingUser = () => {
                         <Box className="block md:hidden" sx={{width: "50%", margin: "auto", textAlign: "center"}}>
                             <PopOutCircle image={BImg} circleBg='bg-contrastAccent-200' imagePos='14px' imageTop='10px' imageLeft='0px' imageOverflow='hiden' borderColor='blue' imageSize="2" />
                         </Box>
-                    <Typography variant='h6' sx={{marginTop: "100px", marginLeft: "10px", marginRight: "1opx", marginBottom: "20px"}}>Enter the verification code we just sent you on your email address</Typography>
+                    <Typography className='verify_text' variant='h6' sx={{marginTop: "100px", marginLeft: "10px", color : '#917EBD',marginRight: "1opx", marginBottom: "20px"}}>Enter the verification code we just sent you on your email address</Typography>
 
                     {otp.map((data, index) => {
                         return (
@@ -160,10 +172,13 @@ const VerifyingUser = () => {
                             />
                         );
                     })}
-                    <Typography>
+                    <Box className = 'mt-10 resendCode' onClick = {resendCode}>
+                        Click here to Resend Code
+                    </Box>
+                    <Typography className = 'my-10'>
                         
                             <Button
-                                className = 'auth-button' 
+                                className = 'buttonGeneralFirst' 
                                 variant="outlined" 
                                 style={{
                                     width:"200px", 
@@ -171,6 +186,9 @@ const VerifyingUser = () => {
                                     background: '#917EBD', 
                                     borderColor : '#917EBD', 
                                     color: 'white', 
+                                    borderRadius:'10px',
+                                    fontSize : '1rem',
+                                    fontWeight : '700',
                                     marginRight: "20px"
                                     }} 
                                 onClick={e => {
@@ -180,9 +198,10 @@ const VerifyingUser = () => {
                                 Clear
                         </Button>
                         <Button
-                            className = 'auth-button' 
+                            className = 'buttonGeneralFirst' 
                             variant="outlined" 
-                            style={{width:"200px", marginTop: "20px", background: '#917EBD', borderColor : '#917EBD', color: 'white'}} 
+                            style={{width:"200px", marginTop: "20px", background: '#917EBD',  fontSize : '1rem',
+                            fontWeight : '600',borderRadius:'10px', borderColor : '#917EBD', color: 'white'}} 
                             onClick={handelCodeSubmit}
                         >
                             Verify OTP
@@ -191,9 +210,15 @@ const VerifyingUser = () => {
                         
                     </Typography>
                 </Box>
-                {errorMsg !== '' && <Alert style = {{marginTop: "20px", width: "50%"}} variant="outlined" severity="error">
-        {errorMsg}
-      </Alert>}
+                {codeMsg !== '' && 
+        <div className ='code_style' style ={{marginTop: '4rem'}}>
+          {codeMsg}
+        </div>}
+                {errorMsg !== '' && 
+        <div className ='error_style' style ={{marginTop: '4rem'}}>
+          {errorMsg}
+        </div>}
+
             </Box>
         </>
     );
