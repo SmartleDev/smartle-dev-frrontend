@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Tangerine&display=swap');
+.c_template-wrapper,
+.c_template-wrapper * {
+  box-sizing: border-box;
+}
+.c_template-wrapper {
+  width: 1000px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  margin: 1rem auto;
+  padding: 1rem;
+  aspect-ratio: 7/5;
+  /* border: 1px black solid; */
+  font-family: 'Poppins', sans-serif;
+  background-image: url('./bg.jpg');
+  background-color: white;
+  background-size: cover;
+}
+
+.c_template-header {
+  text-align: center;
+}
+.c_template-header > h2 {
+  font-size: 3rem;
+  font-weight: 400;
+  text-shadow: 0 0 7px #00000061;
+  margin-block: 0.5rem;
+}
+.c_template-header > h2 > span {
+  display: block;
+}
+.c_template-header > h2 > span:nth-child(1) {
+  font-family: 'Tangerine', cursive;
+  font-size: 3rem;
+  text-shadow: none;
+}
+
+.c_template-header > h2 > span + span {
+  font-size: 2rem;
+  font-weight: 300;
+}
+
+.c_template-header-divider {
+  width: fit-content;
+  margin: auto;
+  position: relative;
+}
+.c_template-header-divider > img {
+  width: 46px;
+  height: 25px;
+  object-fit: contain;
+  background-color: white;
+}
+
+.c_template-header-divider > span {
+  width: 225px;
+  height: 1px;
+  background-color: #fae64f;
+  display: block;
+  position: absolute;
+  top: 12px;
+  left: -50%;
+  z-index: -1;
+}
+.c_lead {
+  font-size: 1.125rem;
+}
+.c_template-main {
+  text-align: center;
+}
+.c_template-main > h1 {
+  font-weight: 500;
+  text-shadow: 0 0 7px #00000042;
+  font-size: 3.3rem;
+  margin-bottom: 1rem;
+}
+.c_para {
+  max-width: 67%;
+  margin: 0 auto;
+  margin-bottom: 2rem;
+}
+.c_sign-wrapper {
+  display: flex;
+  gap: 170px;
+  justify-content: center;
+}
+.c_sign-item > img {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  border-bottom: 1px black solid;
+  mix-blend-mode: multiply;
+}
+
+.c_sign-item > p {
+  font-size: 1rem;
+  margin-block: 0.3rem !important;
+}
+.c_sign-item > p + p {
+  font-size: 0.8rem;
+}
+
+.generate_certificate_pdf {
+  background-color: #735aac;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
+    rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+}
+.generate_certificate_pdf:hover {
+  background-color: #ffedf9;
+  color: #735aac;
+}
+.generate_certificate_button_main {
+  display: flex;
+  justify-content: center;
+}

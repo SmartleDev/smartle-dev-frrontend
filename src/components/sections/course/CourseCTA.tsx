@@ -78,7 +78,7 @@ const CourseCTA = ({courseId, isEnterprise=false, status}:Props) => {
         if(user === null){
           navigate('/login')
         }else{
-          navigate('/bookingcourse')
+          navigate(`/bookingcourse/${course_id}`)
         }
       }
 

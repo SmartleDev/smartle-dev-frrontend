@@ -1,104 +1,102 @@
-.my-courses{
-	display:flex;
-	justify-content:start;
-	flex : wrap;
-	
+.my-courses {
+  display: flex;
+  justify-content: start;
+  flex: wrap;
 }
-.home-page{
-	margin : 1% 5% 0 5%;
-}
-
-.line{
-	position: absolute;
-	width: 395px;
-	height: 0px;
-	left: 849px;
-	top: 463px;
-
-	border: 0.83px dashed #917EBD;
-	transform: rotate(-90deg);
-
-}
-.line-home{
-	position: absolute;
-	width: 800px;
-	height: 0px;
-	left: 600px;
-	top: 110%;
-
-	border: 0.83px dashed #917EBD;
-	transform: rotate(-90deg);
-
+.home-page {
+  margin: 1% 5% 0 5%;
 }
 
-.modal{
-	background: rgba(255, 255, 255, 0.17);
-	top: 300px;
-	border-radius: 16px;
-	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-	backdrop-filter: blur(7.9px);
-	-webkit-backdrop-filter: blur(7.9px);
-	border: 1px solid rgba(255, 255, 255, 0.3);
-	max-width: 40%;
-	margin: auto;
-	padding: 25px;
-	text-align: center;
-	margin-top: 100px;
+.line {
+  position: absolute;
+  width: 395px;
+  height: 0px;
+  left: 849px;
+  top: 463px;
+
+  border: 0.83px dashed #917ebd;
+  transform: rotate(-90deg);
+}
+.line-home {
+  position: absolute;
+  width: 800px;
+  height: 0px;
+  left: 600px;
+  top: 110%;
+  border: 0.83px dashed #917ebd;
+  transform: rotate(-90deg);
 }
 
-.loggedhome_heading{
-	color: black;
-	font-weight: bold;
-	font-size: 32px;
-	margin-left: 30px;
+.modal {
+  background: rgba(255, 255, 255, 0.17);
+  top: 300px;
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(7.9px);
+  -webkit-backdrop-filter: blur(7.9px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  max-width: 40%;
+  margin: auto;
+  padding: 25px;
+  text-align: center;
+  margin-top: 100px;
 }
 
-.loggedhome_subheading{
-	font-size: 18px;
-	color: #917EBD;
-	text-align: center;
-	margin-top: 50px;
+.loggedhome_heading {
+  color: black;
+  font-weight: bold;
+  font-size: 32px;
+  margin-left: 30px;
+}
+
+.loggedhome_subheading {
+  font-size: 18px;
+  color: #917ebd;
+  text-align: center;
+  margin-top: 50px;
 }
 @media screen and (max-width: 1000px) {
-	.sub_div{
-		text-align: center;
-		margin: 20px 10px 100px 10px !important;
-	}
+  .sub_div {
+    text-align: center;
+    margin: 20px 10px 100px 10px !important;
+  }
 }
 
 @media screen and (max-width: 767px) {
-	.loggedhome_heading{
-		margin: 10% auto 10% auto;
-		font-size: 25px;
-		text-align: center;
+  .loggedhome_heading {
+    margin: 10% auto 10% auto;
+    font-size: 25px;
+    text-align: center;
+  }
+  .loggedhome_subheading {
+    font-size: 15px;
+    margin: 0 20px 50px 20px;
+  }
+  .section_heading {
+    text-align: center;
+    margin: 10% auto 10% auto !important;
+    font-weight: bolder;
+    font-size: 30px !important;
+  }
+  .enrolled_course {
+    margin: 0 auto 0 auto !important;
 
-	}
-	.loggedhome_subheading{
-		font-size: 15px;
-		margin: 0 20px 50px 20px;
-	}
-	.section_heading{
-		text-align: center;
-		margin: 10% auto 10% auto !important;
-		font-weight: bolder;
-		font-size: 30px !important;
-	}
-	.enrolled_course{
-		margin: 0 auto 0 auto !important;
-
-		width: 80vw !important;
-		height: 190px !important;
-	}
-	.my-courses{
-		margin: 0px !important;
-	}
-	.progress_bar{
-		width: 80vw !important;
-		left: 35px;
-	}
-	.enrolled_course_name{
-		margin-top: 30px !important;
-		text-align: center !important;
-		font-size: 20px !important;
-	}
+    width: 80vw !important;
+    height: 190px !important;
+  }
+  .my-courses {
+    margin: 0px !important;
+  }
+  .progress_bar {
+    width: 80vw !important;
+    left: 35px;
+  }
+  .enrolled_course_name {
+    margin-top: 30px !important;
+    text-align: center !important;
+    font-size: 20px !important;
+  }
+  #certificate-styles:hover {
+    opacity: 20% !important;
+  }
 }

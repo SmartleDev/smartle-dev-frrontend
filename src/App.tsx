@@ -24,6 +24,7 @@ import Login from './auth/Login';
 import Signup from './auth/Signup';
 import RegisterChild from './auth/RegisterChild';
 import SelectLearner from './auth/SelectLearner';
+import EnterpriseMain from './pages/Enterprise/EnterpriseMain';
 
 const Course = lazy(() => import('./pages/courseViewHome'));
 const CourseContent = lazy(() => import('./pages/courseContent'));
@@ -85,6 +86,7 @@ function App() {
                 <Route path="/forgotpassword" element={<ForgotPassword/>} />
                 <Route path="/verfiyforgotpassword" element={<VerifyForgotPass/>} />
                 <Route path="/newpassword" element={<NewPassword/>} />
+                <Route path="/enterprise/course/:subject" element={<EnterpriseMain/>} />
                
                 {/* <Route path="/" element={<LoggedSideDrawer />} /> */}
                 <Route path="*" element={<CompleteError />} />

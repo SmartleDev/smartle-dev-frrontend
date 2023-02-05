@@ -18,7 +18,7 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import React, { Suspense, useEffect, useState } from 'react';
-import { Route, Routes, useLocation, Link} from 'react-router-dom';
+import { Route, Routes, useLocation, Link } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
 import Header from '../components/organisms/Header';
 import { ThemeProvider, createTheme } from '@mui/material';
@@ -27,7 +27,7 @@ import VerifyingUser from '../auth/VerifyingUser';
 import ExploreIcon from '@mui/icons-material/Explore';
 import HomeIcon from '@mui/icons-material/Home';
 import SchoolIcon from '@mui/icons-material/School';
-import { smartlelogo1, Smartle_Logo } from "../util/resources"
+import { smartlelogo1, Smartle_Logo } from '../util/resources';
 import CoursesAfterLoggedIn from './Courses';
 
 //redux copy
@@ -50,6 +50,7 @@ import RegisterChild from '../auth/RegisterChild';
 import SelectLearner from '../auth/SelectLearner';
 import ShortTextIcon from '@mui/icons-material/ShortText';
 import CourseView from '../LoggedInUser/CourseView';
+import CourseViewTrial from '../LoggedInUser/CourseViewTrial';
 import BookingTrial from '../bookCourse/BookingTrial';
 import BookingCourse from '../bookCourse/BookingCourse';
 import AfterBook from '../bookCourse/AfterBook';
@@ -112,26 +113,26 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-    boxSizing: 'border-box',
-    ...(open && {
-      ...openedMixin(theme),
-      '& .MuiDrawer-paper': openedMixin(theme),
-    }),
-    ...(!open && {
-      ...closedMixin(theme),
-      '& .MuiDrawer-paper': closedMixin(theme),
-    }),
+const Drawer = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => prop !== 'open',
+})(({ theme, open }) => ({
+  width: drawerWidth,
+  flexShrink: 0,
+  whiteSpace: 'nowrap',
+  boxSizing: 'border-box',
+  ...(open && {
+    ...openedMixin(theme),
+    '& .MuiDrawer-paper': openedMixin(theme),
   }),
-);
+  ...(!open && {
+    ...closedMixin(theme),
+    '& .MuiDrawer-paper': closedMixin(theme),
+  }),
+}));
 const Home = lazy(() => import('../pages/home'));
 const LoggedUserHome = lazy(() => import('./Home'));
 const Courses = lazy(() => import('../pages/courses'));
-const Course = lazy(() => import('../pages/courseViewHome'));
+const Course = lazy(() => import('../LoggedInUser/CourseViewLoggedIn'));
 // const About = lazy(() => import('../../pages/about'));
 const Enterprise = lazy(() => import('../pages/enterprise'));
 const Legal = lazy(() => import('../pages/legal'));
@@ -142,35 +143,42 @@ const BookCourse = lazy(() => import('../bookCourse/BookCourse'));
 const MyCourses = lazy(() => import('../LoggedInUser/MyCourses'));
 const SwitchUser = lazy(() => import('../LoggedInUser/SwitchUser'));
 const LearnerProfile = lazy(() => import('../LoggedInUser/LearnerProfile'));
+const Certificate = lazy(() => import('./certificate/Certificate'));
 // const Drawer = lazy(() => import('../LoggedInUser/Drawer'));
 
 const theme = createTheme();
 
 export default function MiniDrawer() {
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const { fetchUsers, fetchCourseID } = bindActionCreators(
+    actionCreators,
+    dispatch
+  );
 
-	const location = useLocation();
-	const dispatch = useDispatch();
-	const { fetchUsers, fetchCourseID} = bindActionCreators(actionCreators, dispatch)
-  
-	const [user, setUser] = useState<any>(JSON.parse(localStorage.getItem('user-details') || 'null'))
-	const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getItem('learner-details') || 'null'))
-	
-	useEffect(() => {
-	  fetchUsers()
-	  window.scrollTo(0, 0);
-	  if (
-		location.pathname === "/enterprise" ||
-		location.pathname === "/course/chemistry" ||
-		location.pathname === "/course/mathematics" ||
-		location.pathname === "/course/biology" ||
-		location.pathname === "/course/physics"
-	  )
-		document.documentElement.style.setProperty('--scrollBarColor', '#5290F2');
-	  else
-		document.documentElement.style.setProperty('--scrollBarColor', '#917ebd');
-	}, [location, user, leanerUser, Route]);
-	const state = useSelector((state: RootState) => state.fetchUsers)
-	
+  const [user, setUser] = useState<any>(
+    JSON.parse(localStorage.getItem('user-details') || 'null')
+  );
+  const [leanerUser, setLearnerUser] = useState<any>(
+    JSON.parse(localStorage.getItem('learner-details') || 'null')
+  );
+
+  useEffect(() => {
+    fetchUsers();
+    window.scrollTo(0, 0);
+    if (
+      location.pathname === '/enterprise' ||
+      location.pathname === '/course/chemistry' ||
+      location.pathname === '/course/mathematics' ||
+      location.pathname === '/course/biology' ||
+      location.pathname === '/course/physics'
+    )
+      document.documentElement.style.setProperty('--scrollBarColor', '#5290F2');
+    else
+      document.documentElement.style.setProperty('--scrollBarColor', '#917ebd');
+  }, [location, user, leanerUser, Route]);
+  const state = useSelector((state: RootState) => state.fetchUsers);
+
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -186,109 +194,138 @@ export default function MiniDrawer() {
 
   return (
     <>
-    <Box sx={{ display: 'flex' }} className="">
-      {!isMobile && <Drawer variant="permanent" open={open}
-      PaperProps={{
-        style: {
-          background: 'linear-gradient(to right bottom, #A18CD1, #FBC2EB)',
-        }
-      }}>
-	  <IconButton
-          
-            color="primary"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-			style = {{color : 'black', margin : '10px 0px 5px 0px'}}
-            sx={{
-              marginRight: 5,
-              ...(open && { display: 'none' }),
+      <Box sx={{ display: 'flex' }} className="">
+        {!isMobile && (
+          <Drawer
+            variant="permanent"
+            open={open}
+            PaperProps={{
+              style: {
+                background:
+                  'linear-gradient(to right bottom, #A18CD1, #FBC2EB)',
+              },
             }}
           >
-            <ShortTextIcon fontSize='large'/>
-            
-          </IconButton>
-		  {open && <DrawerHeader>
-           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-          </IconButton>
-        </DrawerHeader>}
-        <Divider />
-        <List>
-			<Link to ='/'>
-            <ListItemButton
+            <IconButton
+              color="primary"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              style={{ color: 'black', margin: '10px 0px 5px 0px' }}
               sx={{
-                minHeight: 60,
-                justifyContent: open ? 'initial' : 'center',
-                px: 2.5,
+                marginRight: 5,
+                ...(open && { display: 'none' }),
               }}
             >
-				<ListItemIcon
-                sx={{
-                  my : '0px',
-                  minWidth: 0,
-                  mr: open ? 3 : 'auto',
-                  justifyContent: 'center',
-                }}
-              >
-                  <img className='w-12' src={Smartle_Logo} alt="" />
-              </ListItemIcon>
-              <ListItemText>
-              <img style={{width:'200px'}} src={smartlelogo1} alt="" />
-              </ListItemText>
-            </ListItemButton>
-			</Link>
-      <Divider />
-		<Link to='courses'>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? 'initial' : 'center',
-                px: 2.5,
-              }}
-            >
-				<ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : 'auto',
-                  justifyContent: 'center',
-                }}
-              >
-                 <ExploreIcon />
-              </ListItemIcon>
-              <ListItemText>
-              <Button variant="contained"  sx={{width:'150px', height:'50px', borderRadius: '12px',marginLeft : '18px', backgroundColor:'#917EBD', fontWeight: '600'}}>
-            Explore
-           </Button>
-                </ListItemText>
-            </ListItemButton>
-			</Link>
-		<Link to='mycourses'>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? 'initial' : 'center',
-                px: 2.5,
-              }}
-            >
-				<ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : 'auto',
-                  justifyContent: 'center',
-                }}
-              >
-                 <SchoolIcon />
-              </ListItemIcon>
-              <ListItemText>
-              <Button variant="contained"  sx={{width:'150px', height:'50px', borderRadius: '12px',marginLeft : '18px', backgroundColor:'#917EBD', fontWeight: '600'}}>
-            My Courses
-           </Button>
-                </ListItemText>
-            </ListItemButton>
-			</Link>
+              <ShortTextIcon fontSize="large" />
+            </IconButton>
+            {open && (
+              <DrawerHeader>
+                <IconButton onClick={handleDrawerClose}>
+                  {theme.direction === 'rtl' ? (
+                    <ChevronRightIcon />
+                  ) : (
+                    <ChevronLeftIcon />
+                  )}
+                </IconButton>
+              </DrawerHeader>
+            )}
+            <Divider />
+            <List>
+              <Link to="/">
+                <ListItemButton
+                  sx={{
+                    minHeight: 60,
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2.5,
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      my: '0px',
+                      minWidth: 0,
+                      mr: open ? 3 : 'auto',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <img className="w-12" src={Smartle_Logo} alt="" />
+                  </ListItemIcon>
+                  <ListItemText>
+                    <img style={{ width: '200px' }} src={smartlelogo1} alt="" />
+                  </ListItemText>
+                </ListItemButton>
+              </Link>
+              <Divider />
+              <Link to="courses">
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2.5,
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : 'auto',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <ExploreIcon />
+                  </ListItemIcon>
+                  <ListItemText>
+                    <Button
+                      variant="contained"
+                      sx={{
+                        width: '150px',
+                        height: '50px',
+                        borderRadius: '12px',
+                        marginLeft: '18px',
+                        backgroundColor: '#917EBD',
+                        fontWeight: '600',
+                      }}
+                    >
+                      Explore
+                    </Button>
+                  </ListItemText>
+                </ListItemButton>
+              </Link>
+              {/* <Link to="mycourses">
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2.5,
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : 'auto',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <SchoolIcon />
+                  </ListItemIcon>
+                  <ListItemText>
+                    <Button
+                      variant="contained"
+                      sx={{
+                        width: '150px',
+                        height: '50px',
+                        borderRadius: '12px',
+                        marginLeft: '18px',
+                        backgroundColor: '#917EBD',
+                        fontWeight: '600',
+                      }}
+                    >
+                      My Courses
+                    </Button>
+                  </ListItemText>
+                </ListItemButton>
+              </Link> */}
 
-			{/* <Link to ='mycourses'>
+              {/* <Link to ='mycourses'>
             <ListItemButton
               sx={{
                 minHeight: 48,
@@ -308,58 +345,64 @@ export default function MiniDrawer() {
               <ListItemText primary= 'My Courses' sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
 			</Link> */}
-              
-        </List>
-        <Divider />
-      </Drawer>}
-      <Box component="main" sx={{ flexGrow: 1 }}>
-        {/* <DrawerHeader /> */}
-		<ThemeProvider theme={theme}>
-          <Suspense
-            fallback={
-              <div style={{ marginTop: '40vh', textAlign: 'center' }}>
-                <CircularProgress color="secondary" />
+            </List>
+            <Divider />
+          </Drawer>
+        )}
+        <Box component="main" sx={{ flexGrow: 1 }}>
+          {/* <DrawerHeader /> */}
+          <ThemeProvider theme={theme}>
+            <Suspense
+              fallback={
+                <div style={{ marginTop: '40vh', textAlign: 'center' }}>
+                  <CircularProgress color="secondary" />
+                </div>
+              }
+            >
+              <div className="">
+                <Routes>
+                  <Route path="/" element={<LoggedUserHome />} />
+                  <Route path="/courses" element={<CoursesAfterLoggedIn />} />
+                  <Route path="/course/:id" element={<CompleteCourse />} />
+                  <Route path="/enterprise" element={<CompleteEnterprise />} />
+                  <Route path="/terms-of-service" element={<CompleteLegal />} />
+                  <Route
+                    path="/privacy-policy"
+                    element={<CompletePrivacyPolicy />}
+                  />
+                  <Route path=" " element={<CourseContent />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<Signup />} />
+                  <Route path="/registerchild" element={<RegisterChild />} />
+                  <Route path="/learner" element={<SelectLearner />} />
+                  <Route path="/otp" element={<VerifyingUser />} />
+                  {/* <Route path="/bookcourse" element={<BookCourse/>} /> */}
+                  <Route path="/bookingcourse/:id" element={<BookingCourse />} />
+                  <Route path="/booktrial" element={<BookingTrial />} />
+                  {/* <Route path="/booktrial" element={<BookTrial/>} /> */}
+                  {/* <Route path="/" element={<LoggedSideDrawer />} /> */}
+                  <Route path="/loggedcourseview/:id" element={<CourseView />} />
+                  <Route path="/loggedtrialcourseview/:id" element={<CourseViewTrial />} />
+                  <Route path="/mycourses" element={<MyCourses />} />
+                  {/* <Route path="/switchlearner" element={<SwitchUser />} /> */}
+                  <Route path="*" element={<CompleteError />} />
+                  <Route path="/course-content" element={<CourseContent />} />
+                  <Route path="/profile" element={<LearnerProfile />} />
+                  <Route
+                    path="/updateparentprofile"
+                    element={<UpdateParent />}
+                  />
+                  <Route path="/email" element={<EmailTemplate />} />
+                  <Route path="/testheader" element={<MobileLoggedHeader />} />
+                  <Route path="/afterbook" element={<AfterBook />} />
+                  <Route path="/certificate/:id" element={<Certificate />} />
+                  {/* <Route path='/drawer' element={<Drawer/>} /> */}
+                </Routes>
               </div>
-            }
-          >
-            <div className="">
-            <Routes>
-                <Route path="/" element={<LoggedUserHome />} />
-                <Route path="/courses" element={<CoursesAfterLoggedIn />} />
-                <Route path="/course/:id" element={<CompleteCourse />} />
-                <Route path="/enterprise" element={<CompleteEnterprise />} />
-                <Route path="/terms-of-service" element={<CompleteLegal />} />
-                <Route path="/privacy-policy" element={<CompletePrivacyPolicy />} />
-                <Route path=' ' element={<CourseContent/>} />
-                <Route path="/login" element={<Login/>} />
-                <Route path="/signup" element={<Signup/>} />
-                <Route path="/registerchild" element={<RegisterChild/>} />
-                <Route path="/learner" element={<SelectLearner/>} />
-                <Route path="/otp" element={<VerifyingUser/>} />
-                {/* <Route path="/bookcourse" element={<BookCourse/>} /> */}
-                <Route path="/bookingcourse" element={<BookingCourse/>} />
-                <Route path="/booktrial" element={<BookingTrial/>} />
-                {/* <Route path="/booktrial" element={<BookTrial/>} /> */}
-                {/* <Route path="/" element={<LoggedSideDrawer />} /> */}
-                <Route path="/loggedcourseview" element={<CourseView />} />
-                <Route path="/mycourses" element={<MyCourses />} />
-                {/* <Route path="/switchlearner" element={<SwitchUser />} /> */}
-                <Route path="*" element={<CompleteError />} />
-                <Route path='/course-content' element={<CourseContent/>} />
-                <Route path='/profile' element={<LearnerProfile/>} />
-                <Route path="/updateparentprofile" element={<UpdateParent/>} />
-                <Route path="/email" element={<EmailTemplate/>} />
-                <Route path="/testheader" element={<MobileLoggedHeader/>} />
-                <Route path="/afterbook" element={<AfterBook/>} />
-                {/* <Route path='/drawer' element={<Drawer/>} /> */}
-
-               
-          </Routes>
-            </div>
-          </Suspense>
-    </ThemeProvider>
+            </Suspense>
+          </ThemeProvider>
+        </Box>
       </Box>
-    </Box>
     </>
   );
 }

@@ -5,6 +5,7 @@ import GradBlobBlueTR from '../components/atom/GradBlobBlueTR';
 import GradBlobResp from '../components/atom/GradBlobResp';
 import GradBlobRespBlue from '../components/atom/GradBlobRespBlue';
 import GradBlobTRSm from '../components/atom/GradBlobTRSm';
+import Switch from '@mui/material/Switch';
 import {
   Banner,
   StatsCard,
@@ -41,7 +42,7 @@ import { actionCreators } from '../redux';
 import StarIcon from '@mui/icons-material/Star';
 import '../styles/general.css';
 
-const CourseViewHome = () => {
+const CourseViewLoggedIn = () => {
   const { id } = useParams<{ id: string }>();
   console.log(id);
 
@@ -52,7 +53,11 @@ const CourseViewHome = () => {
       },
     },
   });
+  const [ageChecked, setChecked] = React.useState(false);
 
+  const handleAgeCheckChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked);
+  };
   const [course, setCourse] = useState<any>(undefined);
   const [fail, setFail] = useState<string | undefined>(undefined);
   const [instructor, setInstructor] = useState<any>(undefined);
@@ -75,7 +80,7 @@ const CourseViewHome = () => {
   const [courseView, setCourseView] = useState<courseViewer[]>([]);
   const [courseStatus, setCourseStatus] = useState<any>([]);
   console.log(courseStatus);
-  const [courseAgeView, setCourseAgeView] = useState<any[]>([]);
+  const [courseAgeView, setCourseAgeView] = useState<any[]>();
   const [courseTypeView, setCourseTypeView] = useState<any[]>([]);
   const [courseGeneralView, setCourseGeneralView] = useState<courseViewer[]>(
     []
@@ -85,7 +90,6 @@ const CourseViewHome = () => {
     JSON.parse(localStorage.getItem('user-details') || 'null')
   );
   const [bool, setBool] = useState<any>(false);
-  const [courseAge, setCourseAge] = useState<any>('');
   const [courseType, setcourseType] = useState<any>('');
 
   const dispatch = useDispatch();
@@ -97,6 +101,24 @@ const CourseViewHome = () => {
   const [leanerUser, setLearnerUser] = useState<any>(
     JSON.parse(localStorage.getItem('learner-details') || 'null')
   );
+  console.log(leanerUser);
+  const handelAge = (age: number) => {
+    if (age === 9) {
+      return 8;
+    } else if (age === 10) {
+      return 8;
+    } else if (age === 12) {
+      return 11;
+    } else if (age === 14) {
+      return 13;
+    } else {
+      return age;
+    }
+  };
+  const [courseAge, setCourseAge] = useState<any>(
+    handelAge(parseInt(leanerUser.student_age))
+  );
+  console.log(courseAge);
   const [registerIntrest, setRegisterIntrest] = useState<any>('');
   const [interestError, setInterestError] = useState<any>('');
   const [finalCost, setFinalCost] = useState<any>('' || 1);
@@ -143,9 +165,9 @@ const CourseViewHome = () => {
     instructor_description: string | null;
   }
   console.log(courseView);
-  console.log(
-    courseAgeView.map((a, v) => ({ ['age']: v, selected: false }), {})
-  );
+  //   console.log(
+  //     courseAgeView.map((a, v) => ({ ['age']: v, selected: false }), {})
+  //   );
   useEffect(() => {
     API.post('getCourseDetailsHome', {
       course_title: id,
@@ -233,6 +255,8 @@ const CourseViewHome = () => {
   );
   const handelBuyCourse = () => {
     fetchEnrollmentID(courseStatus[0].enrollment_id);
+    //localStorage.setItem('courseId', course_id)
+    //localStorage.setItem('enrollment_id', courseStatus[0].enrollment_id.toString())
     navigate(`/bookingcourse/${course_id}?enrollmentId=${courseStatus[0].enrollment_id}`)
   };
 
@@ -300,7 +324,17 @@ const CourseViewHome = () => {
           })
             .then((res) => {
               setBookTrialMessage(res.data);
-              navigate('/loggedcourseview');
+              API.post('enrolledUserProgressDefault', {
+                enrollmentId: res.data.enrolmentId,
+                courseId: course_id,
+              })
+                .then((res) => {
+                  console.log(res.data);
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+              navigate('/');
             })
             .catch((err) => {
               console.log(err);
@@ -359,8 +393,12 @@ const CourseViewHome = () => {
                 </p>
               </>
             )}
-            <div className="my-10 " style={{ color: '#735AAC' }}>
-              <h1 className="text_options">Select learners age group:</h1>
+            <br />
+            <h1 className="text_options" id="text_Style_heading">
+              Select your child's age:{' '}
+            </h1>
+            <br />
+            <div className="my-3 " style={{ color: '#735AAC' }}>
               <div className="flex flex-wrap  pt-5 main_option">
                 {courseAgeView?.map((dataItem, index) => (
                   <>
@@ -413,9 +451,7 @@ const CourseViewHome = () => {
             </div>
 
             <div className="my-10 " style={{ color: '#735AAC' }}>
-              <h1 className="text_options">
-                Choose Your learning preference:{' '}
-              </h1>
+              <h1 className="text_options">Choose a learning preference:</h1>
               <div
                 className="flex flex-wrap pt-5 mr-5 main_option"
                 style={{ width: '68%' }}
@@ -540,9 +576,15 @@ const CourseViewHome = () => {
                   </ThemeProvider>
                 ) : (
                   <Box mt={5}>
-                    <Typography variant="h6" fontWeight={800}>
-                      You have already purchased this course.
-                    </Typography>
+                    {courseStatus[0]?.enrollment_type === 'trial' ? (
+                      <Typography variant="h6" fontWeight={800}>
+                        You have the trial version of this course.
+                      </Typography>
+                    ) : (
+                      <Typography variant="h6" fontWeight={800}>
+                        You have already purchased this course.
+                      </Typography>
+                    )}
                     <ThemeProvider theme={redTheme}>
                       <Button
                         variant="contained"
@@ -1000,4 +1042,4 @@ const CourseViewHome = () => {
   );
 };
 
-export default CourseViewHome;
+export default CourseViewLoggedIn;

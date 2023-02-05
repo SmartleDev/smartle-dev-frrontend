@@ -206,7 +206,7 @@ const CourseViewContent = () => {
       {isMobile && <MobileLoggedHeader />}
       {!isMobile && <Header />}
       <Box>
-        <Box className="m-5 md:m-20" style ={{marginBottom: "0px"}}>
+        <Box className="m-5 md:m-20" style={{ marginBottom: '0px' }}>
           {isMobile && (
             <div>
               {courseView?.map((dataItem: any, index: any) => (
@@ -246,7 +246,6 @@ const CourseViewContent = () => {
               item
               xs={8}
               md={6}
-              borderRight="1px dashed #917EBD"
               className="border-0 lg:border-r md:border-fuchsia-500 md:pr-20"
             >
               {courseView?.map((dataItem: any, index: any) => (
@@ -265,7 +264,6 @@ const CourseViewContent = () => {
                   <Typography className="dark:text-white ml-2 mt-6 md:mt-2 text-sm md:text-lg">
                     {dataItem.course_description}
                   </Typography>
-                  
                 </Box>
               ))}
             </Grid>
@@ -417,13 +415,13 @@ const CourseViewContent = () => {
             </div>
           );
         })}
-        {courseView[0]?.enrollment_type === 'paid' &&(
-          <PaidView
-            moduleViewPaid={moduleView}
-            topicArray={topics}
-            enrollmentID={courseView[0]?.enrollment_id}
-            courseView={courseView[0]}
-          />)}
+        {courseView[0]?.enrollment_type === 'trial' && (
+          <TrialView
+            moduleViewTrial={moduleView}
+            enrollmentIDTrial={courseView[0]?.enrollment_id}
+            courseViewTrial={courseView[0]}
+          />
+        )}
       </Box>
     </Box>
   );

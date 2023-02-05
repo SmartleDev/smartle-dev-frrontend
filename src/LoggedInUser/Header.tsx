@@ -8,12 +8,13 @@ import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
 import Avatar from "@mui/material/Avatar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import jwt_decode from "jwt-decode";
 import API from "../redux/api/api";
 
 function Header() {
+  const navigate = useNavigate()
   const [user, setUser] = useState<any>(
     JSON.parse(localStorage.getItem("user-details") || "null")
   );
@@ -44,6 +45,7 @@ function Header() {
     localStorage.removeItem("user-details");
     localStorage.removeItem("learner-details");
     setUser(null);
+    navigate('/')
     window.location.reload();
   };
   return (

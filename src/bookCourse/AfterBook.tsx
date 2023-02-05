@@ -23,7 +23,7 @@ function AfterBook() {
 	const {fetchInstructorID, fetchEnrollmentID} = bindActionCreators(actionCreators, dispatch)
 	const [sessionID, setSessionID] = useState<any>(localStorage.getItem('sessionId')); //global state
 	const [course_id, setcourse_id] = useState<any>(localStorage.getItem('courseId')); //global state
-	const [enrollment_id, setenrollment_id] = useState<any>(localStorage.getItem('enrollmentId')); //global state
+	const [enrollment_id, setenrollment_id] = useState<any>(localStorage.getItem('enrollment_id')); //global state
 
     // const enrollment_id = useSelector((state: RootState) => state.EnrollmentIDFetch)
 	const token = JSON.parse(localStorage.getItem('user-details') || '{}');
@@ -43,7 +43,7 @@ function AfterBook() {
 			console.log(res.data)
 			API.post('enrollCourseEmailService', {emailTo: details?.email,studentName: leanerUser?.student_name , courseId: course_id} )
 			.then(res => {
-				API.post("CourseInvoice", {emailTo: details?.email})
+				API.post("CourseInvoice", {emailTo: details?.email, studentId: leanerUser?.student_id})
 				.then((res) => {
 					console.log(res.data)
 				})
@@ -58,14 +58,13 @@ function AfterBook() {
 
 			fetchInstructorID(0)
 
-			API.post("enrolledUserProgressDefault", {enrollmentId : enrollment_id, courseId : course_id})
-			.then((res) => {
-				console.log(res.data)
-
-			})
-			.catch((err) => {
-			  console.log(err);
-			});
+			// API.post("enrolledUserProgressDefault", {enrollmentId : enrollment_id, courseId : course_id})
+			// .then((res) => {
+			// 	console.log(res.data)
+			// })
+			// .catch((err) => {
+			//   console.log(err);
+			// });
 			if(Array.isArray(couponData)){
 				API.post("voucherCount", {voucherId : couponData[0]?.voucher_id})
 				.then((res) => {
@@ -89,12 +88,18 @@ function AfterBook() {
 		  });
 		}else{
 			if(sessionID === null || undefined){
-				API.post('enrollLearner', {courseId : course_id, studentId : leanerUser?.student_id, studentFeeStatus : true, sessionId : null, enrollmentType : 'paid'})
+				API.post('enrollLearner', {courseId : course_id, studentId : leanerUser?.student_id, studentFeeStatus : true, sessionId : 0, enrollmentType : 'paid'})
 				.then((res) => {
-					console.log(res.data)
+					API.post("enrolledUserProgressDefault", {enrollmentId : res.data.enrolmentId, courseId : course_id})
+					.then((res) => {
+						console.log(res.data)
+					})
+					.catch((err) => {
+					  console.log(err);
+					});
 					API.post('enrollCourseEmailService', {emailTo: details?.email,studentName: leanerUser?.student_name , courseId: course_id} )
 					.then(res => {
-						API.post("CourseInvoice", {emailTo: details?.email})
+						API.post("CourseInvoice", {emailTo: details?.email, studentId: leanerUser?.student_id})
 						.then((res) => {
 							console.log(res.data)
 						})
@@ -122,20 +127,29 @@ function AfterBook() {
 					});
 					fetchEnrollmentID(0)
 					localStorage.removeItem('enrollmentId')
+					localStorage.removeItem('enrollment_id')
+					localStorage.removeItem('courseId')
 				  })
 				  .catch((err) => {
 					console.log(err);
 				  });
 
 				  
+				  
 			}else{
-				API.post('enrollLearner', {courseId : course_id, studentId : leanerUser?.student_id, studentFeeStatus : true, sessionId : sessionID, enrollmentType : 'paid'})
+				API.post('enrollLearner', {courseId : course_id, studentId : leanerUser?.student_id, studentFeeStatus : true, sessionId : sessionID || 0, enrollmentType : 'paid'})
 				.then((res) => {
 					console.log(res.data)
-					
+					API.post("enrolledUserProgressDefault", {enrollmentId : res.data.enrolmentId, courseId : course_id})
+					.then((res) => {
+						console.log(res.data)
+					})
+					.catch((err) => {
+					  console.log(err);
+					});
 					API.post('enrollCourseEmailService', {emailTo: details?.email,studentName: leanerUser?.student_name , courseId: course_id} )
 					.then(res => {
-						API.post("CourseInvoice", {emailTo: details?.email})
+						API.post("CourseInvoice", {emailTo: details?.email, studentId: leanerUser?.student_id})
 						.then((res) => {
 							console.log(res.data)
 						})
@@ -148,13 +162,6 @@ function AfterBook() {
 					})
 					
 					
-					API.post("enrolledUserProgressDefault", {enrollmentId : res.data?.enrolmentId, courseId : course_id})
-					.then((res) => {
-						console.log(res.data)
-					})
-					.catch((err) => {
-					  console.log(err);
-					});
 
 
 					API.post("updateSessionAvaliablity", {sessionId : sessionID})
@@ -182,6 +189,7 @@ function AfterBook() {
 					});
 					fetchEnrollmentID(0)
 					localStorage.removeItem('enrollment_id')
+					localStorage.removeItem('courseId')
 				  })
 				  .catch((err) => {
 					console.log(err);
@@ -192,7 +200,7 @@ function AfterBook() {
 			navigate('/')
 		}	
 
-    },[])
+    },[enrollment_id, sessionID, course_id, fetchEnrollmentID, couponData, fetchInstructorID])
 
   
 	const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {

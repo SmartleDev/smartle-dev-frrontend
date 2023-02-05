@@ -1,5 +1,19 @@
-import React, {useState, useEffect} from 'react';
-import {Box, Slide, AppBar, CssBaseline, Toolbar, Typography, Grid,Stack, Divider,Button,Accordion, Drawer, AccordionDetails } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import {
+  Box,
+  Slide,
+  AppBar,
+  CssBaseline,
+  Toolbar,
+  Typography,
+  Grid,
+  Stack,
+  Divider,
+  Button,
+  Accordion,
+  Drawer,
+  AccordionDetails,
+} from '@mui/material';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ArticleRoundedIcon from '@mui/icons-material/ArticleRounded';
 import GradBlobCourseContent from '../components/atom/GradBlobCourseContent';
@@ -8,30 +22,21 @@ import FrameDiv from '../components/sections/coursecontent/frameDiv';
 import CourseContentDrawer from '../components/sections/coursecontent/CourseContentDrawer';
 import MobileFooter from '../components/organisms/MobileFooter';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
-import "../styles/coursecontent.scss";
-import API from "../redux/api/api";
-import SyncLoader from "react-spinners/SyncLoader";
+import '../styles/coursecontent.scss';
+import API from '../redux/api/api';
+import SyncLoader from 'react-spinners/SyncLoader';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { css } from "@emotion/react";
-import {useParams} from 'react-router-dom'
+import { css } from '@emotion/react';
+import { useParams } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import useMediaQuery from '@mui/material/useMediaQuery'
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { actionCreators } from '../redux';
 import { RootState } from '../redux/reducers';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link , useNavigate} from 'react-router-dom';
-
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import AssignmentIndRoundedIcon from '@mui/icons-material/AssignmentIndRounded';
-import VideogameAssetRoundedIcon from '@mui/icons-material/VideogameAssetRounded';
-import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
-import GroupsIcon from '@mui/icons-material/Groups';
-import PausePresentationIcon from '@mui/icons-material/PausePresentation';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
-import PaidView from '../LoggedInUser/PaidView'
-import TrialView from '../LoggedInUser/TrialView'
+import { Link, useNavigate } from 'react-router-dom';
+import PaidView from '../LoggedInUser/PaidView';
+//import TrialView from '../LoggedInUser/TrialView';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
-
 
 interface Props {
   /**
@@ -45,32 +50,30 @@ interface Props {
 interface moduleViewer {
   module_id: number;
   module_name: string;
-  module_duration ?: string | null;
+  module_duration?: string | null;
   module_description: string;
-  module_objective:string;
+  module_objective: string;
 }
 
 interface topicViewer {
   module_id: number;
-  module_topic_id : number;
-  topic_id : number;
+  module_topic_id: number;
+  topic_id: number;
   topic_name: string;
-  topic_duration ?: string | null;
+  topic_duration?: string | null;
   topic_type: string;
-  module_objective:string;
-  topic_path : string;
-  topiccol:string
+  module_objective: string;
+  topic_path: string;
+  topiccol: string;
 }
 
 interface singleTopicViewer {
-  topic_id : number;
+  topic_id: number;
   topic_name: string;
-  topic_duration ?: string | null;
+  topic_duration?: string | null;
   topic_type: string;
-  topic_path : string;
+  topic_path: string;
 }
-
-
 
 function HideOnScroll(props: Props) {
   const { children, window } = props;
@@ -81,8 +84,6 @@ function HideOnScroll(props: Props) {
     target: window ? window() : undefined,
   });
 
-  
-
   return (
     <Slide appear={false} direction="down" in={!trigger}>
       {children}
@@ -91,370 +92,442 @@ function HideOnScroll(props: Props) {
 }
 
 const CourseContent = () => {
-  const module_id = useSelector((state: RootState) => state.moduleIDFetch)
-  const enrollment_id = useSelector((state: RootState) => state.EnrollmentIDFetch)
+  const module_id = useSelector((state: RootState) => state.moduleIDFetch);
+  const enrollment_id = useSelector(
+    (state: RootState) => state.EnrollmentIDFetch
+  );
   const topic_id = useSelector((state: RootState) => state.TopicIDFetch);
   const course_id = useSelector((state: RootState) => state.courseIDFetch);
   const [moduleView, setModuleView] = useState<moduleViewer[]>([]);
   const [moduleContent, setModuleContent] = useState<moduleViewer[]>([]);
   const [topicView, setTopicView] = useState<topicViewer[]>([]);
-  const [singleTopicContent, setSingleTopicContent] = useState<singleTopicViewer[]>([]);
-  console.log(singleTopicContent)
-  console.log(moduleView)
+  const [singleTopicContent, setSingleTopicContent] = useState<
+    singleTopicViewer[]
+  >([]);
+  console.log(singleTopicContent);
+  console.log(moduleView);
   const [modules, setModules] = useState<number[]>([]);
   const [topics, setTopics] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
   console.log(loading);
 
-
   const dispatch = useDispatch();
-  const navigate = useNavigate()
-  const { fetchtopicID, fetchModuleID} = bindActionCreators(actionCreators, dispatch)
-  
+  const navigate = useNavigate();
+  const { fetchtopicID, fetchModuleID } = bindActionCreators(
+    actionCreators,
+    dispatch
+  );
+
   const [expanded, setExpanded] = React.useState<string | false>(false);
   const [myCourses, setMyCourse] = useState<any>([]);
   console.log(myCourses);
-  const [learner, setLearner] = useState<any>(JSON.parse(localStorage.getItem('learner-details') || 'null'))
+  const [learner, setLearner] = useState<any>(
+    JSON.parse(localStorage.getItem('learner-details') || 'null')
+  );
 
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false);
     };
 
-    console.log(modules);
-    console.log(topics);
+  console.log(modules);
+  console.log(topics);
 
-// console.log(moduleView)
-// console.log(topicView);
-// console.log(singleTopicContent);
+  // console.log(moduleView)
+  // console.log(topicView);
+  // console.log(singleTopicContent);
 
-const [marginLoader, setMarginLoader] = useState("200px");
-const [currTopic, setCurrTopic] = useState<number>(0);
-const [currModule, setCurrModule] = useState<number>(0);
-const [topicPath, setTopicPath] = useState("");
-const [buttonName, setButtonName] = useState("Next");
-const [PreviousButton, setPreviousButton] = useState("Previous");
+  const [marginLoader, setMarginLoader] = useState('200px');
+  const [currTopic, setCurrTopic] = useState<number>(0);
+  const [currModule, setCurrModule] = useState<number>(0);
+  const [topicPath, setTopicPath] = useState('');
+  const [buttonName, setButtonName] = useState('Next');
+  const [PreviousButton, setPreviousButton] = useState('Previous');
 
-console.log(topicPath);
+  console.log(topicPath);
 
-const hideSpinner = () => {
-  setLoading(false);
-  setMarginLoader("0px");
-};
+  const hideSpinner = () => {
+    setLoading(false);
+    setMarginLoader('0px');
+  };
 
-const [indexTopic, setIndexTopic] = useState(0);
-const [indexModule, setIndexModule] = useState(0);
-console.log(indexTopic);
-console.log(indexModule);
-
-useEffect(() => {
-
-  API.get<number[]>('getProgressCourseModule/'+course_id)
-  .then((res)=>{
-    setModules(res.data)
-  }).catch((err) => {
-    console.log(err)
-  })
-
-  API.get<number[]>('getProgressModuleTopic/'+module_id)
-  .then((res)=>{
-    setTopics(res.data)
-    if(topics){
-      API.get<singleTopicViewer[]>('getTopicContent/'+topic_id)
-      .then((response)=>{
-        setSingleTopicContent(response.data)
-        // setTopicPath(res.data[0].topic_path);
-      }).catch((err) => {
-        console.log(err)
-      })
-    }
-  }).catch((err) => {
-    console.log(err)
-  })
-},[topic_id, module_id, indexTopic, indexModule])
+  const [indexTopic, setIndexTopic] = useState(0);
+  const [indexModule, setIndexModule] = useState(0);
+  console.log(indexTopic);
+  console.log(indexModule);
 
   useEffect(() => {
+    API.get<number[]>('getProgressCourseModule/' + course_id)
+      .then((res) => {
+        setModules(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
-    API.post("getEnrolledCourseView", { studentId: learner?.student_id,courseId: course_id,})
-    .then((res) => {
-      setMyCourse(res.data);
+    API.get<number[]>('getProgressModuleTopic/' + module_id)
+      .then((res) => {
+        setTopics(res.data);
+        if (topics) {
+          API.get<singleTopicViewer[]>('getTopicContent/' + topic_id)
+            .then((response) => {
+              setSingleTopicContent(response.data);
+              // setTopicPath(res.data[0].topic_path);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [topic_id, module_id, indexTopic, indexModule]);
+
+  useEffect(() => {
+    API.post('getEnrolledCourseView', {
+      studentId: learner?.student_id,
+      courseId: course_id,
     })
-    .catch((err) => {
-      console.log(err);
-    });
+      .then((res) => {
+        setMyCourse(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
-    API.get("getmoduleforcourse/" + course_id)
-    .then((res) => {
-      setModuleContent(res.data);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+    API.get('getmoduleforcourse/' + course_id)
+      .then((res) => {
+        setModuleContent(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
-    API.get<moduleViewer[]>('getModuleView/'+module_id)
-    .then((res)=>{
-      setModuleView(res.data)
-    }).catch((err) => {
-      console.log(err)
-    })
+    API.get<moduleViewer[]>('getModuleView/' + module_id)
+      .then((res) => {
+        setModuleView(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
-    API.get<topicViewer[]>('gettopicformodule/'+module_id)
-    .then((res)=>{
-      setTopicView(res.data)
-    }).catch((err) => {
-      console.log(err)
-    })
+    API.get<topicViewer[]>('gettopicformodule/' + module_id)
+      .then((res) => {
+        setTopicView(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [topic_id, course_id, module_id, indexModule]);
 
-  }, [topic_id, course_id, module_id, indexModule])
-
-  const isMobile:any = useMediaQuery('(max-width:500px)');
-  const drawerWidth:number = 340;
-  let [color, setColor] = useState("#917EBD");
+  const isMobile: any = useMediaQuery('(max-width:500px)');
+  const drawerWidth: number = 340;
+  let [color, setColor] = useState('#917EBD');
 
   const [showNext, setShowNext] = useState(true);
   const [showPrev, setShowPrev] = useState(true);
   const override = css`
-  display: block;
-  margin: 0 auto;
-  border-color: red;
-`;
+    display: block;
+    margin: 0 auto;
+    border-color: red;
+  `;
 
-  const handlePrevious = () =>{
-    setIndexModule(modules?.indexOf(module_id)); 
-    setIndexTopic(topics?.indexOf(topic_id))
+  const handlePrevious = () => {
+    setIndexModule(modules?.indexOf(module_id));
+    setIndexTopic(topics?.indexOf(topic_id));
 
-    let index = indexTopic
+    let index = indexTopic;
 
-    if(indexTopic > 0 ){
-      index = indexTopic-1
-    }else if (indexTopic == -1){
-      index = indexTopic+1
-    }else{
-      index = 0
+    if (indexTopic > 0) {
+      index = indexTopic - 1;
+    } else if (indexTopic == -1) {
+      index = indexTopic + 1;
+    } else {
+      index = 0;
     }
 
-    if(index < topics.length){
+    if (index < topics.length) {
       // setIndexTopic(indexTopic+1);
       fetchtopicID(topics[index]);
+    } else {
+      let indexM = indexModule;
 
-    }else{
-      let indexM = indexModule
-
-      if(indexModule > 0){
-        indexM = indexModule-1
-        console.log('firstsssssss')
-      }else{
-        indexM = -1
-        console.log('first')
+      if (indexModule > 0) {
+        indexM = indexModule - 1;
+        console.log('firstsssssss');
+      } else {
+        indexM = -1;
+        console.log('first');
       }
 
-      if(indexM > modules.length){
+      if (indexM > modules.length) {
         setIndexTopic(-1);
-        index = -1
+        index = -1;
         setIndexModule(indexM);
         fetchModuleID(modules[indexM]);
 
         fetchtopicID(topics[index]);
-        console.log(topics[indexTopic]) 
-
-      }else{
+        console.log(topics[indexTopic]);
+      } else {
         setShowNext(false);
       }
     }
-  }
+  };
 
   const handleNext = () => {
-
-    
-
-  let index = indexTopic+1  
-  setIndexModule(modules?.indexOf(module_id)); 
-  setIndexTopic(topics?.indexOf(topic_id))
-  console.log(module_id)
-  console.log(topic_id)
-    if(index < topics.length){
+    let index = indexTopic + 1;
+    setIndexModule(modules?.indexOf(module_id));
+    setIndexTopic(topics?.indexOf(topic_id));
+    console.log(module_id);
+    console.log(topic_id);
+    if (index < topics.length) {
       // setIndexTopic(indexTopic+1);
       fetchtopicID(topics[index]);
-      setButtonName("Next")
-      console.log(topics[indexTopic])
+      setButtonName('Next');
+      console.log(topics[indexTopic]);
 
-      API.post('updateTopicStatus', {courseTopic : topics[index], enrollmentId : enrollment_id})
-      .then((res)=>{
-          console.log(res.data)
-      }).catch((err) => {
-        console.log(err)
+      API.post('updateTopicStatus', {
+        courseTopic: topics[index],
+        enrollmentId: enrollment_id,
       })
-      
-      API.post('updateTopicsCompleted', {courseTopic : topics[indexTopic], enrollmentId : enrollment_id})
-      .then((res)=>{
-          console.log(res.data)
-      }).catch((err) => {
-        console.log(err)
-      })
-
-    }else{
-      let indexM = indexModule+1
-      if(indexM < modules.length){
-        API.post('updateTopicsCompleted', {courseTopic : topics[indexTopic], enrollmentId : enrollment_id})
-        .then((res)=>{
-            console.log(res.data)
-        }).catch((err) => {
-          console.log(err)
+        .then((res) => {
+          console.log(res.data);
         })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      API.post('updateTopicsCompleted', {
+        courseTopic: topics[indexTopic],
+        enrollmentId: enrollment_id,
+      })
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      let indexM = indexModule + 1;
+      if (indexM < modules.length) {
+        API.post('updateTopicsCompleted', {
+          courseTopic: topics[indexTopic],
+          enrollmentId: enrollment_id,
+        })
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
         setIndexTopic(0);
         setIndexModule(indexM);
         fetchModuleID(modules[indexM]);
 
-        let index = 0 
+        let index = 0;
         fetchtopicID(topics[index]);
-        console.log(topics[indexTopic])
-  
-        API.post('updateTopicStatus', {courseTopic : topics[index], enrollmentId : enrollment_id})
-        .then((res)=>{
-            console.log(res.data)
-        }).catch((err) => {
-          console.log(err)
-        })
+        console.log(topics[indexTopic]);
 
-        API.post('updateModuleStatus', {courseModule : modules[indexM], enrollmentId : enrollment_id})
-        .then((res)=>{
-            console.log(res.data)
-        }).catch((err) => {
-          console.log(err)
+        API.post('updateTopicStatus', {
+          courseTopic: topics[index],
+          enrollmentId: enrollment_id,
         })
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
 
-        API.post('updateTopicStatus', {courseTopic : topics[0], enrollmentId : enrollment_id})
-        .then((res)=>{
-            console.log(res.data)
-        }).catch((err) => {
-          console.log(err)
+        API.post('updateModuleStatus', {
+          courseModule: modules[indexM],
+          enrollmentId: enrollment_id,
         })
-        
-        API.post('updateModuleCompeletedStatus', {enrollmentId : enrollment_id})
-        .then((res)=>{
-            console.log(res.data)
-        }).catch((err) => {
-          console.log(err)
-        })
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
 
-      }else{
-
-        API.post('updateTopicStatus', {courseTopic : topics[indexTopic], enrollmentId : enrollment_id})
-        .then((res)=>{
-            console.log(res.data)
-        }).catch((err) => {
-          console.log(err)
+        API.post('updateTopicStatus', {
+          courseTopic: topics[0],
+          enrollmentId: enrollment_id,
         })
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
 
-        API.post('updateModuleCompeletedStatus', {enrollmentId : enrollment_id})
-        .then((res)=>{
-            console.log(res.data)
-        }).catch((err) => {
-          console.log(err)
+        API.post('updateModuleCompeletedStatus', {
+          enrollmentId: enrollment_id,
         })
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        API.post('updateTopicStatus', {
+          courseTopic: topics[indexTopic],
+          enrollmentId: enrollment_id,
+        })
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
 
-        API.post('updateTopicsCompleted', {courseTopic : topics[indexTopic], enrollmentId : enrollment_id})
-        .then((res)=>{
-            console.log(res.data)
-        }).catch((err) => {
-          console.log(err)
+        API.post('updateModuleCompeletedStatus', {
+          enrollmentId: enrollment_id,
         })
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+
+        API.post('updateTopicsCompleted', {
+          courseTopic: topics[indexTopic],
+          enrollmentId: enrollment_id,
+        })
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
 
         setShowNext(false);
       }
     }
     // console.log(indexTopic);
     // console.log(indexModule);
-   
-  }
+  };
 
-  const handleHomeClick = () =>{
-    navigate('/')
-  }
+  const handleHomeClick = () => {
+    navigate('/');
+  };
 
-  const handleCoursesClick = () =>{
-    navigate('/courses')
-  }
-
+  const handleCoursesClick = () => {
+    navigate('/courses');
+  };
 
   return (
     <>
-    <Box sx={{ display: 'flex' }} style={{padding: "0px"}}>
-      <CssBaseline />
-      <HideOnScroll >
-      <AppBar sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, marginTop: '30px', 
-        display: { xs:"none", sm:"nome", md: "none", lg: "block" },}} className="title-div">
-        <Toolbar>
-       {moduleView?.map((dataItem : any, index : any) => 
-        <Box sx={{ flexGrow: 1 }}>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-       <Typography sx={{mt: '5px'}}>Course title: {myCourses[0]?.course_name}</Typography>
-     </Grid>
-     <Grid item xs={4}>
-       <Typography variant='h6' sx={{ fontWeight: '900' }}>{dataItem.module_name}</Typography>
-     </Grid>
-     <Grid item xs={8} alignContent="end">
-       {/* <Typography variant='h6' align='right' sx={{ fontWeight: '900' }}>{dataItem?.module}</Typography> */}
-     </Grid>
-       </Grid> 
-    </Box>
-       )}
-        </Toolbar>
-        </AppBar>
+      <Box sx={{ display: 'flex' }} style={{ padding: '0px' }}>
+        <CssBaseline />
+        <HideOnScroll>
+          <AppBar
+            sx={{
+              zIndex: (theme) => theme.zIndex.drawer + 1,
+              marginTop: '30px',
+              display: { xs: 'none', sm: 'nome', md: 'none', lg: 'block' },
+            }}
+            className="title-div"
+          >
+            <Toolbar>
+              {moduleView?.map((dataItem: any, index: any) => (
+                <Box sx={{ flexGrow: 1 }}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <Typography sx={{ mt: '5px' }}>
+                        Course title: {myCourses[0]?.course_name}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <Typography variant="h6" sx={{ fontWeight: '900' }}>
+                        {dataItem.module_name}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={8} alignContent="end">
+                      {/* <Typography variant='h6' align='right' sx={{ fontWeight: '900' }}>{dataItem?.module}</Typography> */}
+                    </Grid>
+                  </Grid>
+                </Box>
+              ))}
+            </Toolbar>
+          </AppBar>
         </HideOnScroll>
         <Drawer
-        variant="permanent"
-        PaperProps={{
+          variant="permanent"
+          PaperProps={{
             sx: {
-              backgroundColor: "#F9EDF5",
-            }
+              backgroundColor: '#F9EDF5',
+            },
           }}
-        sx={{
-            display: { xs:"none", sm:"nome",md: "none", lg: "block" },
-          width: drawerWidth,
-          backgroundColor: "pink",
-          flexShrink: 0,
-          [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
-        }}
-      >
-        <Box ml={"20px"} mt="10px" sx={{background: "#917ebd", width: "40px", padding:"5px", borderRadius: "3px"}}><KeyboardBackspaceIcon sx={{color: 'white'}} fontSize='medium' onClick={() => navigate(-1)}/></Box>
-        <Box sx={{mt: '90px'}}>
-          <Box sx={{textAlign:"center"}}>
-            <Button  
-            onClick={handleHomeClick}
-            style={{
-                width:"100px", 
-                marginTop: "20px", 
-                background: 'linear-gradient(to right bottom, #A18CD1, #FBC2EB)', 
-                borderColor : '#917EBD', 
-                color: 'white', 
-                marginRight: "40px"
-                }} >
-                    Home
+          sx={{
+            display: { xs: 'none', sm: 'nome', md: 'none', lg: 'block' },
+            width: drawerWidth,
+            backgroundColor: 'pink',
+            flexShrink: 0,
+            [`& .MuiDrawer-paper`]: {
+              width: drawerWidth,
+              boxSizing: 'border-box',
+            },
+          }}
+        >
+          <Box
+            ml={'20px'}
+            mt="10px"
+            sx={{
+              background: '#917ebd',
+              width: '40px',
+              padding: '5px',
+              borderRadius: '3px',
+            }}
+          >
+            <KeyboardBackspaceIcon
+              sx={{ color: 'white' }}
+              fontSize="medium"
+              onClick={() => navigate(-1)}
+            />
+          </Box>
+          <Box sx={{ mt: '90px' }}>
+            <Box sx={{ textAlign: 'center' }}>
+              <Button
+                onClick={handleHomeClick}
+                style={{
+                  width: '100px',
+                  marginTop: '20px',
+                  background:
+                    'linear-gradient(to right bottom, #A18CD1, #FBC2EB)',
+                  borderColor: '#917EBD',
+                  color: 'white',
+                  marginRight: '40px',
+                }}
+              >
+                Home
               </Button>
-              <Button  
-              onClick={handleCoursesClick}
-            style={{
-                width:"100px", 
-                marginTop: "20px", 
-                background: 'linear-gradient(to right bottom, #A18CD1, #FBC2EB)', 
-                borderColor : '#917EBD', 
-                color: 'white', 
-
-                }} >
-                    Courses
+              <Button
+                onClick={handleCoursesClick}
+                style={{
+                  width: '100px',
+                  marginTop: '20px',
+                  background:
+                    'linear-gradient(to right bottom, #A18CD1, #FBC2EB)',
+                  borderColor: '#917EBD',
+                  color: 'white',
+                }}
+              >
+                Courses
               </Button>
             </Box>
-        </Box>
-        <Toolbar />
-        <Box sx={{ overflow: 'auto', mt: '-60px'}}>
-        {myCourses[0]?.enrollment_type === "paid" ? (
-        <PaidView moduleViewPaid={moduleContent} topicArray = {topics}/>
+          </Box>
+          <Toolbar />
+          <Box sx={{ overflow: 'auto', mt: '-60px' }}>
+            {/* {myCourses[0]?.enrollment_type === "paid" ? (
+        <PaidView moduleViewPaid={moduleContent} topicArray = {topics} enrollmentID ={1} begin = {true} setBeginNow = {() => {}}/>
       ) : (
         <TrialView moduleViewTrial={moduleContent} enrollmentID = {myCourses[0]?.enrollment_id} />
-      )}
-          {/* {moduleContent?.map((dataItem, index) => 
+      )} */}
+            {/* {moduleContent?.map((dataItem, index) => 
         <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -490,73 +563,103 @@ useEffect(() => {
                 )
                 })
             } */}
-        </Box>
-        
-      </Drawer>
+          </Box>
+        </Drawer>
         <Box component="main" sx={{ flexGrow: 1 }}>
-            <GradBlobCourseContent/>
-            <MobileHeader />
-            <Box  margin="auto">
-                <Box sx={{}}>
-                <Box textAlign={"center"} marginTop={marginLoader}><SyncLoader color={color} loading={loading} css={override} size={15} /></Box>
-            {singleTopicContent?.map((dataItem:any, index: number) => 
-            <>
-                <Typography sx={{mt: '60px', ml:5}}>{dataItem?.topic_name} :</Typography>
-                <br/>
-                <iframe src={dataItem?.topic_path}
-                  loading="lazy"
-                  onLoad={hideSpinner}
-                  title="W3Schools Free Online Web Tutorials"     
-                  style={{justifyContent:'center', width:"70vw", height: "90vh"}}
-                  className="content-resize">
-                </iframe> 
-                </>
-            )}
-            
-            {!isMobile ?(<>
-              <Box paddingLeft={"100px"} paddingRight={"100px"}>
-                <Button 
-                    onClick={handlePrevious}
-                    className='sm:mt-12 md:mt-12 lg:mt-5 xl:mt-0 rounded-md md:rounded-md shadow-xl font-bold py-3 px-5 md:w-auto md:px-10 lg:px-10 h-9 text-white bg-color-400 '>
-                        {PreviousButton}
-                       
-                </Button>
-                {showNext && <Button 
-                    onClick={handleNext}
-                    className='sm:mt-12 md:mt-12 lg:mt-5 xl:mt-0 rounded-md md:rounded-md shadow-xl font-bold py-3 px-10 md:w-auto md:px-14 lg:px-14 h-9 text-white bg-color-400' style={{float:"right"}}>
-                    {buttonName}
-                </Button>}
-        </Box></>) :(
+          <GradBlobCourseContent />
+          <MobileHeader />
+          <Box margin="auto">
+            <Box sx={{}}>
+              <Box textAlign={'center'} marginTop={marginLoader}>
+                <SyncLoader
+                  color={color}
+                  loading={loading}
+                  css={override}
+                  size={15}
+                />
+              </Box>
+              {singleTopicContent?.map((dataItem: any, index: number) => (
                 <>
-                <Box sx={{mt: '70px'}} className='module-overview' 
-                component={Stack} 
-                direction="column" 
-                justifyContent="center">
-                <Typography variant='h6'>Module Overview</Typography>
-                </Box>
-                <Typography paragraph sx={{pl: '10px', pr: '10px', mt: '10px', ml: "30px"}}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. l aenean urna,
-                </Typography>
-                <Box width={"80%"} margin="auto"><Divider /></Box>
-                <Box sx={{ flexGrow: 1, mt:'10px', ml:'20px',mr:'20px' }}>
+                  <Typography sx={{ mt: '60px', ml: 5 }}>
+                    {dataItem?.topic_name} :
+                  </Typography>
+                  <br />
+                  <iframe
+                    src={dataItem?.topic_path}
+                    loading="lazy"
+                    onLoad={hideSpinner}
+                    onEnded={() => console.log('hello')}
+                    title="W3Schools Free Online Web Tutorials"
+                    style={{
+                      justifyContent: 'center',
+                      width: '70vw',
+                      height: '90vh',
+                    }}
+                    className="content-resize"
+                  ></iframe>
+                </>
+              ))}
+
+              {!isMobile ? (
+                <>
+                  <Box paddingLeft={'100px'} paddingRight={'100px'}>
+                    <Button
+                      onClick={handlePrevious}
+                      className="sm:mt-12 md:mt-12 lg:mt-5 xl:mt-0 rounded-md md:rounded-md shadow-xl font-bold py-3 px-5 md:w-auto md:px-10 lg:px-10 h-9 text-white bg-color-400 "
+                    >
+                      {PreviousButton}
+                    </Button>
+                    {showNext && (
+                      <Button
+                        onClick={handleNext}
+                        className="sm:mt-12 md:mt-12 lg:mt-5 xl:mt-0 rounded-md md:rounded-md shadow-xl font-bold py-3 px-10 md:w-auto md:px-14 lg:px-14 h-9 text-white bg-color-400"
+                        style={{ float: 'right' }}
+                      >
+                        {buttonName}
+                      </Button>
+                    )}
+                  </Box>
+                </>
+              ) : (
+                <>
+                  <Box
+                    sx={{ mt: '70px' }}
+                    className="module-overview"
+                    component={Stack}
+                    direction="column"
+                    justifyContent="center"
+                  >
+                    <Typography variant="h6">Module Overview</Typography>
+                  </Box>
+                  <Typography
+                    paragraph
+                    sx={{ pl: '10px', pr: '10px', mt: '10px', ml: '30px' }}
+                  >
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. l
+                    aenean urna,
+                  </Typography>
+                  <Box width={'80%'} margin="auto">
+                    <Divider />
+                  </Box>
+                  <Box sx={{ flexGrow: 1, mt: '10px', ml: '20px', mr: '20px' }}>
                     <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                        <Typography variant='h6'>Activities</Typography>
-                        </Grid>
-                        <Grid item xs={6} textAlign="right">
-                            <Typography variant='h6'>1/5</Typography>
-                        </Grid>
+                      <Grid item xs={6}>
+                        <Typography variant="h6">Activities</Typography>
+                      </Grid>
+                      <Grid item xs={6} textAlign="right">
+                        <Typography variant="h6">1/5</Typography>
+                      </Grid>
                     </Grid>
-                </Box>
-     
-            </> ) }
-        </Box>
-                </Box>
+                  </Box>
+                </>
+              )}
             </Box>
-    </Box>
-    <MobileFooter />
+          </Box>
+        </Box>
+      </Box>
+      <MobileFooter />
     </>
   );
-}
+};
 
 export default CourseContent;

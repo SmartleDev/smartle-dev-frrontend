@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Box, Grid, Typography, Button, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import { Box, Grid, Typography, Button, Accordion, AccordionSummary, AccordionDetails, useMediaQuery } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import Modal from '@mui/material/Modal';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -29,13 +29,14 @@ import './loggedUsers.css';
 
 export interface PaidModuleView {
 	moduleViewTrial : {}[];
-	enrollmentID : number;
+	enrollmentIDTrial : number;
+	courseViewTrial: any;
   }
 
 
 function TrialView(props: PaidModuleView) {
 
-	const { moduleViewTrial, enrollmentID } = props;
+	const { moduleViewTrial, enrollmentIDTrial, courseViewTrial } = props;
 
 	const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 		height: 7,
@@ -50,7 +51,7 @@ function TrialView(props: PaidModuleView) {
 	  }));
 
 	interface topicViewer {
-        module_id: number;
+        module_id: any;
         module_topic_id : number;
         topic_id : number;
         topic_name: string;
@@ -60,11 +61,12 @@ function TrialView(props: PaidModuleView) {
         topic_path : string;
         topiccol:string
     }
-
+	const { id } = useParams<{ id: any }>();
 	const dispatch = useDispatch();
 	const navigate = useNavigate()
 	const { fetchtopicID, fetchModuleID, fetchEnrollmentID} = bindActionCreators(actionCreators, dispatch)
 	const enrollment_id = useSelector((state: RootState) => state.EnrollmentIDFetch);
+	const course_id = id
 	//console.log(enrollment_id)
 	const [topicId, setTopicId] = useState('');
 	const [topicView, setTopiceView] = useState<topicViewer[]>([]);
@@ -73,9 +75,9 @@ function TrialView(props: PaidModuleView) {
 	const handleClose = () => setOpen(false);
 	//console.log(topicId)
 
-	const [buttonName, setButtonName] = useState("Next");
+	const [buttonName, setButtonName] = useState("Next Module");
 	const [PreviousButton, setPreviousButton] = useState("Previous");
-	const [showNext, setShowNext] = useState(true);
+	const [showNext, setShowNext] = useState(false);
 	const [showPrev, setShowPrev] = useState(true);
 	const [path, setPath] = useState("");
 	  const [showContent, setShowContent] = useState(false);
@@ -84,9 +86,21 @@ function TrialView(props: PaidModuleView) {
 	  const [modules, setModules] = useState<number[]>([]);
 	  const [topics, setTopics] = useState<number[]>([]);
 	  const topic_id = useSelector((state: RootState) => state.TopicIDFetch)
-	const module_id = useSelector((state: RootState) => state.moduleIDFetch);
+	const module_id: any = useSelector((state: RootState) => state.moduleIDFetch);
+
+	const [getDoneModulesIdTrial, setDoneModulesIdTrial] = useState([]);
+	const [moduleViewTry, setModuleViewTrial] = useState([]);
+	const [modulesRemaningTrial, setModulesRemaningTrial] = useState<any[]>();
+	const [modulesDoneTrial, setModuelsDoneTrial] = useState<any[]>();
+	const [allModuleNumbersTrial, setAllModuelsNumbersTrial] = useState<any>(0);
+	const [allModuleTopicId, setAllModuleTopicId] = useState<any>(0);
 
 	const [expanded, setExpanded] = React.useState<string | false>(false);
+	const [beginNow, setBeginNow] = useState<boolean>(false);
+	const isMobile = useMediaQuery('(max-width:900px)');
+	let lastCompletedModule = getDoneModulesIdTrial[getDoneModulesIdTrial.length -1]
+	console.log(getDoneModulesIdTrial)
+
 
 	const handleChange =
 	  (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
@@ -118,152 +132,147 @@ function TrialView(props: PaidModuleView) {
 		main:  '#917EBD'}
 	  } });
 
-	  const handlePrevious = () =>{
-		setIndexModule(modules?.indexOf(module_id)); 
-		setIndexTopic(topics?.indexOf(topic_id))
-	
-		let index = indexTopic
-	
-		if(indexTopic > 0 ){
-		  index = indexTopic-1
-		}else if (indexTopic == -1){
-		  index = indexTopic+1
-		}else{
-		  index = 0
-		}
-	
-		if(index < topics.length){
-		  // setIndexTopic(indexTopic+1);
-		  fetchtopicID(topics[index]);
-	
-		}else{
-		  let indexM = indexModule
-	
-		  if(indexModule > 0){
-			indexM = indexModule-1
-			//console.log('firstsssssss')
-		  }else{
-			indexM = -1
-			//console.log('first')
-		  }
-	
-		  if(indexM > modules.length){
-			setIndexTopic(-1);
-			index = -1
-			setIndexModule(indexM);
-			fetchModuleID(modules[indexM]);
-	
-			fetchtopicID(topics[index]);
-			//console.log(topics[indexTopic]) 
-	
-		  }else{
-			setShowNext(false);
-		  }
-		}
-	  }
 
+
+	useEffect(() => {
+		API.post('courseModulesRemaining', {courseId: course_id, enrollmentId: enrollmentIDTrial})
+		.then((res)=>{
+		setModulesRemaningTrial(res.data)
+		}).catch((err) => {
+		  console.log(err)
+		})
+		API.post('getDoneModulesID', {enrollmentId: enrollmentIDTrial})
+		.then((res)=>{
+		setDoneModulesIdTrial(res.data)
+		}).catch((err) => {
+		  console.log(err)
+		})
+		API.post('getModuleTopicIdList', {moduleId: module_id})
+		.then((res)=>{
+		setAllModuleTopicId(res.data)
+		}).catch((err) => {
+		  console.log(err)
+		})
+		
+		API.post('courseModulesDone', {courseId : course_id, enrollmentId: enrollmentIDTrial})
+		.then((res)=>{
+			setModuelsDoneTrial(res.data)
+		}).catch((err) => {
+		  console.log(err)
+		})
+
+		API.get(`getProgressCourseModule/${course_id}`)
+		.then((res)=>{
+			setAllModuelsNumbersTrial(res.data.slice(0,2))
+		}).catch((err) => {
+		  console.log(err)
+		})
+
+		API.get("getmoduleforcourse/" + course_id)
+		.then((res) => {
+		  setModuleViewTrial(res.data);
+		})
+		.catch((err) => {
+		  console.log(err);
+		});
+
+		API.get<topicViewer[]>('gettopicformodule/'+topicId)
+        .then((res)=>{
+         setTopiceView(res.data)
+        }).catch((err) => {
+          console.log(err)
+        })
+	}, [])
+	
+	useEffect(() => {
+		if(beginNow === true){
+			API.get('getTrackedCourse/' + enrollment_id).then((res) => {
+				console.log(enrollment_id);
+				console.log(res.data[0]);
+				fetchtopicID(res.data[0]?.course_topic);
+				console.log(topic_id, 'Brgin TOPC_ID -----------');
+				fetchModuleID(
+				  res.data[0]?.course_modules_completed[
+					res.data[0]?.course_modules_completed.length - 1
+				  ]
+				);
+				//topicClicked("https://smartle-video-content.s3.amazonaws.com/Summary+Topics/Communication+Skills/Summary4.mp4")
+			});
+			let isExpanded = beginNow
+			//navigate('/course-content')
+		  setExpanded(isExpanded ? module_id : false);
+		  setTopicId(module_id)
+		}
+	}, [beginNow])
+	
+const handelVideoEnded = () => {
+	const finalModule = allModuleNumbersTrial[allModuleNumbersTrial.length - 1]
+	let currentModule: any = allModuleNumbersTrial?.indexOf(module_id)
+	console.log(finalModule)
+	// console.log(finalModule)
+	console.log(module_id, "module-id")
+	console.log(parseInt(finalModule), "final-id")
+	
+	if(module_id == finalModule){
+		API.post('updateModuleCompeletedArray', {moduleIDCompleted : allModuleNumbersTrial[currentModule + 1], enrollmentId: enrollmentIDTrial})
+        .then((res)=>{
+         console.log(res.data)
+		 setShowNext(false)
+        }).catch((err) => {
+          console.log(err)
+        })
+		setOpen(true)
+		setButtonName("Buy Course")
+	}
+
+	if(allModuleTopicId[allModuleTopicId.length - 1] === topic_id){
+		setShowNext(true)
+	}
+	console.log(allModuleTopicId, "all topics")
+}
 	  const handleNext = () => {
+		if(buttonName === "Buy Course"){
+			fetchEnrollmentID(enrollmentIDTrial)
+			localStorage.setItem('enrollment_id', enrollmentIDTrial.toString())
+			//localStorage.setItem('courseId', course_id)
+			navigate(`/bookingcourse/${course_id}?enrollmentId=${enrollmentIDTrial}`)
+		}
+		//console.log(path);
+		//let index = allModules?.indexOf(path);
+		//console.log(allModules[index+1]);
+		// if(index < allModules.length-1){
+		// 	// if(topicView[topicView.length-1].topic_path === path){
+			let currentModule: any = allModuleNumbersTrial?.indexOf(module_id)
+			console.log(module_id, "CURRENT-ID")
+			console.log(currentModule, "CURRENT-ID-INDEX")
 	
-		
-	
-		let index = indexTopic+1  
-		setIndexModule(modules?.indexOf(module_id)); 
-		setIndexTopic(topics?.indexOf(topic_id))
-		//console.log(module_id)
-		//console.log(topic_id)
-		  if(index < topics.length){
-			// setIndexTopic(indexTopic+1);
-			fetchtopicID(topics[index]);
-			setButtonName("Next")
-			//console.log(topics[indexTopic])
-	  
-			API.post('updateTopicStatus', {courseTopic : topics[index], enrollmentId : enrollment_id})
-			.then((res)=>{
-				//console.log(res.data)
-			}).catch((err) => {
-			  console.log(err)
-			})
-			
-			API.post('updateTopicsCompleted', {courseTopic : topics[indexTopic], enrollmentId : enrollment_id})
-			.then((res)=>{
-				//console.log(res.data)
-			}).catch((err) => {
-			  console.log(err)
-			})
-	  
-		  }else{
-			let indexM = indexModule+1
-			if(indexM < modules.length){
-			  API.post('updateTopicsCompleted', {courseTopic : topics[indexTopic], enrollmentId : enrollment_id})
-			  .then((res)=>{
-				  //console.log(res.data)
-			  }).catch((err) => {
-				console.log(err)
-			  })
-			  setIndexTopic(0);
-			  setIndexModule(indexM);
-			  fetchModuleID(modules[indexM]);
-	  
-			  let index = 0 
-			  fetchtopicID(topics[index]);
-			  //console.log(topics[indexTopic])
-		
-			  API.post('updateTopicStatus', {courseTopic : topics[index], enrollmentId : enrollment_id})
-			  .then((res)=>{
-				  //console.log(res.data)
-			  }).catch((err) => {
-				console.log(err)
-			  })
-	  
-			  API.post('updateModuleStatus', {courseModule : modules[indexM], enrollmentId : enrollment_id})
-			  .then((res)=>{
-				  //console.log(res.data)
-			  }).catch((err) => {
-				console.log(err)
-			  })
-	  
-			  API.post('updateTopicStatus', {courseTopic : topics[0], enrollmentId : enrollment_id})
-			  .then((res)=>{
-				  //console.log(res.data)
-			  }).catch((err) => {
-				console.log(err)
-			  })
-			  
-			  API.post('updateModuleCompeletedStatus', {enrollmentId : enrollment_id})
-			  .then((res)=>{
-				  //console.log(res.data)
-			  }).catch((err) => {
-				console.log(err)
-			  })
-	  
-			}else{
-	  
-			  API.post('updateTopicStatus', {courseTopic : topics[indexTopic], enrollmentId : enrollment_id})
-			  .then((res)=>{
-				  //console.log(res.data)
-			  }).catch((err) => {
-				console.log(err)
-			  })
-	  
-			  API.post('updateModuleCompeletedStatus', {enrollmentId : enrollment_id})
-			  .then((res)=>{
-				  console.log(res.data)
-			  }).catch((err) => {
-				console.log(err)
-			  })
-	  
-			  API.post('updateTopicsCompleted', {courseTopic : topics[indexTopic], enrollmentId : enrollment_id})
-			  .then((res)=>{
-				  //console.log(res.data)
-			  }).catch((err) => {
-				console.log(err)
-			  })
-	  
-			  setShowNext(false);
-			}
-		  }
-		  // console.log(indexTopic);
-		  // console.log(indexModule);
+		fetchModuleID(allModuleNumbersTrial[currentModule + 1])
+		setTopicId(allModuleNumbersTrial[currentModule + 1])
+		setExpanded(allModuleNumbersTrial[currentModule + 1])
+		// 	// }
+		// 	setShowContent(true);
+		// 	setPath(allModules[index+1]);
+		// }
+
+		// if(index === allModules.length-1){
+		// 	console.log("working")
+		// 	setShowNext(false);
+		// }
+
+		API.post('updateModuleCompeletedArray', {moduleIDCompleted : allModuleNumbersTrial[currentModule + 1], enrollmentId: enrollmentIDTrial})
+        .then((res)=>{
+         console.log(res.data)
+		 setShowNext(false)
+        }).catch((err) => {
+          console.log(err)
+        })
+		API.post('updateCourseProgress', {enrollmentId: enrollmentIDTrial})
+        .then((res)=>{
+         console.log(res.data)
+		 setShowNext(false)
+        }).catch((err) => {
+          console.log(err)
+        })
 		 
 		}
   
@@ -276,9 +285,75 @@ function TrialView(props: PaidModuleView) {
 			setPath(pathUrl);
 			setShowContent(!showContent);
 		  }
+
+		  const handelBeginNow = () => {
+			setBeginNow(true);
+			// console.log(module_id)
+			console.log('start');
+			// .catch((err) => {
+			//   console.log(err);
+			// });
+		  };
 	  
 
   return (
+	<>
+		{!isMobile && (
+                    <Box sx = {{marginTop: '-80px'}}>
+                      <Box
+                        sx={{
+                          marginTop: '-100px',
+                          textAlign: 'center',
+                          color: '#917EBD',
+                        }}
+                      >
+                        {courseViewTrial?.course_progress === 0 ? (
+                          <Typography className="text-sm">
+                            Begin your course
+                          </Typography>
+                        ) : courseViewTrial?.course_progress === 100 ? (
+                          <Typography>
+                            Course is Completed, You can still rewatch the
+                            Content
+                          </Typography>
+                        ) : (
+                          <Typography>
+                            Continue you course from where you left off
+                          </Typography>
+                        )}
+                      </Box>
+                      <ThemeProvider theme={redTheme}>
+                        <Box sx={{ textAlign: 'center' }}>
+                          {courseViewTrial?.course_progress === 0 ? (
+                            <Button
+                              variant="contained"
+                              sx={{ marginTop: '10px', borderRadius: '15px' }}
+                              onClick={handelBeginNow}
+                            >
+                              Begin now
+                            </Button>
+                          ) : courseViewTrial?.course_progress === 100 ? (
+                            <Button
+                              variant="contained"
+                              sx={{ marginTop: '10px' }}
+                              onClick={handelBeginNow}
+                            >
+                              Rewatch
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="contained"
+                              sx={{ mt: '10px' }}
+                              onClick={handelBeginNow}
+                            >
+                              Continue
+                            </Button>
+                          )}
+                        </Box>
+                      </ThemeProvider>
+                    </Box>
+                  )}
+
 	  <Box style={{paddingBottom:'50px'}}>
 	<Box width={"90%"} margin="auto" borderTop={'1px dashed #917EBD'} sx={{marginTop:'20px'}}>
 	<Typography variant='h5' fontWeight={600} marginTop="20px" className='dark:text-white'>Modules</Typography>
@@ -295,8 +370,10 @@ function TrialView(props: PaidModuleView) {
 				<ThemeProvider theme={redTheme}>
                       <Button variant='contained' style={{marginTop:"20px"}} onClick = {
 						  () => {
-						fetchEnrollmentID(enrollmentID)
-						 navigate('/bookingcourse')
+						fetchEnrollmentID(enrollmentIDTrial)
+						//localStorage.setItem('courseId', course_id)
+						localStorage.setItem('enrollment_id', enrollmentIDTrial.toString())
+						navigate(`/bookingcourse/${course_id}?enrollmentId=${enrollmentIDTrial}`)
 						  }
 						  }>
                         <Typography fontWeight={"600"} fontSize="14px" px={"30px"} py={"3px"}>Book Course</Typography>
@@ -311,6 +388,7 @@ function TrialView(props: PaidModuleView) {
 
 					<AccordionSummary
 					 onClick = {() => {
+						setBeginNow(false);
 						 setTopicId(dataItem.module_id)
 						 setShowContent(false)
 						}}
@@ -329,7 +407,7 @@ function TrialView(props: PaidModuleView) {
 									
 								</Grid>
 								<Grid item xs={3}>
-								<Typography style={{float:'right', position:'relative', left:'40px'}} className='text-xs md:text-lg'>Week {topicId+1}/{moduleViewTrial.length}</Typography>
+								<Typography style={{float:'right', position:'relative', left:'30px'}} className='text-xs md:text-lg'>Week {topicId+1}/{moduleViewTrial.length}  {dataItem?.module_id !== lastCompletedModule &&<CheckCircleIcon style = {{color : '#92E86F', fontSize: '25px'}} />}</Typography>
 								</Grid>
 							</Grid>
 							
@@ -374,17 +452,15 @@ function TrialView(props: PaidModuleView) {
 									</Grid>
 								</Grid>
 								{showContent && path === topicDataItem.topic_path && <Box style={{marginTop:'20px', borderRadius:'20px'}}>
-						<iframe id="frame" allowFullScreen allow="fullscreen" title={path} style={{borderRadius:'15px'}} width={"100%"} height="500px" src={path} />
+								{path.charAt(path.length-1) === "4" ? 
+								<video id="frame" className='text-center' width="100%" controls  onEnded={handelVideoEnded}><source id="frame" className='text-center' src={path} type="video/mp4" />Your browser does not support the video tag.	</video>
+								// <Vimeo video={path} autoplay onEnd={() => console.log("asdasdasd")} />
+								:
+						 <iframe id="frame" className='text-center' onEnded={() =>  console.log("Ended")} allowFullScreen allow="fullscreen" title={path} style={{borderRadius:'15px'}} width="100%" height="800vw" src={path} />
+					}
 						
-						<Box paddingLeft={"100px"} paddingRight={"100px"} mt="20px">
-							<Button 
-								onClick={handlePrevious}
-								className='sm:mt-12 md:mt-12 lg:mt-5 xl:mt-0 rounded-md md:rounded-md shadow-xl font-bold py-3 px-5 md:w-auto md:px-10 lg:px-10 h-9 text-white bg-color-400 '>
-									{PreviousButton}
-								
-							</Button>
-							<span style={{justifyContent:'center', marginLeft:"300px"}}><button onClick={fullscreen} style={{background:'#917EBD', color:'white', padding:'0px 10px', textAlign:'center'}}><FullscreenExitIcon fontSize='large'/></button></span>
-								{showNext && <Button 
+						<Box className='md:pl-30 md:pr-50 mt-10'>
+						{showNext && <Button 
 									onClick={handleNext}
 									className='sm:mt-12 md:mt-12 lg:mt-5 xl:mt-0 rounded-md md:rounded-md shadow-xl font-bold py-3 px-10 md:w-auto md:px-14 lg:px-14 h-9 text-white bg-color-400' style={{float:"right"}}>
 									{buttonName}
@@ -415,7 +491,7 @@ function TrialView(props: PaidModuleView) {
 			// console.log(moduleViewTrial.slice(2));
 			if (!dataItem.module_id) return(<React.Fragment key={topicId}></React.Fragment>);
 			return (
-				<Accordion key={topicId} >
+<Accordion key={topicId} expanded={expanded === dataItem.module_id} onChange={handleChange(dataItem.module_id)} >
 					<AccordionSummary
 					onClick = {() => setTopicId(dataItem.module_id)}
 					style={{borderRadius: '20px', boxShadow: '16px 16px 25px rgba(0, 0, 0, 0.08)',width:'100%'}}
@@ -485,6 +561,7 @@ function TrialView(props: PaidModuleView) {
 	</Box>
 </Box>
 </Box>
+</>
   )
 }
 

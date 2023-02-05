@@ -4,7 +4,7 @@ import {Grid, Box, Typography, CardContent, CardActions, Button, Stack} from '@m
 import { actionCreators } from '../redux';
 import { RootState } from '../redux/reducers';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams  } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import moment from "moment";
 import API from "../redux/api/api";
@@ -71,14 +71,17 @@ const BookingCourse = () => {
 	console.log(previousCost)
 	console.log(discountedPrice)
 	console.log(pay);
+	const [searchParams] = useSearchParams();
+	const { id } = useParams<{ id: any }>();
 
 	const [instructors, setInstructors] = useState();
 	const [instructor, setInstructor] = useState<any>([]);
 	const [sessionID, setSessionID] = useState<any>(null);
 	const [selectedDate, setSelectedDate] = useState('Not Selected');
 	const [selectedTime, setSelectedTime] = useState('Not Selected');
-	const course_id = useSelector((state: RootState) => state.courseIDFetch)
-	const enrollment_id = useSelector((state: RootState) => state.EnrollmentIDFetch)
+	const course_id: any = id
+	const enrollment_id: any =  searchParams.get('enrollmentId');
+	console.log(enrollment_id, "-----------------------")
 	const [sessionDetails, setSessionDetails] = useState<sessionViewer[]>();
 	const [instructorCourseView, setInstructorCourseView] = useState<courseInstructorViewer[]>([]);
 	const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getItem('learner-details') || 'null'))
@@ -109,6 +112,10 @@ console.log(couponData)
 	}
 		
 	useEffect(() => {
+
+		if(enrollment_id == undefined){
+		localStorage.removeItem('enrollment_id');
+		}
 		
 		API.post('getsessionview', {courseId : course_id})
 		.then((res)=>{
@@ -149,8 +156,8 @@ console.log(couponData)
 		API.post('create-checkout-session', {course_name: instructorCourseView[0]?.course_name, course_amount: pay, course_img: instructorCourseView[0]?.course_image, course_description : instructorCourseView[0]?.course_description, course_id, student_id: leanerUser?.student_id, parent_id: token?.username, voucher_name: couponCode})
 			.then(res => {
 			  console.log(res.data)
-			  if(enrollment_id !== 0){
-				localStorage.setItem('enrollmentId', enrollment_id.toString())
+			  if(parseInt(enrollment_id) !== 0){
+				localStorage.setItem('enrollmentId', enrollment_id)
 			  }
 			  if(res.data.url){
 				localStorage.setItem('courseId', course_id)
@@ -167,7 +174,7 @@ console.log(couponData)
 		event.preventDefault();
 		console.log(couponCode)
 
-		API.post('checkvoucher', {code: couponCode, course_id: course_id.toString(), parent_id: leanerUser.parent_id} )
+		API.post('checkvoucher', {code: couponCode, course_id: course_id, parent_id: leanerUser.parent_id} )
 		.then(res => {
 			if(Array.isArray(res.data)){
 				if(discount !== null){

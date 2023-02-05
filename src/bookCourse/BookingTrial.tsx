@@ -150,7 +150,7 @@ const BookingTrial = () => {
 			}
 			
 
-			navigate('/loggedcourseview')
+			navigate('/')
 			window.addEventListener("popstate", () => {
 				navigate(1);
 			});
@@ -180,7 +180,7 @@ const BookingTrial = () => {
 						});
 					}	
 
-					navigate('/loggedcourseview')
+					navigate('/')
 					window.addEventListener("popstate", () => {
 						navigate(1);
 					});
@@ -195,7 +195,8 @@ const BookingTrial = () => {
 				API.post('enrollLearner', {courseId : course_id, studentId : leanerUser?.student_id, studentFeeStatus : true, sessionId : sessionID, enrollmentType : 'paid'})
 				.then((res) => {
 					console.log(res.data)
-					
+										
+
 					API.post('enrollCourseEmailService', {emailTo: details?.email,studentName: leanerUser?.student_name , courseId: course_id} )
 					.then(res => {
 					console.log(res.data)
@@ -231,7 +232,7 @@ const BookingTrial = () => {
 						});
 					}	
 
-					navigate('/loggedcourseview')
+					navigate('/')
 					window.addEventListener("popstate", () => {
 						navigate(1);
 					});
@@ -261,6 +262,13 @@ const BookingTrial = () => {
           }).catch(err => {
             console.log(err)
           })
+		  API.post("enrolledUserProgressDefault", {enrollmentId : res.data?.enrolmentId, courseId : course_id})
+		  .then((res) => {
+			  console.log(res.data)
+		  })
+		  .catch((err) => {
+			console.log(err);
+		  });
   
           API.post("updateSessionAvaliablity", {sessionId : sessionID})
           .then((res) => {
@@ -274,12 +282,12 @@ const BookingTrial = () => {
           setMsg(confrim.message);
           setOpen(true);
           setConfrim(res.data)
-          navigate('/loggedcourseview/');
+          navigate('/');
           window.addEventListener("popstate", () => {
             navigate(1);
           });
           if(open === true){
-            navigate('/loggedcourseview/');
+            navigate('/');
             window.addEventListener("popstate", () => {
                           navigate(1);
                       });

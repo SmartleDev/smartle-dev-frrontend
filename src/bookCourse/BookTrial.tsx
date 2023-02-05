@@ -98,7 +98,16 @@ const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getIt
   const handleProperConfirmTrial = () => {
       API.post('enrollLearner', {courseId : course_id, studentId : leanerUser?.student_id, studentFeeStatus : null, sessionId : sessionId, enrollmentType : 'trial'})
       .then((res)=>{
-
+        API.post('enrolledUserProgressDefault', {
+          enrollmentId: res.data.enrolmentId,
+          courseId: course_id,
+        })
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
         API.post('enrollTrialCourseEmailService', {emailTo: details?.email,studentName: leanerUser?.student_name , courseId: course_id} )
         .then(res => {
           console.log(res.data)
@@ -118,12 +127,12 @@ const [leanerUser, setLearnerUser] = useState<any>(JSON.parse(localStorage.getIt
         setMsg(confrim.message);
         setOpen(true);
         setConfrim(res.data)
-        navigate('/loggedcourseview/');
+        navigate('/');
         window.addEventListener("popstate", () => {
           navigate(1);
         });
         if(open === true){
-          navigate('/loggedcourseview/');
+          navigate('/');
           window.addEventListener("popstate", () => {
 						navigate(1);
 					});
