@@ -67,7 +67,7 @@ function EnterpriseCourseContent({ course }: props) {
   return (
     <>
       <Box
-        style={{ marginRight: '200px', marginLeft: '155px', marginTop: '30px' }}
+        
       >
         <div style={{ display: 'flex', justifyContent: 'Center' }}>
           <div>

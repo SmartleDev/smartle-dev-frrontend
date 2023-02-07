@@ -5,6 +5,8 @@ import EnterpriseCourseContent from './EnterpriseCourseContent';
 import API from '../../redux/api/api';
 import { Box } from '@mui/material';
 import { Link, useNavigate, useParams, useLocation  } from 'react-router-dom';
+import EnterpriseGrade from './EnterpriseGrade';
+import '../../styles/general.css';
 
 function EnterpriseMain() {
   const [enterpirseCourses, setenterpirseCourses] = useState<any>([]);
@@ -23,7 +25,10 @@ function EnterpriseMain() {
   return (
     <>
       <Header />
+      <div className='enterprise_main'>
      <EnterpriseCourseContent  course = {enterpirseCourses}/>
+     <EnterpriseGrade/>
+      </div>
       <Footer />
     </>
   );

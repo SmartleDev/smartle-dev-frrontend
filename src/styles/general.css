@@ -85,10 +85,31 @@ input[type='radio']:checked:after {
   color: #917ebd;
   border-radius: 13px;
 }
+.course_curriculum{
+  width: 65%;
+  font-size: 18px;
+}
+.enterprise_main{
+  margin-right: 200px;
+  margin-left: 160px;
+  margin-top: 30px;
+}
+@media screen and (max-width: 950px) {
+  .course_curriculum{
+    width: 100% !important;
+  }
+}
 
 @media screen and (max-width: 780px) {
+  .enterprise_main{
+    margin: 10px;
+  }
+  .course_curriculum{
+    font-size: 10px !important;
+  }
   .main_course {
     width: 100% !important;
+    margin: 0;
   }
   .course_main {
     margin: 15px 15px 15px 15px !important;
